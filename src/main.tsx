@@ -10,6 +10,7 @@ import App from './App.tsx';
 import GlobalStyle from './styles/GlobalStyle.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
 import PostsPage from './pages/PostsPage.tsx';
+import PostWritePage from './pages/PostWritePage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: '/posts',
         element: <PostsPage />,
+      },
+      {
+        path: '/write',
+        element: <PostWritePage />,
       },
     ],
   },

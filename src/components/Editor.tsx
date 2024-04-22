@@ -30,7 +30,16 @@ const formats = [
 function Editor() {
   const [value, setValue] = useState('');
 
-  return <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} />;
+  return (
+    <ReactQuill
+      theme="snow"
+      style={{ height: '600px' }}
+      value={value}
+      onChange={setValue}
+      modules={modules}
+      formats={formats}
+    />
+  );
 }
 
 export default Editor;
