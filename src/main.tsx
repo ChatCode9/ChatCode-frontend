@@ -10,6 +10,7 @@ import App from './App.tsx';
 import GlobalStyle from './styles/GlobalStyle.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
 import PostsPage from './pages/PostsPage.tsx';
+import LoginPage from './pages/LoginPage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <div>로그인</div>,
+    element: <LoginPage />,
   },
 ]);
 
