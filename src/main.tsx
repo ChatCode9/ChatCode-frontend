@@ -9,8 +9,8 @@ const queryClient = new QueryClient();
 import App from './App.tsx';
 import GlobalStyle from './styles/GlobalStyle.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
-import PostsPage from './pages/PostsPage.tsx';
 import PostWritePage from './pages/PostWritePage.tsx';
+import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
@@ -20,8 +20,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/posts',
-        element: <PostsPage />,
+        path: '/board/question',
+        element: <QuestionBoardPage />,
       },
       {
         path: '/write',
