@@ -5,9 +5,10 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 interface Props {
   filters: string[];
+  extra?: React.ReactNode;
 }
 
-function BoardController({ filters }: Props) {
+function BoardController({ filters, extra }: Props) {
   return (
     <Container>
       <Wrapper>
@@ -29,7 +30,7 @@ function BoardController({ filters }: Props) {
             </FilterItem>
           ))}
         </FilterList>
-
+        {extra && <div className="extra">{extra}</div>}
         <SearchForm>
           <SearchInput type="text" placeholder="find in Q&A" />
           <SearchButton type="submit">
@@ -48,6 +49,10 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  .extra {
+    margin-left: 10px;
+  }
 `;
 
 const Wrapper = styled.div`

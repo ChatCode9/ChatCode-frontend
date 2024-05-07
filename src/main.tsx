@@ -11,6 +11,7 @@ import GlobalStyle from './styles/GlobalStyle.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
 import PostWritePage from './pages/PostWritePage.tsx';
 import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
+import FreeBoardPage from './pages/FreeBoardPage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: '/board/question',
         element: <QuestionBoardPage />,
+      },
+      {
+        path: '/board/free',
+        element: <FreeBoardPage />,
       },
       {
         path: '/write',

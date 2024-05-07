@@ -1,10 +1,15 @@
 import styled from 'styled-components';
 
-function BoardInfo() {
+interface Props {
+  title: string;
+  description: string;
+}
+
+function BoardInfo({ title, description }: Props) {
   return (
     <Container>
-      <div className="title">Q&A 게시판</div>
-      <p>질문은 정중하게~~ 어쩌고 저쩌고 이용 수칙을 따르지 않을 경우 제재할 수 있습니다.</p>
+      <div className="title">{title}</div>
+      <p>{description}</p>
     </Container>
   );
 }
@@ -19,5 +24,6 @@ const Container = styled.div`
 
   .title {
     margin-bottom: 20px;
+    font-weight: 700;
   }
 `;
