@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -27,8 +27,12 @@ const formats = [
   'code-block',
 ];
 
-function Editor() {
-  const [value, setValue] = useState('');
+interface Props {
+  content: string;
+  setContent: (value: string) => void;
+}
+
+function Editor({ content, setContent }: Props) {
   const quillRef = useRef<ReactQuill | null>(null);
 
   const handleImage = async () => {
@@ -61,8 +65,8 @@ function Editor() {
     <ReactQuill
       theme="snow"
       style={{ height: '600px' }}
-      value={value}
-      onChange={setValue}
+      value={content}
+      onChange={setContent}
       modules={modules}
       formats={formats}
       ref={quillRef}

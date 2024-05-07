@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,75 +6,77 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { BiRightArrowAlt } from 'react-icons/bi';
 import Editor from '../components/Editor';
-import Button from '@mui/material/Button';
-import EastIcon from '@mui/icons-material/East';
 
 function PostWritePage() {
-  const [mainCategory, setMainCategory] = useState('');
-  const [subCategory, setSubCategory] = useState('');
+  const [category, setCategory] = useState('');
+  const [title, setTitle] = useState('');
+  const [tags, SetTags] = useState<string[]>([]);
+  const [content, setContent] = useState('');
 
   const handleMainChange = (e: SelectChangeEvent) => {
-    setMainCategory(e.target.value as string);
+    setCategory(e.target.value as string);
   };
 
-  const handleSubChange = (e: SelectChangeEvent) => {
-    setSubCategory(e.target.value as string);
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleTagsChange = (_: React.SyntheticEvent, value: string[]) => {
+    SetTags(value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log({
+      category,
+      title,
+      tags,
+      content,
+    });
   };
 
   return (
     <Container>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Header>
           <SelectWrapper>
-            <FormControl fullWidth size="small">
-              <InputLabel>대분류</InputLabel>
-              <Select label="대분류" value={mainCategory} onChange={handleMainChange}>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth size="small">
-              <InputLabel>중분류</InputLabel>
-              <Select label="중분류" value={subCategory} onChange={handleSubChange}>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+            <FormControl fullWidth size="medium">
+              <InputLabel>게시판 선택</InputLabel>
+              <Select label="게시판 선택" value={category} onChange={handleMainChange}>
+                <MenuItem value={'question'}>Q&A</MenuItem>
+                <MenuItem value={'free'}>자유</MenuItem>
               </Select>
             </FormControl>
           </SelectWrapper>
 
-          <TextField fullWidth placeholder="제목" />
+          <TextField fullWidth placeholder="제목" value={title} onChange={handleTitleChange} />
 
           <TagAutocompleteWrapper>
             <Autocomplete
               multiple
               options={['javascript', 'react', 'python', 'Node.js']}
               renderInput={(params) => <TextField {...params} placeholder="태그" />}
+              value={tags}
+              onChange={handleTagsChange}
             />
           </TagAutocompleteWrapper>
         </Header>
 
         <EditorWrapper>
-          <Editor />
+          <Editor content={content} setContent={setContent} />
         </EditorWrapper>
 
         <ButtonWrapper>
-          <Button variant="outlined" sx={{ backgroundColor: '#F8FAFF' }}>
+          <button className="btn-save" type="button">
             Save
-          </Button>
-          <Button
-            variant="contained"
-            endIcon={<EastIcon />}
-            sx={{
-              backgroundColor: '#6D758F',
-              ':hover': { backgroundColor: '#6D758F' },
-              '.MuiButton-icon': { marginLeft: '0px' },
-            }}
-          >
+          </button>
+          <button className="btn-post">
             Post
-          </Button>
+            <BiRightArrowAlt />
+          </button>
         </ButtonWrapper>
       </Form>
     </Container>
@@ -97,7 +99,7 @@ const Header = styled.header``;
 
 const SelectWrapper = styled.div`
   display: flex;
-  max-width: 500px;
+  max-width: 300px;
   margin-bottom: 10px;
 
   .MuiFormControl-root + .MuiFormControl-root {
@@ -118,7 +120,29 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end;
   margin-top: 70px;
 
+  button {
+    font-size: 16px;
+    outline: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   button + button {
     margin-left: 10px;
+  }
+
+  .btn-save {
+    background-color: #f8faff;
+    color: #6d758f;
+    border: 1px solid #e1e4ed;
+  }
+
+  .btn-post {
+    background-color: #6d758f;
+    border: none;
+    color: #fff;
   }
 `;
