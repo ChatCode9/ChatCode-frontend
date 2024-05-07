@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -29,6 +29,33 @@ const formats = [
 
 function Editor() {
   const [value, setValue] = useState('');
+  const quillRef = useRef<ReactQuill | null>(null);
+
+  const handleImage = async () => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.addEventListener('change', async () => {
+      const file = input.files?.[0];
+
+      try {
+        // 이미지 업로드
+        console.log(file);
+        // 이미지 업로드 후 url 가져오기
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (quillRef.current) {
+      const toolbar = quillRef.current.getEditor().getModule('toolbar');
+      toolbar.addHandler('image', handleImage);
+    }
+  }, []);
 
   return (
     <ReactQuill
@@ -38,6 +65,7 @@ function Editor() {
       onChange={setValue}
       modules={modules}
       formats={formats}
+      ref={quillRef}
     />
   );
 }
