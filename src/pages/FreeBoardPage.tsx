@@ -6,6 +6,7 @@ import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
 import PaginationRounded from '../components/board/Pagination';
 import Divider from '../components/board/Divider';
+import FreeBoardList from '../components/board/FreeBoardList';
 
 const filters = ['전체', '최신순', '인기순'];
 
@@ -28,10 +29,14 @@ function FreeBoardPage() {
             onClick={() => {}}
           >
             <MenuItem value={15}>15개씩 보기</MenuItem>
+            <MenuItem value={30}>30개씩 보기</MenuItem>
+            <MenuItem value={50}>50개씩 보기</MenuItem>
+            <MenuItem value={100}>100개씩 보기</MenuItem>
           </Select>
         }
       />
       <Divider />
+      <FreeBoardList />
       <PaginationRounded />
     </Container>
   );
@@ -40,6 +45,6 @@ function FreeBoardPage() {
 export default FreeBoardPage;
 
 const Container = styled.div`
-  max-width: 1024px;
+  max-width: 1200px;
   margin: 0 auto;
 `;
