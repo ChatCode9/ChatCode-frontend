@@ -6,12 +6,12 @@ import { textState } from './atoms/textState';
 import { getTodos } from './services/getTodos';
 
 function App() {
-  const { data, isLoading, isError } = useQuery({ queryKey: ['todos'], queryFn: getTodos });
+  // const { data, isLoading, isError } = useQuery({ queryKey: ['todos'], queryFn: getTodos });
   const value = useRecoilValue(textState);
 
-  console.log(value);
+  // console.log(value);
 
-  console.log(data, isLoading, isError);
+  // console.log(data, isLoading, isError);
 
   return (
     <div>

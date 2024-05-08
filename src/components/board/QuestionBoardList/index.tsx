@@ -63,7 +63,7 @@ function QuestionBoardList() {
             </BookMarkWrapper>
             {!block && (
               <MoreWrapper>
-                <More />
+                <More options={[{ label: '이 글 더 이상 그만보기', callback: () => {} }]} />
               </MoreWrapper>
             )}
           </BoardItem>

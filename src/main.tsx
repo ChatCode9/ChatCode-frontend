@@ -12,6 +12,7 @@ import ErrorPage from './pages/ErrorPage.tsx';
 import PostWritePage from './pages/PostWritePage.tsx';
 import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
 import FreeBoardPage from './pages/FreeBoardPage.tsx';
+import PostDetailPage from './pages/PostDetailPage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: '/write',
         element: <PostWritePage />,
+      },
+      {
+        path: '/posts/:postId',
+        element: <PostDetailPage />,
       },
     ],
   },

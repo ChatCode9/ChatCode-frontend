@@ -1,15 +1,17 @@
-import * as React from 'react';
+import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const options = ['이 글 더 이상 그만보기'];
-
 const ITEM_HEIGHT = 48;
 
-export default function More() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+interface Props {
+  options: { label: string; callback: () => void }[];
+}
+
+export default function More({ options }: Props) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -45,9 +47,9 @@ export default function More() {
           },
         }}
       >
-        {options.map((option) => (
-          <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-            {option}
+        {options.map(({ label, callback }) => (
+          <MenuItem key={label} onClick={handleClose}>
+            {label}
           </MenuItem>
         ))}
       </Menu>

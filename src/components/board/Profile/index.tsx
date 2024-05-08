@@ -7,7 +7,7 @@ interface Props {
 }
 
 function Profile({ avatar, timeline, nickname }: Props) {
-  console.log(avatar);
+  // console.log(avatar);
 
   return (
     <Container>
