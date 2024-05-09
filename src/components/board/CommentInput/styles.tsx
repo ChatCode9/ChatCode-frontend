@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Form = styled.form`
-  display: flex;
+export const Form = styled.form<{ $type: 'textarea' | 'editor' }>`
+  /* display: flex; */
+  /* flex-direction: ${(props) => (props.$type === 'textarea' ? 'row' : '')}; */
   align-items: center;
 
   textarea {
@@ -10,7 +11,7 @@ export const Form = styled.form`
     margin-right: 15px;
   }
 
-  button {
+  .btn-submit {
     height: 35px;
     display: flex;
     justify-content: center;
@@ -23,4 +24,23 @@ export const Form = styled.form`
     border-radius: 5px;
     padding: 10px 15px;
   }
+
+  .editor {
+    width: 100%;
+  }
+
+  .btn-wrapper {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  ${(props) =>
+    props.$type === 'editor' &&
+    css`
+      .btn-submit {
+        display: block;
+        margin-top: 50px;
+        justify-self: flex-end;
+      }
+    `}
 `;

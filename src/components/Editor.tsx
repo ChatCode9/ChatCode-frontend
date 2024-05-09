@@ -30,9 +30,11 @@ const formats = [
 interface Props {
   content: string;
   setContent: (value: string) => void;
+  width?: number | string;
+  height?: number | string;
 }
 
-function Editor({ content, setContent }: Props) {
+function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
   const quillRef = useRef<ReactQuill | null>(null);
 
   const handleImage = async () => {
@@ -64,7 +66,7 @@ function Editor({ content, setContent }: Props) {
   return (
     <ReactQuill
       theme="snow"
-      style={{ height: '600px' }}
+      style={{ width, height }}
       value={content}
       onChange={setContent}
       modules={modules}

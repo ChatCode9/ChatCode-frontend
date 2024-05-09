@@ -37,7 +37,7 @@ function Comments() {
             <h2>댓글</h2>
             <div className="count">10</div>
           </div>
-          <CommentInput />
+          <CommentInput type="textarea" />
         </Header>
 
         <CommentList comments={data} />
