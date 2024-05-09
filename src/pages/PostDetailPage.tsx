@@ -6,6 +6,7 @@ import { BiLike } from 'react-icons/bi';
 import { BiDislike } from 'react-icons/bi';
 import More from '../components/board/More';
 import Divider from '../components/board/Divider';
+import Comments from '../components/board/Comments';
 
 const postData = {
   title: '코딩 문제 중 이게 어떻게 어쩌고 저쩌고 하는지 잘 모르겠는데 봐주세요 어쩌고저쩌고',
@@ -18,77 +19,81 @@ function PostDetailPage() {
   const { title, tags, userName } = postData;
 
   return (
-    <Container>
-      <Header>
-        <h1 className="title">{title}</h1>
-        <div className="sub">
-          <span>1시간 전 작성</span>
-          <span>24.04.23. 14:52 수정</span>
-          <span>조회수 12.3M</span>
-        </div>
-        <div className="more">
-          <More
-            options={[
-              { label: '이 글 더 이상 그만보기', callback: () => {} },
-              { label: '수정하기', callback: () => {} },
-              { label: '삭제하기', callback: () => {} },
-            ]}
-          />
-        </div>
-        <div className="actions">
-          <button>
-            <BiBookmark className="icon ico-bookmark" />
-          </button>
-          <button>
-            <BiShare className="icon ico-share" />
-          </button>
-        </div>
-
-        <Divider />
-      </Header>
-      <Tags>
-        {tags.map((tag) => (
-          <li key={tag}>#{tag}</li>
-        ))}
-      </Tags>
-
-      <div
-        dangerouslySetInnerHTML={{
-          __html: '<p>내용</p>',
-        }}
-      />
-
-      <UserProfile>
-        <div className="inner">
-          <div className="avatar">
-            <img src="https://placehold.co/60" alt="프로필 이미지" />
+    <>
+      <Container>
+        <Header>
+          <h1 className="title">{title}</h1>
+          <div className="sub">
+            <span>1시간 전 작성</span>
+            <span>24.04.23. 14:52 수정</span>
+            <span>조회수 12.3M</span>
           </div>
-          <div className="info">
-            <div className="username">{userName}</div>
-
-            <ul className="tags">
-              <li>frontend</li>
-              <li>backend</li>
-              <li>ui/ux engineer</li>
-              <li>beginner</li>
-            </ul>
-
-            <p className="desc">This is test user profile</p>
+          <div className="more">
+            <More
+              options={[
+                { label: '이 글 더 이상 그만보기', callback: () => {} },
+                { label: '수정하기', callback: () => {} },
+                { label: '삭제하기', callback: () => {} },
+              ]}
+            />
           </div>
-        </div>
-      </UserProfile>
+          <div className="actions">
+            <button>
+              <BiBookmark className="icon ico-bookmark" />
+            </button>
+            <button>
+              <BiShare className="icon ico-share" />
+            </button>
+          </div>
 
-      <LikeDisLinkButton>
-        <div className="inner">
-          <button className="btn-like">
-            <BiLike />
-          </button>
-          <button className="btn-dislike">
-            <BiDislike />
-          </button>
-        </div>
-      </LikeDisLinkButton>
-    </Container>
+          <Divider />
+        </Header>
+        <Tags>
+          {tags.map((tag) => (
+            <li key={tag}>#{tag}</li>
+          ))}
+        </Tags>
+
+        <div
+          dangerouslySetInnerHTML={{
+            __html: '<p>내용</p>',
+          }}
+        />
+
+        <UserProfile>
+          <div className="inner">
+            <div className="avatar">
+              <img src="https://placehold.co/60" alt="프로필 이미지" />
+            </div>
+            <div className="info">
+              <div className="username">{userName}</div>
+
+              <ul className="tags">
+                <li>frontend</li>
+                <li>backend</li>
+                <li>ui/ux engineer</li>
+                <li>beginner</li>
+              </ul>
+
+              <p className="desc">This is test user profile</p>
+            </div>
+          </div>
+        </UserProfile>
+
+        <LikeDisLinkButton>
+          <div className="inner">
+            <button className="btn-like">
+              <BiLike />
+            </button>
+            <button className="btn-dislike">
+              <BiDislike />
+            </button>
+          </div>
+        </LikeDisLinkButton>
+      </Container>
+
+      <Comments />
+    </>
   );
 }
 

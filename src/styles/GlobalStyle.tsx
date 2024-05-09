@@ -52,6 +52,10 @@ const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+
+  body {
+    padding-bottom: 100px;
+  }
 `;
 
 export default GlobalStyle;
