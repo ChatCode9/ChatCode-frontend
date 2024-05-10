@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Editor from '../components/Editor';
 import CategorySelect from '../components/write/CategorySelect';
 import TagAutocomplete from '../components/write/TagAutocomplete';
 import ActionButtons from '../components/write/ActionButtons';
+import { createNewArticle } from '../services/http';
 
 function PostWritePage() {
   const [category, setCategory] = useState<'question' | 'free' | undefined>();
   const [title, setTitle] = useState('');
   const [tagList, setTagList] = useState<string[]>([]);
   const [content, setContent] = useState('');
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: createNewArticle,
+    onSuccess: () => {
+      console.log('성공!');
+    },
+  });
 
   const handleCategoryChange = (category: 'question' | 'free') => {
     setCategory(category);
@@ -26,6 +35,8 @@ function PostWritePage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    mutate({ title, contentText: content });
 
     console.log({
       category,
