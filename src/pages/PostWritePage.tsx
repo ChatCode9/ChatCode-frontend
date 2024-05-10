@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { BiRightArrowAlt } from 'react-icons/bi';
 import Editor from '../components/Editor';
+import CategorySelect from '../components/write/CategorySelect';
+import TagAutocomplete from '../components/write/TagAutocomplete';
+import ActionButtons from '../components/write/ActionButtons';
 
 function PostWritePage() {
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState<'question' | 'free' | undefined>();
   const [title, setTitle] = useState('');
-  const [tags, SetTags] = useState<string[]>([]);
+  const [tagList, setTagList] = useState<string[]>([]);
   const [content, setContent] = useState('');
 
-  const handleMainChange = (e: SelectChangeEvent) => {
-    setCategory(e.target.value as string);
+  const handleCategoryChange = (category: 'question' | 'free') => {
+    setCategory(category);
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
-  const handleTagsChange = (_: React.SyntheticEvent, value: string[]) => {
-    SetTags(value);
+  const handleTagListChange = (tagList: string[]) => {
+    setTagList(tagList);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,7 +30,7 @@ function PostWritePage() {
     console.log({
       category,
       title,
-      tags,
+      tagList,
       content,
     });
   };
@@ -42,42 +39,12 @@ function PostWritePage() {
     <Container>
       <Form onSubmit={handleSubmit}>
         <Header>
-          <SelectWrapper>
-            <FormControl fullWidth size="medium">
-              <InputLabel>게시판 선택</InputLabel>
-              <Select label="게시판 선택" value={category} onChange={handleMainChange}>
-                <MenuItem value={'question'}>Q&A</MenuItem>
-                <MenuItem value={'free'}>자유</MenuItem>
-              </Select>
-            </FormControl>
-          </SelectWrapper>
-
+          <CategorySelect category={category} onCategoryChange={handleCategoryChange} />
           <TextField fullWidth placeholder="제목" value={title} onChange={handleTitleChange} />
-
-          <TagAutocompleteWrapper>
-            <Autocomplete
-              multiple
-              options={['javascript', 'react', 'python', 'Node.js']}
-              renderInput={(params) => <TextField {...params} placeholder="태그" />}
-              value={tags}
-              onChange={handleTagsChange}
-            />
-          </TagAutocompleteWrapper>
+          <TagAutocomplete tagList={tagList} onTagListChange={handleTagListChange} />
         </Header>
-
-        <EditorWrapper>
-          <Editor content={content} setContent={setContent} />
-        </EditorWrapper>
-
-        <ButtonWrapper>
-          <button className="btn-save" type="button">
-            Save
-          </button>
-          <button className="btn-post">
-            Post
-            <BiRightArrowAlt />
-          </button>
-        </ButtonWrapper>
+        <Editor content={content} setContent={setContent} />
+        <ActionButtons />
       </Form>
     </Container>
   );
@@ -95,54 +62,6 @@ const Form = styled.form`
   padding-top: 100px;
 `;
 
-const Header = styled.header``;
-
-const SelectWrapper = styled.div`
-  display: flex;
-  max-width: 300px;
+const Header = styled.header`
   margin-bottom: 10px;
-
-  .MuiFormControl-root + .MuiFormControl-root {
-    margin-left: 20px;
-  }
-`;
-
-const TagAutocompleteWrapper = styled.div`
-  margin-top: 10px;
-`;
-
-const EditorWrapper = styled.div`
-  margin-top: 10px;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 70px;
-
-  button {
-    font-size: 16px;
-    outline: none;
-    border-radius: 8px;
-    padding: 10px 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  button + button {
-    margin-left: 10px;
-  }
-
-  .btn-save {
-    background-color: #f8faff;
-    color: #6d758f;
-    border: 1px solid #e1e4ed;
-  }
-
-  .btn-post {
-    background-color: #6d758f;
-    border: none;
-    color: #fff;
-  }
 `;

@@ -42,7 +42,7 @@ function CommentItem({ avatar, username, timestamp, likeCount, disLikeCount, com
 
       <ToggleBtn>{isOpenInput ? '댓글 닫기' : '댓글 보기'}</ToggleBtn>
 
-      <CommentInput />
+      <CommentInput type="textarea" />
     </>
   );
 }
