@@ -56,6 +56,11 @@ const GlobalStyle = createGlobalStyle`
   body {
     padding-bottom: 100px;
   }
+
+  li {
+    list-style: none;
+    padding-left: 0px;
+  }
 `;
 
 export default GlobalStyle;

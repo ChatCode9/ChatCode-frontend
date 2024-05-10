@@ -62,7 +62,7 @@ function TagAutocomplete({ tagList, onTagListChange }: Props) {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="태그"
+            placeholder="태그"
             InputProps={{
               ...params.InputProps,
               endAdornment: (
