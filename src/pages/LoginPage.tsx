@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-// import GlobalStyle from '../styles/GlobalStyle';
 import Navbar from '../components/NavBar';
 import BottomNavBar from '../components/BottomNavBar';
+import { useState } from 'react';
 
 function LoginPage() {
+  const userLoginState = useState(true);
   return (
     <>
       <Navbar></Navbar>
@@ -21,6 +22,7 @@ function LoginPage() {
           </SnsBtn>
         </SnsLogin>
       </LoginBox>
+
       <BottomNavBar></BottomNavBar>
     </>
   );
@@ -29,6 +31,7 @@ export default LoginPage;
 
 const LoginBox = styled.div`
   display: flex;
+
   min-height: 100%;
   position: relative;
   z-index: 10;
