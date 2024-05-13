@@ -64,15 +64,19 @@ function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
   }, []);
 
   return (
-    <ReactQuill
-      theme="snow"
-      style={{ width, height }}
-      value={content}
-      onChange={setContent}
-      modules={modules}
-      formats={formats}
-      ref={quillRef}
-    />
+    <div>
+      <ReactQuill
+        theme="snow"
+        bounds="#scrolling-container"
+        scrollingContainer=".parent-scroll"
+        style={{ width, height }}
+        value={content}
+        onChange={setContent}
+        modules={modules}
+        formats={formats}
+        ref={quillRef}
+      />
+    </div>
   );
 }
 

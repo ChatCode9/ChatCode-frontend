@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 
-import Comments from '../components/board/Comments';
 import Post from '../components/detail/Post';
+import Comments from '../components/detail/Comments';
 
 function PostDetailPage() {
   const { postId } = useParams();
