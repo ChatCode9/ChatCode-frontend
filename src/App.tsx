@@ -8,7 +8,7 @@ import useModalsDispatch from './hooks/useModalsDispatch';
 import { SolveModal } from './components/SolveModal';
 
 function App() {
-  const { data, isLoading, isError } = useQuery({ queryKey: ['todos'], queryFn: getTodos });
+  // const { data, isLoading, isError } = useQuery({ queryKey: ['todos'], queryFn: getTodos });
   const value = useRecoilValue(textState);
   const Dispatch = useModalsDispatch();
 
@@ -21,7 +21,7 @@ function App() {
   };
   console.log(value);
 
-  console.log(data, isLoading, isError);
+  // console.log(data, isLoading, isError);
 
   return (
     <div>

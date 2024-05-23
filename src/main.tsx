@@ -10,6 +10,10 @@ const queryClient = new QueryClient();
 import App from './App.tsx';
 import GlobalStyle from './styles/GlobalStyle.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
+import PostWritePage from './pages/PostWritePage.tsx';
+import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
+import FreeBoardPage from './pages/FreeBoardPage.tsx';
+import PostDetailPage from './pages/PostDetailPage.tsx';
 import PostsPage from './pages/PostsPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
 import SignupPage from './pages/SignupPage.tsx';
@@ -22,8 +26,20 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/posts',
-        element: <PostsPage />,
+        path: '/board/question',
+        element: <QuestionBoardPage />,
+      },
+      {
+        path: '/board/free',
+        element: <FreeBoardPage />,
+      },
+      {
+        path: '/write',
+        element: <PostWritePage />,
+      },
+      {
+        path: '/posts/:postId',
+        element: <PostDetailPage />,
       },
     ],
   },
