@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { postFile } from '../services/http';
 
 const modules = {
   toolbar: [
@@ -27,6 +28,15 @@ const formats = [
   'code-block',
 ];
 
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve((reader?.result as string).split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 interface Props {
   content: string;
   setContent: (value: string) => void;
@@ -44,14 +54,16 @@ function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
     input.click();
 
     input.addEventListener('change', async () => {
-      const file = input.files?.[0];
-
-      try {
-        // 이미지 업로드
-        console.log(file);
-        // 이미지 업로드 후 url 가져오기
-      } catch (error) {
-        console.log(error);
+      if (input.files && input.files[0]) {
+        try {
+          const base64String = await readFileAsBase64(input.files[0]);
+          const base64File = `data:${input.files[0].type};base64,${base64String}`;
+          await postFile({ base64File, targetId: 1 });
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        alert('Please select a file.');
       }
     });
   };

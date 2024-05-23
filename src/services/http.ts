@@ -13,3 +13,15 @@ export const createNewArticle = async (newArticle: { title: string; contentText:
     throw error;
   }
 };
+
+export const postFile = async (file: { base64File: string; targetId: number }) => {
+  try {
+    const response = await client.post('files', file);
+
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+
+    throw error;
+  }
+};
