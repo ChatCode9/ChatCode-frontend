@@ -1,10 +1,25 @@
 import styled from 'styled-components';
 import Navbar from '../components/NavBar';
 import BottomNavBar from '../components/BottomNavBar';
-import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function LoginPage() {
-  const userLoginState = useState(true);
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const porfile = params.get('profile');
+    if (porfile === '0') {
+      navigate('/signup');
+    }
+  }, [location, navigate]);
+
+  const handleLogin = () => {
+    const currentUrl = window.location.href;
+    const encodedUrl = encodeURIComponent(currentUrl);
+    window.location.href = `https://chatcode.store/login/oauth2/google?url=${encodedUrl}`;
+  };
   return (
     <>
       <Navbar></Navbar>
@@ -12,12 +27,12 @@ function LoginPage() {
         <SnsLogin>
           <LoginTitle>SNS로 간편하게 시작하기</LoginTitle>
           <SnsBtn>
-            <GoogleBox>
-              <Link href="">google</Link>
+            <GoogleBox onClick={handleLogin}>
+              <div>google</div>
             </GoogleBox>
 
             <GithubBox>
-              <Link href="">github</Link>
+              <div>github</div>
             </GithubBox>
           </SnsBtn>
         </SnsLogin>
@@ -67,6 +82,11 @@ const GoogleBox = styled.button`
   background-color: #ffffff;
   margin-bottom: 20px;
   border-radius: 6px;
+  div {
+    font-size: 20px;
+    color: #000000;
+    margin: 10px;
+  }
 `;
 const GithubBox = styled.button`
   display: flex;
@@ -75,15 +95,9 @@ const GithubBox = styled.button`
   height: 46px;
   background-color: #353e5c;
   border-radius: 6px;
-  a {
+  div {
     color: #ffffff;
+    font-size: 20px;
+    margin: 10px;
   }
-`;
-
-const Link = styled.a`
-  font-size: 20px;
-  color: #000000;
-  text-decoration: none;
-  outline: none;
-  margin: 10px;
 `;
