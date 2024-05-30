@@ -17,6 +17,7 @@ import PostDetailPage from './pages/PostDetailPage.tsx';
 import PostsPage from './pages/PostsPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
 import SignupPage from './pages/SignupPage.tsx';
+import Mypage from './pages/Mypage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <SignupPage />,
+  },
+  {
+    path: '/mypage',
+    element: <Mypage />,
   },
 ]);
 
