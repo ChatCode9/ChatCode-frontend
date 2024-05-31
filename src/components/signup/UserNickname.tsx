@@ -1,11 +1,23 @@
 import styled from 'styled-components';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { fetchUserNickname } from '../../services/http';
+
+interface User {
+  nickname: string;
+}
 
 function Nickname() {
+  const { data, isLoading, error }: UseQueryResult<User, Error> = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: fetchUserNickname,
+  });
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
   return (
     <>
       <SignupInfoBox>회원가입에 필요한 기본정보를 입력해주세요.</SignupInfoBox>
       <NicknameInfo>
-        <label htmlFor="nickname_id">닉네임</label>
+        <label htmlFor="nickname_id">{data?.nickname}</label>
         <div>
           <NicknameInput
             type="text"
