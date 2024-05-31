@@ -25,3 +25,14 @@ export const postFile = async (file: { base64File: string; targetId: number }) =
     throw error;
   }
 };
+
+export const fetchUserNickname = async () => {
+  try {
+    const response = await client.get('avatars/me');
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

@@ -25,24 +25,24 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '/board/question',
-        element: <QuestionBoardPage />,
-      },
-      {
-        path: '/board/free',
-        element: <FreeBoardPage />,
-      },
-      {
-        path: '/write',
-        element: <PostWritePage />,
-      },
-      {
-        path: '/posts/:postId',
-        element: <PostDetailPage />,
-      },
-    ],
+    //   children: [
+    //     {
+    //       path: '/board/question',
+    //       element: <QuestionBoardPage />,
+    //     },
+    //     {
+    //       path: '/board/free',
+    //       element: <FreeBoardPage />,
+    //     },
+    //     {
+    //       path: '/write',
+    //       element: <PostWritePage />,
+    //     },
+    //     {
+    //       path: '/posts/:postId',
+    //       element: <PostDetailPage />,
+    //     },
+    //   ],
   },
   {
     path: '/login',
@@ -55,6 +55,22 @@ const router = createBrowserRouter([
   {
     path: '/mypage',
     element: <Mypage />,
+  },
+  {
+    path: '/board/question',
+    element: <QuestionBoardPage />,
+  },
+  {
+    path: '/board/free',
+    element: <FreeBoardPage />,
+  },
+  {
+    path: '/write',
+    element: <PostWritePage />,
+  },
+  {
+    path: '/posts/:postId',
+    element: <PostDetailPage />,
   },
 ]);
 
