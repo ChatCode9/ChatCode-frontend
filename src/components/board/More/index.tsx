@@ -43,12 +43,16 @@ export default function More({ options }: Props) {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: '20ch',
+            width: '21ch',
           },
         }}
       >
         {options.map(({ label, callback }) => (
-          <MenuItem key={label} onClick={handleClose}>
+          <MenuItem key={label} onClick={() => {
+            callback();
+            handleClose();
+          }}
+          >
             {label}
           </MenuItem>
         ))}

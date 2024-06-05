@@ -1,24 +1,56 @@
 import styled from 'styled-components';
+import Navbar from '../components/NavBar';
 import PickFlow from '../components/board/PickFlow';
 import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
 import Divider from '../components/board/Divider';
 import QuestionBoardList from '../components/board/QuestionBoardList';
 import PaginationRounded from '../components/board/Pagination';
+import { useEffect, useState } from 'react';
 
-const filters = ['전체', '최신순', '인기순', '해결 대기', '해결 완료'];
+// const category = ['전체', '최신순', '인기순', '해결 대기', '해결 완료'];
+
+type Filters = {
+  search: string;
+  categories: string;
+  sortby: string;
+  status: string[];
+  pageInfo: {
+    page: number;
+    size: number;
+  };
+};
 
 function QuestionBoardPage() {
+  const [filters, setFilters] = useState<Filters>({
+    search: '',
+    categories: 'question',
+    sortby: 'latest',
+    // sortby: '',
+    status: ['wait', 'finish'],
+    // status: [],
+    pageInfo: {
+      page: 1,
+      size: 10,
+    },
+  });
+
+  useEffect(() => {
+    console.log("filters 상태 변경:", filters);
+    // 여기에 상태 변화에 따른 추가 작업을 수행할 수 있습니다.
+  }, [filters]);
+
   return (
     <Container>
+      <Navbar></Navbar>
       <PickFlow />
       <BoardInfo
         title="Q&A 게시판"
         description="질문은 정중하게~~ 어쩌고 저쩌고 이용 수칙을 따르지 않을 경우 제재할 수 있습니다."
       />
-      <BoardController filters={filters} />
+      <BoardController filters={filters} setFilters={setFilters}/>
       <Divider />
-      <QuestionBoardList />
+      <QuestionBoardList filters={filters}/>
       <PaginationRounded />
     </Container>
   );

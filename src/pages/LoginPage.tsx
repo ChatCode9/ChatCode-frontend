@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import Navbar from '../components/NavBar';
 import BottomNavBar from '../components/BottomNavBar';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
 
 function LoginPage() {
   const location = useLocation();
@@ -20,6 +21,7 @@ function LoginPage() {
     const encodedUrl = encodeURIComponent(currentUrl);
     window.location.href = `https://chatcode.store/login/oauth2/google?url=${encodedUrl}`;
   };
+
   return (
     <>
       <Navbar></Navbar>
@@ -30,7 +32,6 @@ function LoginPage() {
             <GoogleBox onClick={handleLogin}>
               <div>google</div>
             </GoogleBox>
-
             <GithubBox>
               <div>github</div>
             </GithubBox>
