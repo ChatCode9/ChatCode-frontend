@@ -7,28 +7,16 @@ import Divider from '../components/board/Divider';
 import QuestionBoardList from '../components/board/QuestionBoardList';
 import PaginationRounded from '../components/board/Pagination';
 import { useEffect, useState } from 'react';
+import { Filters } from '../requestType/postType.ts';
 
 // const category = ['전체', '최신순', '인기순', '해결 대기', '해결 완료'];
-
-type Filters = {
-  search: string;
-  categories: string;
-  sortby: string;
-  status: string[];
-  pageInfo: {
-    page: number;
-    size: number;
-  };
-};
 
 function QuestionBoardPage() {
   const [filters, setFilters] = useState<Filters>({
     search: '',
     categories: 'question',
     sortby: 'latest',
-    // sortby: '',
     status: ['wait', 'finish'],
-    // status: [],
     pageInfo: {
       page: 1,
       size: 10,

@@ -11,17 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PostsQuery } from '../../../services/post.ts';
 import { Post } from '../../../responseType/postType.ts';
-
-type Filters = {
-  search: string;
-  categories: string;
-  sortby: string;
-  status: string[];
-  pageInfo: {
-    page: number;
-    size: number;
-  };
-};
+import { Filters } from '../../../requestType/postType.ts';
 
 interface Props {
   filters: Filters;
@@ -76,7 +66,7 @@ function QuestionBoardList({ filters }: Props) {
   };
 
   // 데이터 호출
-  const { data, isLoading, isError, error  } = PostsQuery();
+  const { data, isLoading, isError, error  } = PostsQuery(filters);
 
   // 데이터가 변경될 때 posts 상태 업데이트
   useEffect(() => {

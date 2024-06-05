@@ -4,19 +4,10 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useQueryClient } from '@tanstack/react-query';
-import { SetStateAction, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Filters } from '../../../requestType/postType.ts';
 
-type Filters = {
-  search: string;
-  categories: string;
-  sortby: string;
-  status: string[];
-  pageInfo: {
-    page: number;
-    size: number;
-  };
-};
 
 interface Props {
   filters: Filters;
@@ -86,14 +77,26 @@ function BoardController({ filters, setFilters }: Props) {
     setIsAscending(null);
     setIsPending(false);
     setIsCompleted(false);
+    setInputValue('');
   };
 
-  const handleSelectChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      pageInfo: {
+        ...prevFilters.pageInfo,
+        size: Number(event.target.value)
+      }
+    }));
   };
 
-  const handleInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleInputChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setInputValue(event.target.value);
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      search: event.target.value
+    }));
   };
 
   // 게시글 클릭 할 때

@@ -1,10 +1,15 @@
 import styled from 'styled-components';
 import Pagination from '@mui/material/Pagination';
+import { Stack } from '@mui/material';
 
 function PaginationRounded() {
   return (
     <Wrapper>
-      <Pagination count={1} shape="rounded" />
+      <Stack spacing={2}>
+        <Pagination count={10}
+                    variant="outlined"
+                    shape="rounded"/>
+      </Stack>
     </Wrapper>
   );
 }
@@ -12,5 +17,7 @@ function PaginationRounded() {
 export default PaginationRounded;
 
 const Wrapper = styled.div`
-  margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
