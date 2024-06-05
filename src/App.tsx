@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ModalProvider } from './context/ModalsContext.tsx';
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
 
@@ -76,7 +75,6 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <GoogleOAuthProvider clientId="729869699887-ibpfhnhjju75b3qkg6i9tr25bhc6kfbs.apps.googleusercontent.com">
     <React.StrictMode>
         <GlobalStyle />
         <RecoilRoot>
@@ -87,6 +85,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           </ModalProvider>
         </RecoilRoot>
     </React.StrictMode>
-  </GoogleOAuthProvider>
-
 );
