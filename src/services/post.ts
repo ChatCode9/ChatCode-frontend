@@ -1,7 +1,8 @@
 import client from './client';
 import { Question } from '../responseType/postType.ts';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Filters } from '../requestType/postType.ts';
+// import initialData from '../data/Question_Dummy_data.json';
 
 const fetchPosts = async (filters: Filters): Promise<Question> => {
   const { search, categories, sortby, pageInfo } = filters;
@@ -29,9 +30,36 @@ const fetchPosts = async (filters: Filters): Promise<Question> => {
   return res.data;
 }
 
+// Search 데이터를 활용한 Question Post List 데이터 호출
 export const PostsQuery = (filters: Filters) => {
   return useQuery<Question, Error>({
     queryKey: ['posts', filters],
     queryFn: () => fetchPosts(filters),
+    // 서버와 통신이 안되지만 초기 데이터로 퍼블리싱 체크할때 사용
+    // initialData: initialData,
   });
 };
+
+// 북마크 업데이트
+export const updateBookmark = async (data : {postId : number; bookmark : boolean}) => {
+  try {
+    const response = await client.post('http://localhost:3000/bookmark', data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// 글 블라인드 업데이트
+export const updateBlind = async (data : {postId : number; blind : boolean}) => {
+  try {
+    const response = await client.post('http://localhost:3000/blind', data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

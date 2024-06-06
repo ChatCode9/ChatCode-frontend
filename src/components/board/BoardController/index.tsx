@@ -17,7 +17,7 @@ interface Props {
 function BoardController({ filters, setFilters }: Props) {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState('전체');
-  const [isAscending, setIsAscending] = useState(null);
+  const [isAscending, setIsAscending] = useState<boolean | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [selectedValue, setSelectedValue] = useState('10');
@@ -91,7 +91,7 @@ function BoardController({ filters, setFilters }: Props) {
     }));
   };
 
-  const handleInputChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     setFilters(prevFilters => ({
       ...prevFilters,

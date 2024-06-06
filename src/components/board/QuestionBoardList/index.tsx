@@ -7,11 +7,11 @@ import Block from '../Block';
 import BookMarkIcon from '../BookMarkIcon';
 import TagList from '../TagList';
 import { useNavigate } from 'react-router-dom';
-// import initialData from '../../../data/Question_Dummy_data.json';
 import React, { useCallback, useEffect, useState } from 'react';
-import { PostsQuery } from '../../../services/post.ts';
+import { PostsQuery, updateBlind, updateBookmark } from '../../../services/post.ts';
 import { Post } from '../../../responseType/postType.ts';
 import { Filters } from '../../../requestType/postType.ts';
+import { useMutation } from '@tanstack/react-query';
 
 interface Props {
   filters: Filters;
@@ -24,58 +24,100 @@ function QuestionBoardList({ filters }: Props) {
   const [posts, setPosts] = useState<Post[]>([]);
   const BookMarkIconMemo = React.memo(BookMarkIcon);
 
-  // 게시글 클릭 할 때
-  const handlePostClick = (id: string) => {
-    navigate(`/posts/${id}`);
-  };
+  // 데이터 호출
+  const { data : postList, isLoading : isPostListLD, isError : isPostListER, error : postListER  } = PostsQuery(filters);
+
+  const { mutate: bookmark, isError: isBookmarkER, error: bookmarkER} = useMutation({
+    mutationFn : updateBookmark,
+    onSuccess: (data, variables, context) => {
+      console.log('Bookmark updated successfully');
+      const { postId } = variables;
+      const updatedPosts = posts.map(post =>
+        post.id === String(postId) ? { ...post, bookmark: !post.bookmark } : post
+      );
+      setPosts(updatedPosts);
+    },
+    onError: (error) => {
+      // Handle error case here, e.g., show an error message
+      console.error('Error updating bookmark:', error);
+    }
+  });
+
+  const { mutate: blind, isError: isBlind, error: blindER} = useMutation({
+    mutationFn : updateBlind,
+    onSuccess: (data, variables, context) => {
+      console.log('blind updated successfully');
+      const { postId } = variables;
+      const updatedPosts = posts.map(post =>
+        post.id === String(postId) ? { ...post, blind: !post.blind } : post
+      );
+      setPosts(updatedPosts);
+    },
+    onError: (error) => {
+      // Handle error case here, e.g., show an error message
+      console.error('Error updating blind:', error);
+    }
+  });
+
+  const toggleStatus = useCallback((id: string, type: 'blind' | 'bookmark') => {
+    console.log(`toggle${type.charAt(0).toUpperCase() + type.slice(1)}Status`);
+    // 현재 클릭한 게시글 데이터 찾기
+    const currentPost = posts.find(post => post.id === id);
+
+    if (!currentPost) {
+      console.error('Post not found');
+      return;
+    }
+
+    if (type === 'blind') {
+      const product = {
+        postId: Number(id),
+        blind: !currentPost.blind
+      };
+      blind(product);
+    } else if (type === 'bookmark') {
+      const product = {
+        postId: Number(id),
+        bookmark: !currentPost.bookmark
+      };
+      bookmark(product);
+    }
+  }, [blind, bookmark, posts]);
 
   // 게시글 북마크 하고자 할 때
-  const handleBookMarkIconClick = useCallback<(event: React.MouseEvent<HTMLDivElement>, id: string) => void>(
-    (event, id) => {
-      event.stopPropagation();
-      // 로그인 유저가 해당 게시글 북마크 로직 처리
-
-      // 성공시 setPosts 실행
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post.id === id ? { ...post, bookmark: !post.bookmark } : post
-        )
-      );
-      // 실패시 에러 관련 메시지 출력
-    },
-    [setPosts]
-  );
-
-  // 게시글 블라인드 하고자 할 때
-  const handleMoreClick = useCallback<(event: React.MouseEvent<HTMLDivElement>, id: string) => void>(
-    (event, id) => {
-      event.stopPropagation();
-      // 로그인 유저가 해당 게시글 블라인드 로직 처리
-
-      // 실패시 에러 관련 메시지 출력
-    },
-    []
-  );
-
-  // 블라인드 글을 해체 하고자 할 때
-  const handleBlindDataAddClick = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleBookMarkIconClick = useCallback((event: React.MouseEvent<HTMLDivElement>, id: string) => {
     event.stopPropagation();
-    // 클릭 이벤트 처리 로직
-    console.log('Button clicked / id : '+id);
-    // 클릭한 블라인드 글 데이터 조회
-  };
+    toggleStatus(id, 'bookmark');
+  }, [toggleStatus]);
 
-  // 데이터 호출
-  const { data, isLoading, isError, error  } = PostsQuery(filters);
+  // 블라인드 상태 토글하고자 할 때
+  const handleMoreClick = useCallback((event: React.MouseEvent<HTMLLIElement>, id: string) => {
+    event.stopPropagation();
+    toggleStatus(id, 'blind');
+  }, [toggleStatus]);
+
+  const handleBlindDataAddClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    event.stopPropagation();
+    toggleStatus(id, 'blind');
+  }, [toggleStatus]);
+
+  const eventStop = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  }, []);
+
+  // 게시글 클릭 할 때
+  const handlePostClick = useCallback((id: string) => {
+      navigate(`/post/${id}`);
+    }, [navigate]);
 
   // 데이터가 변경될 때 posts 상태 업데이트
   useEffect(() => {
-    if (data?.data) {
+    if (postList?.data) {
       // console.log("data 상태 변경:");
-      // console.log(data.data);
-      setPosts(data.data);
+      // console.log(postList.data);
+      setPosts(postList.data);
     }
-  }, [data]);
+  }, [postList]);
 
   // posts 상태가 변경될 때마다 로그 출력
   useEffect(() => {
@@ -84,15 +126,10 @@ function QuestionBoardList({ filters }: Props) {
   }, [posts]);
 
   // 로딩, 에러, 데이터 없음 처리
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error?.message}</div>;
-  if (!data?.data || data.data.length === 0) return <div>No data available</div>;
-
-  // console.log(data.code);
-  // console.log(data.data);
-  // console.log(data.message);
-  // console.log(data.pageInfo);
-
+  if (isPostListLD) return <BoardListWrapper><Board>데이터 로딩중..</Board></BoardListWrapper>;
+  // if (isError) return <div>Error: {error?.message}</div>;
+  if (isPostListER) return <BoardListWrapper><Board>데이터 로딩에 실패 하였습니다</Board></BoardListWrapper>;
+  if (!postList?.data || postList.data.length === 0) return <BoardListWrapper><Board>데이터가 존재하지 않습니다</Board></BoardListWrapper>;
 
   return (
     <BoardListWrapper>
@@ -133,11 +170,11 @@ function QuestionBoardList({ filters }: Props) {
             </BookMarkWrapper>
             )}
             {!blind && (
-              <MoreWrapper onClick={(event) => handleMoreClick(event, id)}>
-                <More options={[{
-                  label: '이 글 더 이상 그만보기', callback: () => {
-                  },
-                }]} />
+              <MoreWrapper onClick={eventStop}>
+                <More
+                  onClick={handleMoreClick}
+                  id={id}
+                />
               </MoreWrapper>
             )}
           </BoardItem>
@@ -151,6 +188,20 @@ export default QuestionBoardList;
 
 const BoardListWrapper = styled.ul`
     padding-bottom: 50px;
+`;
+
+const Board = styled.li`
+    position: relative;
+    display: flex;
+    border: 1px solid #BCBACD;
+    border-radius: 10px;
+    margin-top: 5px;
+    padding: 40px 40px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
 `;
 
 const BoardItem = styled.li<{ $status: string }>`
@@ -226,6 +277,6 @@ const BookMarkWrapper = styled.div`
 
 const MoreWrapper = styled.div`
     position: absolute;
-    right: -30px;
+    right: -33px;
     top: 0px;
 `;

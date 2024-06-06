@@ -7,10 +7,12 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 const ITEM_HEIGHT = 48;
 
 interface Props {
-  options: { label: string; callback: () => void }[];
+  onClick: (event: React.MouseEvent<HTMLLIElement>, id: string) => void;
+  id: string;
+  // options: { label: string; callback: () => void }[];
 }
 
-export default function More({ options }: Props) {
+export default function More({ onClick, id }: Props) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -19,6 +21,9 @@ export default function More({ options }: Props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleBlindClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    onClick(event, id); // 추가된 부분: 외부 onClick 핸들러 호출
+  }
 
   return (
     <div>
@@ -43,19 +48,13 @@ export default function More({ options }: Props) {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: '21ch',
+            width: '20ch',
           },
         }}
       >
-        {options.map(({ label, callback }) => (
-          <MenuItem key={label} onClick={() => {
-            callback();
-            handleClose();
-          }}
-          >
-            {label}
-          </MenuItem>
-        ))}
+        <MenuItem onClick={handleBlindClick}>
+          이 글 블라인드하기
+        </MenuItem>
       </Menu>
     </div>
   );
