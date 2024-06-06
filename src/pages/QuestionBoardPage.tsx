@@ -19,7 +19,7 @@ function QuestionBoardPage() {
     status: ['wait', 'finish'],
     pageInfo: {
       page: 1,
-      size: 10,
+      size: 15,
     },
   });
 

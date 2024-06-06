@@ -5,7 +5,7 @@ import { PostsQuery, updateBlind, updateBookmark } from '../../../services/post'
 import { Post } from '../../../responseType/postType';
 import { Filters } from '../../../requestType/postType';
 import BoardItem from './BoardItem';
-import { BoardListWrapper, Board } from './styles';
+import { BoardListWrapper } from './styles';
 import BookMarkIcon from '../BookMarkIcon';
 import PaginationRounded from '../Pagination'; // BookMarkIcon 직접 임포트
 
@@ -22,7 +22,6 @@ function QuestionBoardList({ filters }: Props) {
   const [posts, setPosts] = useState<Post[]>([]);
   const BookMarkIconMemo = React.memo(BookMarkIcon);
   const [showPagination, setShowPagination] = useState(false);
-
 
   // 데이터 호출
   const { data: postList, isLoading: isPostListLD, isError: isPostListER, error: postListER } = PostsQuery(filters);

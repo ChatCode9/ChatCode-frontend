@@ -19,7 +19,7 @@ interface BoardItemProps {
   post: Post;
   handlePostClick: (id: string) => void;
   handleBookMarkIconClick: (event: React.MouseEvent<HTMLDivElement>, id: string) => void;
-  handleMoreClick: (event: React.MouseEvent<HTMLLIElement>, id: string) => void;
+  handleMoreClick: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
   handleBlindDataAddClick: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
   eventStop: (event: React.MouseEvent<HTMLDivElement>) => void;
   BookMarkIconMemo: React.FC<{ isActive: boolean }>;

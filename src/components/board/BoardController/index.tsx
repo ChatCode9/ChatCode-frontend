@@ -69,7 +69,7 @@ function BoardController({ filters, setFilters }: Props) {
       status: ['wait', 'finish'],
       pageInfo: {
         page: 1,
-        size: 10,
+        size: 15,
       },
     };
     setFilters(initialFilters);
@@ -158,9 +158,10 @@ function BoardController({ filters, setFilters }: Props) {
         {/*{extra && <div className="extra">{extra}</div>}*/}
         <SelectWrapper>
           <Select value={selectedValue} onChange={handleSelectChange}>
-            <option value="10">10개씩 보기</option>
             <option value="15">15개씩 보기</option>
             <option value="30">30개씩 보기</option>
+            <option value="50">50개씩 보기</option>
+            <option value="100">100개씩 보기</option>
           </Select>
           <Icon  />
         </SelectWrapper>

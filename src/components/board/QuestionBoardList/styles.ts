@@ -92,6 +92,6 @@ export const BookMarkWrapper = styled.div`
 
 export const MoreWrapper = styled.div`
     position: absolute;
-    right: -33px;
+    right: -5px;
     top: 0px;
 `;
