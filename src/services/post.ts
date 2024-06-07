@@ -22,7 +22,7 @@ const fetchPosts = async (filters: Filters): Promise<Question> => {
     size: pageInfo.size.toString(),
   }).toString();
 
-  const res = await client.get(`http://localhost:3000/board/question?${queryParams}`);
+  const res = await client.get(`board/question?${queryParams}`);
   // 응답전체 데이터
   // console.log(res);
   // 백엔드에서 보내주는 데이터
@@ -43,7 +43,7 @@ export const PostsQuery = (filters: Filters) => {
 // 북마크 업데이트
 export const updateBookmark = async (data : {postId : number; bookmark : boolean}) => {
   try {
-    const response = await client.post('http://localhost:3000/bookmark', data);
+    const response = await client.post('bookmark', data);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -55,7 +55,7 @@ export const updateBookmark = async (data : {postId : number; bookmark : boolean
 // 글 블라인드 업데이트
 export const updateBlind = async (data : {postId : number; blind : boolean}) => {
   try {
-    const response = await client.post('http://localhost:3000/blind', data);
+    const response = await client.post('blind', data);
     console.log(response.data);
     return response.data;
   } catch (error) {
