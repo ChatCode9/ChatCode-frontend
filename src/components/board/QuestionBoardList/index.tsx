@@ -10,6 +10,7 @@ import BookMarkIcon from '../BookMarkIcon';
 import PaginationRounded from '../Pagination'; // BookMarkIcon 직접 임포트
 import initialData from '../../../data/Question_Dummy_data.json';
 
+
 // 타입 정의
 type BookmarkVariables = { postId: number; bookmark: boolean };
 type BlindVariables = { postId: number; blind: boolean };
@@ -23,6 +24,8 @@ function QuestionBoardList({ filters }: Props) {
   const [posts, setPosts] = useState<Post[]>([]);
   const BookMarkIconMemo = React.memo(BookMarkIcon);
   const [showPagination, setShowPagination] = useState(false);
+  const [showLoadingMessage, setShowLoadingMessage] = useState(false);
+  const [showNoDataMessage, setNoDataMessage] = useState(false);
 
   // 데이터 호출
   const { data: postList, isLoading: isPostListLD, isError: isPostListER, error: postListER } = PostsQuery(filters);
@@ -104,23 +107,69 @@ function QuestionBoardList({ filters }: Props) {
     navigate(`/post/${id}`);
   }, [navigate]);
 
+  // 0.15초 후에도 데이터 로딩 메시지 표시
   useEffect(() => {
-    if (isPostListER) {
-      setPosts(initialData.data);
-    } else if (postList?.data) {
-      setPosts(postList.data);
+    const timer = setTimeout(() => {
+      if (isPostListLD) {
+        setShowLoadingMessage(true);
+      }
+    }, 150); // 0.15초
+
+    return () => clearTimeout(timer);
+  }, [isPostListLD]);
+
+  // 3초 후에도 데이터 로딩 실패 시 초기 데이터 설정
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isPostListLD) {
+        setShowLoadingMessage(false);
+        if(initialData.data.length > 0){
+          setPosts(initialData.data);
+        } else {
+          setNoDataMessage(true);
+        }
+      }
+    }, 3000); // 3초
+
+    return () => clearTimeout(timer);
+  }, [isPostListLD]);
+
+  // 데이터 로딩되면 데이터 바인딩 + 데이터 로딩 메시지 제거
+  useEffect(() => {
+    if (postList) {
+      if(postList.data.length > 0){
+        setPosts(postList.data);
+        // 데이터 로딩중 표시 제거
+        setShowLoadingMessage(false);
+      } else {
+        // 데이터 0건이면 표시
+        setNoDataMessage(true);
+      }
     }
-  }, [postList, isPostListER]);
+  }, [postList]);
 
   // BoardItem 랜더링 완료후 Pagination 컴포넌트 랜더링 시작
   useEffect(() => {
     if (!isPostListLD && !isPostListER && postList) {
-      setShowPagination(true); // Show pagination after posts are loaded
+      setShowPagination(true);
     }
-  }, [isPostListLD, isPostListER, postList]); // Trigger effect when loading/error state or postList changes
+  }, [isPostListLD, isPostListER, postList]);
 
-  if (isPostListLD) return <BoardListWrapper><Board>데이터 로딩중...</Board></BoardListWrapper>;
-  // if (!postList?.data || postList.data.length === 0) return <BoardListWrapper><Board>데이터가 존재하지 않습니다</Board></BoardListWrapper>;
+  if (showLoadingMessage) {
+    return (
+      <BoardListWrapper>
+        <Board>데이터 로딩중...</Board>
+      </BoardListWrapper>
+    );
+  }
+
+  if (showNoDataMessage) {
+    return (
+      <BoardListWrapper>
+        <Board>데이터 0건</Board>
+      </BoardListWrapper>
+    );
+  }
 
   return (
     <BoardListWrapper>
