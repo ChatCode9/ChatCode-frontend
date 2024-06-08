@@ -32,12 +32,8 @@ function QuestionBoardList({ filters }: Props) {
   const { data: postList, isLoading: isPostListLD, isError: isPostListER } = PostsQuery(filters);
 
   const bookmarkOptions: MutationOptions<void, unknown, BookmarkVariables> = {
-    mutationFn: (variables: BookmarkVariables) => {
-      // updateBookmark 함수를 variables.postId 및 variables.bookmark와 함께 호출합니다.
-      return updateBookmark(variables);
-    },
-    onSuccess: (data, variables) => {
-      console.log('북마크가 성공적으로 업데이트되었습니다. data : ', data);
+    mutationFn: updateBookmark,
+    onSuccess: (_, variables) => {
       const { postId } = variables;
       const updatedPosts = posts.map(post =>
         post.id === String(postId) ? { ...post, bookmark: !post.bookmark } : post
@@ -59,12 +55,8 @@ function QuestionBoardList({ filters }: Props) {
   };
 
   const blindOptions: MutationOptions<void, unknown, BlindVariables> = {
-    mutationFn: (variables: BlindVariables) => {
-      // updateBlind 함수를 variables.postId 및 variables.blind와 함께 호출합니다.
-      return updateBlind(variables);
-    },
-    onSuccess: (data, variables) => {
-      console.log('블라인드 처리가 성공적으로 업데이트되었습니다. data : ', data);
+    mutationFn: updateBlind,
+    onSuccess: (_, variables) => {
       const { postId } = variables;
       const updatedPosts = posts.map(post =>
         post.id === String(postId) ? { ...post, blind: !post.blind } : post

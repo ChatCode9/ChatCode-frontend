@@ -1,6 +1,6 @@
 import client from './client';
 import { Question } from '../responseType/postType.ts';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Filters } from '../requestType/postType.ts';
 
 const fetchPosts = async (filters: Filters): Promise<Question> => {
