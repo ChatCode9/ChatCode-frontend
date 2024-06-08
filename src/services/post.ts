@@ -2,7 +2,6 @@ import client from './client';
 import { Question } from '../responseType/postType.ts';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Filters } from '../requestType/postType.ts';
-// import initialData from '../data/Question_Dummy_data.json';
 
 const fetchPosts = async (filters: Filters): Promise<Question> => {
   const { search, categories, sortby, pageInfo } = filters;

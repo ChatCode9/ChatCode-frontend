@@ -5,9 +5,10 @@ import { PostsQuery, updateBlind, updateBookmark } from '../../../services/post'
 import { Post } from '../../../responseType/postType';
 import { Filters } from '../../../requestType/postType';
 import BoardItem from './BoardItem';
-import { BoardListWrapper } from './styles';
+import { Board, BoardListWrapper } from './styles';
 import BookMarkIcon from '../BookMarkIcon';
 import PaginationRounded from '../Pagination'; // BookMarkIcon 직접 임포트
+import initialData from '../../../data/Question_Dummy_data.json';
 
 // 타입 정의
 type BookmarkVariables = { postId: number; bookmark: boolean };
@@ -104,10 +105,12 @@ function QuestionBoardList({ filters }: Props) {
   }, [navigate]);
 
   useEffect(() => {
-    if (postList?.data) {
+    if (isPostListER) {
+      setPosts(initialData.data);
+    } else if (postList?.data) {
       setPosts(postList.data);
     }
-  }, [postList]);
+  }, [postList, isPostListER]);
 
   // BoardItem 랜더링 완료후 Pagination 컴포넌트 랜더링 시작
   useEffect(() => {
@@ -116,8 +119,7 @@ function QuestionBoardList({ filters }: Props) {
     }
   }, [isPostListLD, isPostListER, postList]); // Trigger effect when loading/error state or postList changes
 
-  // if (isPostListLD) return <BoardListWrapper><Board>데이터 로딩중..</Board></BoardListWrapper>;
-  // if (isPostListER) return <BoardListWrapper><Board>데이터 로딩에 실패 하였습니다</Board></BoardListWrapper>;
+  if (isPostListLD) return <BoardListWrapper><Board>데이터 로딩중...</Board></BoardListWrapper>;
   // if (!postList?.data || postList.data.length === 0) return <BoardListWrapper><Board>데이터가 존재하지 않습니다</Board></BoardListWrapper>;
 
   return (
