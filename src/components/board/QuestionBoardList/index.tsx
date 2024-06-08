@@ -10,8 +10,12 @@ import BookMarkIcon from '../BookMarkIcon';
 import PaginationRounded from '../Pagination'; // BookMarkIcon 직접 임포트
 import initialData from '../../../data/Question_Dummy_data.json';
 
+type ToggleKey = 'bookmark' | 'blind';
 
-// 타입 정의
+// updateBookmark와 updateBlind 함수의 타입 정의
+type UpdateFunction<T> = (variables: T) => Promise<void>;
+
+// Bookmark와 Blind의 변수 타입 정의
 type BookmarkVariables = { postId: number; bookmark: boolean };
 type BlindVariables = { postId: number; blind: boolean };
 
@@ -31,64 +35,49 @@ function QuestionBoardList({ filters }: Props) {
   // 데이터 호출
   const { data: postList, isLoading: isPostListLD, isError: isPostListER } = PostsQuery(filters);
 
-  const bookmarkOptions: MutationOptions<void, unknown, BookmarkVariables> = {
-    mutationFn: updateBookmark,
+  const createMutationOptions = <T extends { postId: number }>(
+    mutationFn: UpdateFunction<T>,
+    key: ToggleKey
+  ): MutationOptions<void, unknown, T> => ({
+    mutationFn,
     onSuccess: (_, variables) => {
       const { postId } = variables;
       const updatedPosts = posts.map(post =>
-        post.id === String(postId) ? { ...post, bookmark: !post.bookmark } : post
+        post.id === String(postId) ? { ...post, [key]: !post[key] } : post
       );
       setPosts(updatedPosts);
     },
     onError: (error, variables) => {
-      console.error('북마크 업데이트 오류:', error);
+      console.error(`${key} 업데이트 오류:`, error);
 
       // 퍼블리싱 용도 코드
-      if(fakeData){
+      if (fakeData) {
         const { postId } = variables;
         const updatedPosts = posts.map(post =>
-          post.id === String(postId) ? { ...post, bookmark: !post.bookmark } : post
+          post.id === String(postId) ? { ...post, [key]: !post[key] } : post
         );
         setPosts(updatedPosts);
       }
     }
-  };
+  });
 
-  const blindOptions: MutationOptions<void, unknown, BlindVariables> = {
-    mutationFn: updateBlind,
-    onSuccess: (_, variables) => {
-      const { postId } = variables;
-      const updatedPosts = posts.map(post =>
-        post.id === String(postId) ? { ...post, blind: !post.blind } : post
-      );
-      setPosts(updatedPosts);
-    },
-    onError: (error, variables) => {
-      console.error('블라인드 처리 업데이트 오류:', error);
-
-      // 퍼블리싱 용도 코드
-      if(fakeData){
-        const { postId } = variables;
-        const updatedPosts = posts.map(post =>
-          post.id === String(postId) ? { ...post, blind: !post.blind } : post
-        );
-        setPosts(updatedPosts);
-      }
-    }
-  };
+  const bookmarkOptions = createMutationOptions<BookmarkVariables>(updateBookmark, 'bookmark');
+  const blindOptions = createMutationOptions<BlindVariables>(updateBlind, 'blind');
 
   // useMutation 훅 사용
-  const { mutate: bookmark} = useMutation(bookmarkOptions);
+  const { mutate: bookmark } = useMutation(bookmarkOptions);
   const { mutate: blind } = useMutation(blindOptions);
 
   const toggleStatus = useCallback((id: string, type: 'blind' | 'bookmark') => {
     const currentPost = posts.find(post => post.id === id);
     if (!currentPost) return;
 
+    const variables = { postId: Number(id), [type]: !currentPost[type] };
+
     if (type === 'blind') {
-      blind({ postId: Number(id), blind: !currentPost.blind });
+      blind(variables as BlindVariables);
     } else if (type === 'bookmark') {
-      bookmark({ postId: Number(id), bookmark: !currentPost.bookmark });
+      bookmark(variables as BookmarkVariables);
     }
   }, [blind, bookmark, posts]);
 
