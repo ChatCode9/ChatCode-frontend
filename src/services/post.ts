@@ -6,7 +6,6 @@ import { Filters } from '../requestType/postType.ts';
 const fetchPosts = async (filters: Filters): Promise<Question> => {
   const { search, categories, sortby, pageInfo } = filters;
   let { status } = filters;
-  // console.log('status:',status);
   if(status.length == 0){
     // 해결대기, 해결완료 모두 선택 했거나 또는 모두 선택하지 않는다면 API 전송시 데이터를 채워준다
     status = ['wait', 'finish'];
@@ -24,7 +23,6 @@ const fetchPosts = async (filters: Filters): Promise<Question> => {
   const res = await client.get(`board/question?${queryParams}`);
   // 응답전체 데이터
   // console.log(res);
-  // 백엔드에서 보내주는 데이터
   console.log(res.data);
   return res.data;
 }
@@ -34,8 +32,6 @@ export const PostsQuery = (filters: Filters) => {
   return useQuery<Question, Error>({
     queryKey: ['posts', filters],
     queryFn: () => fetchPosts(filters),
-    // 서버와 통신이 안되지만 초기 데이터로 퍼블리싱 체크할때 사용
-    // initialData: initialData,
   });
 };
 

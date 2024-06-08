@@ -26,9 +26,10 @@ function QuestionBoardList({ filters }: Props) {
   const [showPagination, setShowPagination] = useState(false);
   const [showLoadingMessage, setShowLoadingMessage] = useState(false);
   const [showNoDataMessage, setNoDataMessage] = useState(false);
+  const [fakeData, setFakeData] = useState(false);
 
   // 데이터 호출
-  const { data: postList, isLoading: isPostListLD, isError: isPostListER, error: postListER } = PostsQuery(filters);
+  const { data: postList, isLoading: isPostListLD, isError: isPostListER } = PostsQuery(filters);
 
   const bookmarkOptions: MutationOptions<void, unknown, BookmarkVariables> = {
     mutationFn: (variables: BookmarkVariables) => {
@@ -36,15 +37,24 @@ function QuestionBoardList({ filters }: Props) {
       return updateBookmark(variables);
     },
     onSuccess: (data, variables) => {
-      console.log('북마크가 성공적으로 업데이트되었습니다.');
+      console.log('북마크가 성공적으로 업데이트되었습니다. data : ', data);
       const { postId } = variables;
       const updatedPosts = posts.map(post =>
         post.id === String(postId) ? { ...post, bookmark: !post.bookmark } : post
       );
       setPosts(updatedPosts);
     },
-    onError: (error) => {
+    onError: (error, variables) => {
       console.error('북마크 업데이트 오류:', error);
+
+      // 퍼블리싱 용도 코드
+      if(fakeData){
+        const { postId } = variables;
+        const updatedPosts = posts.map(post =>
+          post.id === String(postId) ? { ...post, bookmark: !post.bookmark } : post
+        );
+        setPosts(updatedPosts);
+      }
     }
   };
 
@@ -54,15 +64,24 @@ function QuestionBoardList({ filters }: Props) {
       return updateBlind(variables);
     },
     onSuccess: (data, variables) => {
-      console.log('블라인드 처리가 성공적으로 업데이트되었습니다.');
+      console.log('블라인드 처리가 성공적으로 업데이트되었습니다. data : ', data);
       const { postId } = variables;
       const updatedPosts = posts.map(post =>
         post.id === String(postId) ? { ...post, blind: !post.blind } : post
       );
       setPosts(updatedPosts);
     },
-    onError: (error) => {
+    onError: (error, variables) => {
       console.error('블라인드 처리 업데이트 오류:', error);
+
+      // 퍼블리싱 용도 코드
+      if(fakeData){
+        const { postId } = variables;
+        const updatedPosts = posts.map(post =>
+          post.id === String(postId) ? { ...post, blind: !post.blind } : post
+        );
+        setPosts(updatedPosts);
+      }
     }
   };
 
@@ -88,7 +107,7 @@ function QuestionBoardList({ filters }: Props) {
   }, [toggleStatus]);
 
   // 블라인드 상태 토글하고자 할 때
-  const handleMoreClick = useCallback((event: React.MouseEvent<HTMLLIElement>, id: string) => {
+  const handleMoreClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: string) => {
     event.stopPropagation();
     toggleStatus(id, 'blind');
   }, [toggleStatus]);
@@ -119,12 +138,14 @@ function QuestionBoardList({ filters }: Props) {
   }, [isPostListLD]);
 
   // 3초 후에도 데이터 로딩 실패 시 초기 데이터 설정
+  // 퍼블리싱 용도 함수
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isPostListLD) {
         setShowLoadingMessage(false);
         if(initialData.data.length > 0){
           setPosts(initialData.data);
+          setFakeData(true);
         } else {
           setNoDataMessage(true);
         }
