@@ -17,7 +17,7 @@ import TagList from '../TagList';
 
 interface BoardItemProps {
   post: Post;
-  handlePostClick: (id: number) => void;
+  handlePostClick: (id: number, blind: boolean) => void;
   handleBookMarkIconClick: (event: React.MouseEvent<HTMLDivElement>, id: number) => void;
   handleMoreClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
   handleBlindDataAddClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
@@ -37,7 +37,7 @@ const BoardItem: React.FC<BoardItemProps> = ({
   const { id, status, viewCount, commentCount, likeCount, nickname, timeline, title, tags, content, bookmark, blind } = post;
 
   return (
-    <BoardItemWrapper $status={status} onClick={() => handlePostClick(id)}>
+    <BoardItemWrapper $status={status} onClick={() => handlePostClick(id, blind)}>
       {blind && <Block onClick={(event) => handleBlindDataAddClick(event, id)} id={id}/>}
       <StatusWrapper>
         <BoardStatus $status={status}>{status === 'wait' ? '해결 대기' : '해결 완료'}</BoardStatus>

@@ -103,8 +103,10 @@ function QuestionBoardList({ filters }: Props) {
   }, []);
 
   // 게시글 클릭 할 때
-  const handlePostClick = useCallback((id: number) => {
-    navigate(`/post/${id}`);
+  const handlePostClick = useCallback((id: number, blind: boolean) => {
+    if (!blind) {
+      navigate(`/post/${id}`);
+    }
   }, [navigate]);
 
   // 0.15초 후에도 데이터 로딩 메시지 표시
