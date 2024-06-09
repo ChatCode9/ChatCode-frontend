@@ -72,7 +72,7 @@ function QuestionBoardList({ filters }: Props) {
     const currentPost = posts.find(post => post.id === id);
     if (!currentPost) return;
 
-    const variables = { postId: Number(id), [type]: !currentPost[type] };
+    const variables = { postId: id, [type]: !currentPost[type] };
 
     if (type === 'blind') {
       blind(variables as BlindVariables);

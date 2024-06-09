@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface Props {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
   id: number;
 }
 
