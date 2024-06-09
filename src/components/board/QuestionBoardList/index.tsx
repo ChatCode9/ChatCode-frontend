@@ -43,7 +43,7 @@ function QuestionBoardList({ filters }: Props) {
     onSuccess: (_, variables) => {
       const { postId } = variables;
       const updatedPosts = posts.map(post =>
-        post.id === String(postId) ? { ...post, [key]: !post[key] } : post
+        post.id === postId ? { ...post, [key]: !post[key] } : post
       );
       setPosts(updatedPosts);
     },
@@ -54,7 +54,7 @@ function QuestionBoardList({ filters }: Props) {
       if (fakeData) {
         const { postId } = variables;
         const updatedPosts = posts.map(post =>
-          post.id === String(postId) ? { ...post, [key]: !post[key] } : post
+          post.id === postId ? { ...post, [key]: !post[key] } : post
         );
         setPosts(updatedPosts);
       }
@@ -68,7 +68,7 @@ function QuestionBoardList({ filters }: Props) {
   const { mutate: bookmark } = useMutation(bookmarkOptions);
   const { mutate: blind } = useMutation(blindOptions);
 
-  const toggleStatus = useCallback((id: string, type: 'blind' | 'bookmark') => {
+  const toggleStatus = useCallback((id: number, type: 'blind' | 'bookmark') => {
     const currentPost = posts.find(post => post.id === id);
     if (!currentPost) return;
 
@@ -82,18 +82,18 @@ function QuestionBoardList({ filters }: Props) {
   }, [blind, bookmark, posts]);
 
   // 게시글 북마크 하고자 할 때
-  const handleBookMarkIconClick = useCallback((event: React.MouseEvent<HTMLDivElement>, id: string) => {
+  const handleBookMarkIconClick = useCallback((event: React.MouseEvent<HTMLDivElement>, id: number) => {
     event.stopPropagation();
     toggleStatus(id, 'bookmark');
   }, [toggleStatus]);
 
   // 블라인드 상태 토글하고자 할 때
-  const handleMoreClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleMoreClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: number) => {
     event.stopPropagation();
     toggleStatus(id, 'blind');
   }, [toggleStatus]);
 
-  const handleBlindDataAddClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleBlindDataAddClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: number) => {
     event.stopPropagation();
     toggleStatus(id, 'blind');
   }, [toggleStatus]);
@@ -103,7 +103,7 @@ function QuestionBoardList({ filters }: Props) {
   }, []);
 
   // 게시글 클릭 할 때
-  const handlePostClick = useCallback((id: string) => {
+  const handlePostClick = useCallback((id: number) => {
     navigate(`/post/${id}`);
   }, [navigate]);
 

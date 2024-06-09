@@ -36,7 +36,7 @@ export const PostsQuery = (filters: Filters) => {
 };
 
 // 북마크 업데이트
-export const updateBookmark = async (data : {postId : number; bookmark : boolean}) => {
+export const updateBookmark = async (data : {postId : number, bookmark : boolean}) => {
   try {
     const response = await client.post('bookmark', data);
     console.log(response.data);
@@ -48,7 +48,7 @@ export const updateBookmark = async (data : {postId : number; bookmark : boolean
 }
 
 // 글 블라인드 업데이트
-export const updateBlind = async (data : {postId : number; blind : boolean}) => {
+export const updateBlind = async (data : {postId : number, blind : boolean}) => {
   try {
     const response = await client.post('blind', data);
     console.log(response.data);

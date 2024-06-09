@@ -4,9 +4,9 @@ import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 
 interface Props {
-  viewCount: string;
-  commentCount: string;
-  likeCount: string;
+  viewCount: number;
+  commentCount: number;
+  likeCount: number;
 }
 
 function Status({ viewCount, commentCount, likeCount }: Props) {

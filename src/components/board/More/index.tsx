@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 interface Props {
   onClick: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
-  id: string;
+  id: number;
   isUserPost?: boolean; // 필수값이 아닌 옵션값
 }
 

@@ -1,6 +1,6 @@
 // types.ts
 export interface Post {
-  id: string;
+  id: number;
   timeline: string;
   profileImg: string;
   nickname: string;
@@ -10,9 +10,9 @@ export interface Post {
   status: string;
   bookmark: boolean;
   blind: boolean;
-  viewCount: string;
-  commentCount: string;
-  likeCount: string;
+  viewCount: number;
+  commentCount: number;
+  likeCount: number;
 }
 
 export interface PageInfo {
