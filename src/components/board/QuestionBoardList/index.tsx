@@ -4,9 +4,7 @@ import { Filters } from '../../../requestType/postType';
 import BoardItem from './BoardItem';
 import { Board, BoardListWrapper } from './styles';
 import BookMarkIcon from '../BookMarkIcon';
-import PaginationRounded from '../Pagination'; // BookMarkIcon 직접 임포트
-import { SolveModal } from '../../SolveModal.tsx';
-import useModal from './useModal.ts';
+import PaginationRounded from '../Pagination';
 import usePosts from './usePosts.ts';
 
 
@@ -16,7 +14,7 @@ interface Props {
 
 function QuestionBoardList({ filters }: Props) {
   const navigate = useNavigate();
-  const { position, showModal } = useModal();
+  // const { position, showModal } = useModal();
   const { posts, showLoadingMessage, showNoDataMessage, showPagination, toggleStatus } = usePosts(filters);
   const BookMarkIconMemo = React.memo(BookMarkIcon);
 
@@ -35,11 +33,6 @@ function QuestionBoardList({ filters }: Props) {
   const handleBlindDataAddClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: number) => {
     event.stopPropagation();
     toggleStatus(id, 'blind', !posts.find(post => post.id === id)?.blind);
-  }, [toggleStatus, posts]);
-
-  const handleConfirm = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    event.stopPropagation();
-    toggleStatus(id, 'status', 'finish');
   }, [toggleStatus, posts]);
 
   // 게시글 클릭 할 때
@@ -81,11 +74,9 @@ function QuestionBoardList({ filters }: Props) {
           handleBlindDataAddClick={handleBlindDataAddClick}
           eventStop={eventStop}
           BookMarkIconMemo={BookMarkIconMemo}
-          showModal={showModal}
         />
       ))}
       {showPagination && (<PaginationRounded />)}
-      {position && <SolveModal data={position} onConfirm={(event) => handleConfirm(event, position.postId)} />}
     </BoardListWrapper>
   );
 }
