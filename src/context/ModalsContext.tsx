@@ -3,7 +3,11 @@ import { createContext, useMemo, useState } from 'react';
 interface ModalData {
   title: string;
   message: string;
+  confirm1: string;
+  confirm2: string;
+  postId: number;
 }
+
 export const ModalsStateContext = createContext<ModalData | null>(null);
 
 export const ModalsDispatchContext = createContext<{

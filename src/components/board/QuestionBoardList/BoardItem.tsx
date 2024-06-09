@@ -23,6 +23,7 @@ interface BoardItemProps {
   handleBlindDataAddClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
   eventStop: (event: React.MouseEvent<HTMLDivElement>) => void;
   BookMarkIconMemo: React.FC<{ isActive: boolean }>;
+  showModal : (event: React.MouseEvent<HTMLDivElement>, status: string, id: number) => void;
 }
 
 const BoardItem: React.FC<BoardItemProps> = ({
@@ -32,15 +33,18 @@ const BoardItem: React.FC<BoardItemProps> = ({
                                                handleMoreClick,
                                                handleBlindDataAddClick,
                                                eventStop,
-                                               BookMarkIconMemo
+                                               BookMarkIconMemo,
+                                               showModal
                                              }) => {
   const { id, status, viewCount, commentCount, likeCount, nickname, timeline, title, tags, content, bookmark, blind } = post;
 
   return (
-    <BoardItemWrapper $status={status} onClick={() => handlePostClick(id, blind)}>
+    <BoardItemWrapper $status={status} onClick={() => handlePostClick(id, blind)} key={status}>
       {blind && <Block onClick={(event) => handleBlindDataAddClick(event, id)} id={id}/>}
       <StatusWrapper>
-        <BoardStatus $status={status}>{status === 'wait' ? '해결 대기' : '해결 완료'}</BoardStatus>
+        <BoardStatus $status={status} onClick={(event) => showModal(event, status, id)}>
+          {status === 'wait' ? '해결 대기' : '해결 완료'}
+        </BoardStatus>
         <Status viewCount={viewCount} commentCount={commentCount} likeCount={likeCount} />
       </StatusWrapper>
       <BoardWrapper>

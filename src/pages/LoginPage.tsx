@@ -3,7 +3,6 @@ import Navbar from '../components/NavBar';
 import BottomNavBar from '../components/BottomNavBar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { GoogleLogin } from '@react-oauth/google';
 
 function LoginPage() {
   const location = useLocation();

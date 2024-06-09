@@ -62,3 +62,15 @@ export const updateBlind = async (data : {postId : number, blind : boolean}) => 
     throw error;
   }
 }
+
+// 글 해결 대기에서 완료로 업데이트
+export const updateStatus = async (data : {postId : number, status : string}) => {
+  try {
+    const response = await client.post('status', data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
