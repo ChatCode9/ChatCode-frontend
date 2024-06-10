@@ -10,7 +10,7 @@ function Navbar() {
         <LeftTopicMenu>
           <Topic>
             <Link href="/">
-              <img src="/public/NavLogo.svg" alt="Chat Code Logo" width="65px" />
+              <img src="/NavLogo.svg" alt="Chat Code Logo" width="65px" />
             </Link>
           </Topic>
           <Topic>
