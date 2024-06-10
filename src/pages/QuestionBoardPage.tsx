@@ -5,7 +5,6 @@ import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
 import Divider from '../components/board/Divider';
 import QuestionBoardList from '../components/board/QuestionBoardList';
-import PaginationRounded from '../components/board/Pagination';
 import { useEffect, useState } from 'react';
 import { Filters } from '../requestType/postType.ts';
 
