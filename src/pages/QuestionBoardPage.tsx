@@ -30,7 +30,7 @@ function QuestionBoardPage() {
 
   return (
     <Container>
-      <Navbar></Navbar>
+      <Navbar/>
       <PickFlow />
       <BoardInfo
         title="Q&A 게시판"

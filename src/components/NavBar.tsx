@@ -127,6 +127,7 @@ const IconBox = styled.button`
   width: 18px;
   height: 40px;
   color: #767494;
+  background-color: transparent;
   border: none;
   margin-right: 5px;
 
