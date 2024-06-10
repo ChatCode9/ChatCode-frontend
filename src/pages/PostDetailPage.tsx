@@ -14,7 +14,7 @@ function PostDetailPage() {
     <>
       <Container>
         <Navbar/>
-        <Post />
+        <Post postId={Number(postId)} />
         <Comments />
       </Container>
     </>

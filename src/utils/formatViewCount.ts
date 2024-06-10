@@ -21,7 +21,8 @@
 
 export const formatViewCount = (viewCount: number): string => {
   if (viewCount >= 1_000_000) {
-    return `${(viewCount / 1_000_000).toFixed(2)}M`;
+    const formatted = (viewCount / 1_000_000).toFixed(2);
+    return formatted.endsWith('.00') ? `${parseInt(formatted, 10)}M` : `${formatted}M`;
   } else if (viewCount >= 1_000) {
     return viewCount.toLocaleString('en-US');
   } else {
