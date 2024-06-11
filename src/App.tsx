@@ -7,9 +7,7 @@ import { ModalProvider } from './context/ModalsContext.tsx';
 
 const queryClient = new QueryClient();
 
-// import App from './App.tsx';
 import GlobalStyle from './styles/GlobalStyle.tsx';
-import ErrorPage from './pages/ErrorPage.tsx';
 import PostWritePage from './pages/PostWritePage.tsx';
 import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
 import FreeBoardPage from './pages/FreeBoardPage.tsx';
@@ -21,29 +19,6 @@ import Mypage from './pages/Mypage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
-  {
-    path: '/',
-    // element: <App />,
-    errorElement: <ErrorPage />,
-      children: [
-        {
-          path: '/board/question',
-          element: <QuestionBoardPage />,
-        },
-        {
-          path: '/board/free',
-          element: <FreeBoardPage />,
-        },
-        {
-          path: '/write',
-          element: <PostWritePage />,
-        },
-        {
-          path: '/post/:postId',
-          element: <PostDetailPage />,
-        },
-      ],
-  },
   {
     path: '/login',
     element: <LoginPage />,
