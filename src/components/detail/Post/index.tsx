@@ -2,9 +2,32 @@ import ActionButtons from '../ActionButtons';
 import PostHeader from '../PostHeader';
 import WriterProfile from '../WriterProfile';
 import { Container } from './styles';
+import React, { useState } from 'react';
+import axios from 'axios';
+import VotingComponent from '../PostHeader/VotingComponent.tsx';
 
 interface Props {
   postId : number;
+}
+
+interface UserProfile {
+  userId: number;
+  userName: string;
+  avatar: string;
+  tags: string[];
+  comment: string;
+}
+
+interface Data {
+  title: string;
+  timeline: string;
+  updated: boolean;
+  viewCount: number;
+  bookmark: boolean;
+  tags: string[];
+  content: string;
+  userProfile: UserProfile;
+  writer: string;
 }
 
 const data = {
@@ -12,18 +35,28 @@ const data = {
   timeline: '2024-06-09T12:34:56Z',
   updated : true,
   viewCount: 1230000,
+  status : 'wait',
   bookmark: true,
   tags: ['coding', 'react', 'spring', 'html', 'vscode', 'css', 'js', 'study'],
-  content: '<p>내용</p>',
-  writer: '가나다라바마사',
+  content: '&lt;p&gt;내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용&lt;/p&gt;&lt;script&gt;111&lt;/script&gt;',
+  isLiked: false,
+  isDisliked: false,
+  userProfile : {
+    userId : 1,
+    userName : '가나다라마바사',
+    avatar : 'https://placehold.co/60',
+    tags : ['FrontEnd', 'BackEnd', 'FullStack', 'UI/UX Engineer', 'Beginner', 'BigData', 'DevOps'],
+    comment : '프로필 설명란입니다 프로필 설명란입니다 프로필 설명란입니다 프로필 설명란입니다 프로필 설명란입니다'
+  }
 };
 
 function Post({postId} : Props) {
-  const { title, timeline, updated, viewCount, bookmark, tags, content, writer } = data;
+  const { title, timeline, updated, viewCount, status, bookmark, tags, content,  isLiked, isDisliked, userProfile } = data;
 
   return (
     <Container>
-      <PostHeader postId={postId} title={title} timeline={timeline} updated={updated} viewCount={viewCount} bookmark={bookmark} />
+      <PostHeader postId={postId} title={title} timeline={timeline} updated={updated} viewCount={viewCount}
+                  status={status} bookmark={bookmark} isLiked={isLiked} isDisliked={isDisliked} />
       <div className="tags">
         {tags.map((tag) => (
           <li key={tag}>#{tag}</li>
@@ -34,8 +67,7 @@ function Post({postId} : Props) {
           __html: content,
         }}
       />
-      <WriterProfile writer={writer} />
-      <ActionButtons />
+      <WriterProfile userProfile={userProfile} />
     </Container>
   );
 }
