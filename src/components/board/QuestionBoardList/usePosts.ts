@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { PostsQuery, updateBlind, updateBookmark, updateStatus } from '../../../services/post';
+import { PostsQuery, updateBlind, updateBookmark } from '../../../services/post';
 import { Post } from '../../../responseType/postType';
 import { Filters } from '../../../requestType/postType';
 import { useMutation, MutationOptions } from '@tanstack/react-query';
@@ -9,7 +9,6 @@ type ToggleValue = boolean | string;
 type UpdateFunction<T> = (variables: T) => Promise<void>;
 type BookmarkVariables = { postId: number; bookmark: boolean };
 type BlindVariables = { postId: number; blind: boolean };
-type StatusVariables = { postId: number; status: string };
 
 const usePosts = (filters: Filters) => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -29,9 +28,6 @@ const usePosts = (filters: Filters) => {
       const { postId } = variables;
       const updatedPosts = posts.map(post => {
         if (post.id === postId) {
-          if (key === 'status') {
-            return { ...post, status: 'finish' };
-          }
           return { ...post, [key]: !post[key] };
         }
         return post;
@@ -45,11 +41,9 @@ const usePosts = (filters: Filters) => {
 
   const bookmarkOptions = createMutationOptions<BookmarkVariables>(updateBookmark, 'bookmark');
   const blindOptions = createMutationOptions<BlindVariables>(updateBlind, 'blind');
-  const statusOptions = createMutationOptions<StatusVariables>(updateStatus, 'status');
 
   const { mutate: bookmark } = useMutation(bookmarkOptions);
   const { mutate: blind } = useMutation(blindOptions);
-  const { mutate: status } = useMutation(statusOptions);
 
   const toggleStatus = useCallback((id: number, type: ToggleKey, value: ToggleValue) => {
     const currentPost = posts.find(post => post.id === id);
@@ -61,10 +55,8 @@ const usePosts = (filters: Filters) => {
       blind(variables as BlindVariables);
     } else if (type === 'bookmark') {
       bookmark(variables as BookmarkVariables);
-    } else if (type === 'status') {
-      status({ postId: id, status: 'finish' });
     }
-  }, [blind, bookmark, status, posts]);
+  }, [blind, bookmark, posts]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

@@ -63,16 +63,24 @@ export const updateBlind = async (data : {postId : number, blind : boolean}) => 
   }
 }
 
+interface UpdateStatusData {
+  status: string;
+}
+
 // 글 해결 대기에서 완료로 업데이트
-export const updateStatus = async (data : {postId : number, status : string}) => {
+const updateStatus = async (postId: number, data: UpdateStatusData) => {
   try {
-    const response = await client.post('status', data);
+    const response = await client.post(`articles/${postId}/status`, data);
     console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
     throw error;
   }
+}
+
+export const updateStatusWrapper = ({ postId, data }: { postId: number, data: UpdateStatusData }) => {
+  return updateStatus(postId, data);
 }
 
 export const getLikesCount = async (postId: number) => {

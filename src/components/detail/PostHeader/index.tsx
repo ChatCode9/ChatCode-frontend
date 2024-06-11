@@ -6,8 +6,13 @@ import { timeDifference } from '../../../utils/timeDifference.ts';
 import { formatDate } from '../../../utils/formatDate.ts';
 import { formatViewCount } from '../../../utils/formatViewCount.ts';
 import More from '../../board/More';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getLikesCount, PostsQuery, updateBookmark, updateLike } from '../../../services/post.ts';
+import { useMutation } from '@tanstack/react-query';
+import {
+  getLikesCount,
+  updateBookmark,
+  updateLike,
+  updateStatusWrapper,
+} from '../../../services/post.ts';
 import { NotificationModal } from './NotificationModal.tsx';
 import VotingComponent from './VotingComponent.tsx';
 
@@ -70,6 +75,17 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     }
   });
 
+  const { mutate : updateStatusFn } = useMutation({
+    mutationFn: updateStatusWrapper ,
+    onSuccess: () => {
+      setPostStatus('finish');
+    },
+    onError: () => {
+      setModalMessage('서버 통신 실패');
+      setModalVisible(true);
+    }
+  });
+
   const handleLikeStatus = (isLike: boolean) => {
     if (liked === null) {
       updateLikeFn({ data: { isLike }, postId });
@@ -100,10 +116,6 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     setModalVisible(false);
   };
 
-  useEffect(() => {
-    setLiked(isLiked);
-  }, [isLiked]);
-
   const handlePostStatus = () => {
     if (dispatch) {
       dispatch.showModal({
@@ -122,8 +134,10 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     if (dispatch) {
       dispatch.hideModal();
     }
-    // 추가적인 로직을 여기에 추가합니다.
-  }, [dispatch]);
+
+    const data = { status: 'finish' };
+    updateStatusFn({ postId, data });
+  }, [dispatch, postId]);
 
   const modalData = {
     top: 300,
