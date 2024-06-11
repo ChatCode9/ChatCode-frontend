@@ -6,26 +6,6 @@ interface Props {
   postId : number;
 }
 
-interface UserProfile {
-  userId: number;
-  userName: string;
-  avatar: string;
-  tags: string[];
-  comment: string;
-}
-
-interface Data {
-  title: string;
-  timeline: string;
-  updated: boolean;
-  viewCount: number;
-  bookmark: boolean;
-  tags: string[];
-  content: string;
-  userProfile: UserProfile;
-  writer: string;
-}
-
 const data = {
   title: '코딩 문제 중 이게 어떻게 어쩌고 저쩌고 하는지 잘 모르겠는데 봐주세요 어쩌고저쩌고',
   timeline: '2024-06-09T12:34:56Z',
@@ -36,7 +16,7 @@ const data = {
   tags: ['coding', 'react', 'spring', 'html', 'vscode', 'css', 'js', 'study'],
   content: '&lt;p&gt;내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용&lt;/p&gt;&lt;script&gt;111&lt;/script&gt;',
   likeCount : 10,
-  isLiked: true,
+  isLiked: null,
   isDisliked: false,
   userProfile : {
     userId : 1,

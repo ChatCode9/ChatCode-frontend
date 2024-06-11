@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { PostsQuery, updateBlind, updateBookmark, updateStatus } from '../../../services/post';
 import { Post } from '../../../responseType/postType';
 import { Filters } from '../../../requestType/postType';
-import initialData from '../../../data/Question_Dummy_data.json';
 import { useMutation, MutationOptions } from '@tanstack/react-query';
 
 type ToggleKey = 'bookmark' | 'blind' | 'status';
@@ -12,13 +11,11 @@ type BookmarkVariables = { postId: number; bookmark: boolean };
 type BlindVariables = { postId: number; blind: boolean };
 type StatusVariables = { postId: number; status: string };
 
-
 const usePosts = (filters: Filters) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [showLoadingMessage, setShowLoadingMessage] = useState(false);
   const [showNoDataMessage, setNoDataMessage] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
-  const [fakeData, setFakeData] = useState(false);
 
   const { data: postList, isLoading: isPostListLD, isError: isPostListER } = PostsQuery(filters);
 
@@ -43,20 +40,6 @@ const usePosts = (filters: Filters) => {
     },
     onError: (error, variables) => {
       console.error(`${key} 업데이트 오류:`, error);
-
-      if (fakeData) {
-        const { postId } = variables;
-        const updatedPosts = posts.map(post => {
-          if (post.id === postId) {
-            if (key === 'status') {
-              return { ...post, status: 'finish' };
-            }
-            return { ...post, [key]: !post[key] };
-          }
-          return post;
-        });
-        setPosts(updatedPosts);
-      }
     }
   });
 
@@ -89,22 +72,6 @@ const usePosts = (filters: Filters) => {
         setShowLoadingMessage(true);
       }
     }, 150);
-
-    return () => clearTimeout(timer);
-  }, [isPostListLD]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isPostListLD) {
-        setShowLoadingMessage(false);
-        if (initialData.data.length > 0) {
-          setPosts(initialData.data);
-          setFakeData(true);
-        } else {
-          setNoDataMessage(true);
-        }
-      }
-    }, 3000);
 
     return () => clearTimeout(timer);
   }, [isPostListLD]);

@@ -38,7 +38,7 @@ function QuestionBoardList({ filters }: Props) {
   // 게시글 클릭 할 때
   const handlePostClick = useCallback((id: number, blind: boolean) => {
     if (!blind) {
-      navigate(`/post/${id}`);
+      navigate(`/posts/${id}`);
     }
   }, [navigate]);
 

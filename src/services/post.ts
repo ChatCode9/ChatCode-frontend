@@ -20,7 +20,7 @@ const fetchPosts = async (filters: Filters): Promise<Question> => {
     size: pageInfo.size.toString(),
   }).toString();
 
-  const res = await client.get(`board/question?${queryParams}`);
+  const res = await client.get(`article?${queryParams}`);
   // 응답전체 데이터
   // console.log(res);
   console.log(res.data);
@@ -74,3 +74,30 @@ export const updateStatus = async (data : {postId : number, status : string}) =>
     throw error;
   }
 }
+
+export const getLikesCount = async (postId: number) => {
+  const response = await client.get(`articles/${postId}/likesCount`);
+  console.log(response.data);
+  return response.data;
+}
+
+interface UpdateLikeData {
+  isLike: boolean;
+}
+
+interface UpdateLikeProps {
+  data: UpdateLikeData;
+  postId: number;
+}
+
+export const updateLike = async ({ data, postId }: UpdateLikeProps) => {
+  try {
+    const response = await client.post(`articles/${postId}/like`, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+

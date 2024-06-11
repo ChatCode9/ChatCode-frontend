@@ -6,14 +6,13 @@ import { timeDifference } from '../../../utils/timeDifference.ts';
 import { formatDate } from '../../../utils/formatDate.ts';
 import { formatViewCount } from '../../../utils/formatViewCount.ts';
 import More from '../../board/More';
-import { useMutation } from '@tanstack/react-query';
-import { updateBookmark } from '../../../services/post.ts';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getLikesCount, PostsQuery, updateBookmark, updateLike } from '../../../services/post.ts';
 import { NotificationModal } from './NotificationModal.tsx';
 import VotingComponent from './VotingComponent.tsx';
 
 import { SolveModal } from '../../SolveModal.tsx';
 
-import axios from 'axios';
 import { ModalsDispatchContext } from '../../../context/ModalsContext.tsx';
 
 interface Props {
@@ -25,39 +24,71 @@ interface Props {
   status: string;
   bookmark: boolean;
   likeCount: number;
-  isLiked: boolean;
-  isDisliked: boolean;
+  isLiked: boolean | null;
   isGuest?: boolean;
 }
 
-function PostHeader({ postId, title, timeline, updated, viewCount, status, bookmark, likeCount, isLiked, isDisliked,  isGuest = false }: Props) {
+function PostHeader({ postId, title, timeline, updated, viewCount, status, bookmark, likeCount, isLiked, isGuest = false }: Props) {
   const [postStatus, setPostStatus] = useState(status);
   const [isBookmark, setIsBookmark] = useState(bookmark);
 
   const [isModalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const [isSolveModalVisible, setIsSolveModalVisible] = useState(false);
   const dispatch = useContext(ModalsDispatchContext);
 
+  const [liked, setLiked] = useState<boolean | null>(isLiked);
   const [voteCount, setVoteCount] = useState(likeCount);
-  const [liked, setLiked] = useState(isLiked);
-  const [disliked, setDisliked] = useState(isDisliked);
 
-  const userId = 1; // 예시 사용자 ID
-
-  const { mutate } = useMutation({
+  const { mutate : updateBookmarkFn } = useMutation({
     mutationFn: updateBookmark,
     onSuccess: () => {
       setIsBookmark(!isBookmark);
     },
+    onError: () => {
+      setModalMessage('서버 통신 실패');
+      setModalVisible(true);
+    }
   });
 
+  const { mutate : updateLikeFn } = useMutation({
+    mutationFn : updateLike,
+    onSuccess: async (_, variables) => {
+      setLiked(variables.data.isLike);
+      try {
+        const likesCountResponse = await getLikesCount(postId); // API CALL
+        setVoteCount(likesCountResponse.data);
+      } catch (error) {
+        setModalMessage('서버 통신 실패');
+        setModalVisible(true);
+      }
+    },
+    onError: () => {
+      setModalMessage('서버 통신 실패');
+      setModalVisible(true);
+    }
+  });
+
+  const handleLikeStatus = (isLike: boolean) => {
+    if (liked === null) {
+      updateLikeFn({ data: { isLike }, postId });
+    } else {
+      setModalMessage('이미 좋아요/싫어요 클릭하셨습니다');
+      setModalVisible(true);
+    }
+  };
+
+  const handleLike = () => handleLikeStatus(true);
+  const handleDislike = () => handleLikeStatus(false);
+
   const handleToggleBookmark = () => {
-    mutate({postId : postId, bookmark : !isBookmark});
+    updateBookmarkFn({postId : postId, bookmark : !isBookmark});
   };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
+    setModalMessage('복사되었습니다');
     setModalVisible(true);
   };
 
@@ -69,48 +100,9 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     setModalVisible(false);
   };
 
-  const handleLike = () => {
-    if (liked) {
-      updateLikeState(false, false);
-    } else {
-      updateLikeState(true, false);
-    }
-  };
-
-  const handleDislike = () => {
-    if (disliked) {
-      updateLikeState(false, false);
-    } else {
-      updateLikeState(false, true);
-    }
-  };
-
   useEffect(() => {
     setLiked(isLiked);
-    setDisliked(isDisliked);
-  }, [isLiked, isDisliked]);
-
-  const updateLikeState = (newLiked: boolean, newDisliked: boolean) => {
-    axios.post(`http://localhost:4000/posts/likes`, {
-      postId: postId,
-      userId: userId,
-      isLiked: newLiked,
-      isDisliked: newDisliked
-    })
-      .then(() => {
-        setLiked(newLiked);
-        setDisliked(newDisliked);
-        setVoteCount(prevCount => {
-          if (newLiked && !newDisliked) return disliked ? prevCount + 2 : prevCount + 1;
-          if (!newLiked && newDisliked) return liked ? prevCount - 2 : prevCount - 1;
-          if (!newLiked && !newDisliked) return liked ? prevCount - 1 : prevCount + 1;
-          return prevCount;
-        });
-      })
-      .catch(error => {
-        console.error('Error updating like/dislike state', error);
-      });
-  };
+  }, [isLiked]);
 
   const handlePostStatus = () => {
     if (dispatch) {
@@ -145,7 +137,6 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
         <VotingComponent
           voteCount={voteCount}
           isLiked={liked}
-          isDisliked={disliked}
           onLike={handleLike}
           onDislike={handleDislike}
         />
@@ -166,7 +157,7 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
       }
       <Divider />
       <NotificationModal
-        message="복사되었습니다"
+        message={modalMessage}
         isVisible={isModalVisible}
         onClose={handleCloseModal}
       />
