@@ -14,7 +14,7 @@ import VotingComponent from './VotingComponent.tsx';
 import { SolveModal } from '../../SolveModal.tsx';
 
 import axios from 'axios';
-import { ModalsDispatchContext, ModalsStateContext } from '../../../context/ModalsContext.tsx';
+import { ModalsDispatchContext } from '../../../context/ModalsContext.tsx';
 
 interface Props {
   postId: number;
@@ -24,22 +24,22 @@ interface Props {
   viewCount: number;
   status: string;
   bookmark: boolean;
+  likeCount: number;
   isLiked: boolean;
   isDisliked: boolean;
   isGuest?: boolean;
 }
 
-function PostHeader({ postId, title, timeline, updated, viewCount, status, bookmark, isLiked, isDisliked,  isGuest = false }: Props) {
+function PostHeader({ postId, title, timeline, updated, viewCount, status, bookmark, likeCount, isLiked, isDisliked,  isGuest = false }: Props) {
   const [postStatus, setPostStatus] = useState(status);
   const [isBookmark, setIsBookmark] = useState(bookmark);
 
   const [isModalVisible, setModalVisible] = useState(false);
+
   const [isSolveModalVisible, setIsSolveModalVisible] = useState(false);
   const dispatch = useContext(ModalsDispatchContext);
-  const Modals = useContext(ModalsStateContext);
 
-
-  const [voteCount, setVoteCount] = useState(0);
+  const [voteCount, setVoteCount] = useState(likeCount);
   const [liked, setLiked] = useState(isLiked);
   const [disliked, setDisliked] = useState(isDisliked);
 
@@ -113,7 +113,6 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
   };
 
   const handlePostStatus = () => {
-    console.log('handlePostStatus');
     if (dispatch) {
       dispatch.showModal({
         title: '해결 완료로 전환 하시겠습니까?',
