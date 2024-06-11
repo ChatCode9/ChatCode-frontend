@@ -12,11 +12,12 @@ export const NotificationModal = ({ message, isVisible, onClose } : Notification
 
   useEffect(() => {
     if (isVisible) {
-      const timer = setTimeout(onClose, 1500); // 3초 후에 모달을 자동으로 닫기
-      return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 클리어
+      const timer = setTimeout(onClose, 1300); // 1.3초 후에 모달을 자동으로 닫기
+      return () => clearTimeout(timer);
     }
   }, [isVisible, onClose]);
 
+  // 모달 띄어진 상태에서 다른 영역 클릭시 바로 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
