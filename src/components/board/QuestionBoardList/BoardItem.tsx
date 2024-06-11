@@ -60,7 +60,7 @@ const BoardItem: React.FC<BoardItemProps> = ({
       )}
       {!blind && (
         <MoreWrapper onClick={eventStop}>
-          <More onClick={(event) => handleMoreClick(event, id)} id={id} />
+          <More onClick={(event) => handleMoreClick(event, id)} id={id}/>
         </MoreWrapper>
       )}
     </BoardItemWrapper>

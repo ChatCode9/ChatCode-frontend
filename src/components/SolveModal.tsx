@@ -4,13 +4,14 @@ import { useContext, useEffect, useState } from 'react';
 import { ModalsStateContext, ModalsDispatchContext } from '../context/ModalsContext';
 
 interface SolveModalProps {
-  onConfirm: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
+  onConfirm: () => void;
   data: {
     top: number;
     left: number;
-    confirm1: string;
-    confirm2: string;
-    postId: number;
+    confirm1?: string;
+    confirm2?: string;
+    postId?: number;
+    position?: string; // 추가된 부분
   };
 }
 
@@ -35,15 +36,15 @@ export const SolveModal = ({ data, onConfirm }: SolveModalProps) => {
     }
   };
 
-  const handleClickSend = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickSend = () => {
     if (dispatch) {
-      onConfirm(event, data.postId);
+      onConfirm();
       dispatch.hideModal();
     }
   }
 
   // Calculate the left position to center the modal horizontally
-  const leftPosition = (windowWidth - 650) / 2;
+  const leftPosition = data.position === 'absolute' ? data.left : (windowWidth - 650) / 2;
 
   return (
     <Container $top={data.top} $left={leftPosition}>
