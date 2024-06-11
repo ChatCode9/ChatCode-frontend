@@ -117,7 +117,10 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
   };
 
   const handlePostStatus = () => {
-    if (dispatch) {
+    if(postStatus === 'finish') {
+      setModalMessage('이미 해결된 질문입니다');
+      setModalVisible(true);
+    } else if (dispatch) {
       dispatch.showModal({
         title: '해결 완료로 전환 하시겠습니까?',
         message: '해결 완료로 전환 시 대기로 재 전환 불가합니다.',
