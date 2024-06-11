@@ -11,7 +11,7 @@ function CommentList({ comments }: Props) {
     <Container>
       <ul className="comment-list">
         {comments.map((comment) => (
-          <CommentItem {...comment} />
+          <CommentItem key={comment.id} {...comment} />
         ))}
       </ul>
     </Container>
