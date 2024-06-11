@@ -14,7 +14,7 @@ function QuestionBoardPage() {
   const [filters, setFilters] = useState<Filters>({
     search: '',
     categories: 'question',
-    sortby: 'latest',
+    sortBy: 'latest',
     status: ['wait', 'finish'],
     pageInfo: {
       page: 1,

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Filters } from '../requestType/postType.ts';
 
 const fetchPosts = async (filters: Filters): Promise<Question> => {
-  const { search, categories, sortby, pageInfo } = filters;
+  const { search, categories, sortBy, pageInfo } = filters;
   let { status } = filters;
   if(status.length == 0){
     // 해결대기, 해결완료 모두 선택 했거나 또는 모두 선택하지 않는다면 API 전송시 데이터를 채워준다
@@ -14,7 +14,7 @@ const fetchPosts = async (filters: Filters): Promise<Question> => {
   const queryParams = new URLSearchParams({
     search,
     categories,
-    sortby,
+    sortBy,
     status: status.join(','), // Assuming the API expects a comma-separated string for status
     page: pageInfo.page.toString(),
     size: pageInfo.size.toString(),

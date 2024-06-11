@@ -65,7 +65,7 @@ function BoardController({ filters, setFilters }: Props) {
     const initialFilters = {
       search: '',
       categories: 'question',
-      sortby: 'latest',
+      sortBy: 'latest',
       status: ['wait', 'finish'],
       pageInfo: {
         page: 1,
