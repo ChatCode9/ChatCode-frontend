@@ -80,6 +80,7 @@ const Nav = styled.nav`
 `;
 const LeftTopicMenu = styled.div`
   display: flex;
+  align-items: center;
 `;
 const Topic = styled.div`
   margin-left: 30px;

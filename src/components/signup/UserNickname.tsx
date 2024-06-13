@@ -1,27 +1,42 @@
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { fetchUserNickname } from '../../services/http';
 
 interface User {
-  nickname: string;
+  data: {
+    nickname: string;
+  };
 }
 
 function Nickname() {
+  const [nickname, setNickname] = useState<string>('');
+  const handlechange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(event.target.value);
+  };
+
   const { data, isLoading, error }: UseQueryResult<User, Error> = useQuery({
     queryKey: ['userInfo'],
     queryFn: fetchUserNickname,
   });
+  useEffect(() => {
+    if (data && data.data.nickname) {
+      setNickname(data.data.nickname);
+    }
+  }, [data]);
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
   return (
     <>
       <SignupInfoBox>회원가입에 필요한 기본정보를 입력해주세요.</SignupInfoBox>
       <NicknameInfo>
-        <label htmlFor="nickname_id">{data?.nickname}</label>
+        <label htmlFor="nickname_id"></label>
         <div>
           <NicknameInput
             type="text"
             id="nickname_id"
+            value={nickname}
+            onChange={handlechange}
             placeholder="별명을 알파벳, 한글, 숫자를 이용해 8자 이하로 입력해주세요"
           />
         </div>
