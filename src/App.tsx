@@ -1,36 +1,78 @@
-import { Outlet } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { useQuery } from '@tanstack/react-query';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ModalProvider } from './context/ModalsContext.tsx';
 
-import { textState } from './atoms/textState';
-import { getTodos } from './services/getTodos';
-import useModalsDispatch from './hooks/useModalsDispatch';
-import { SolveModal } from './components/SolveModal';
+const queryClient = new QueryClient();
 
-function App() {
-  // const { data, isLoading, isError } = useQuery({ queryKey: ['todos'], queryFn: getTodos });
-  const value = useRecoilValue(textState);
-  const Dispatch = useModalsDispatch();
+import App from './App.tsx';
+import GlobalStyle from './styles/GlobalStyle.tsx';
+import ErrorPage from './pages/ErrorPage.tsx';
+import PostWritePage from './pages/PostWritePage.tsx';
+import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
+import FreeBoardPage from './pages/FreeBoardPage.tsx';
+import PostDetailPage from './pages/PostDetailPage.tsx';
+import PostsPage from './pages/PostsPage.tsx';
+import LoginPage from './pages/LoginPage.tsx';
+import SignupPage from './pages/SignupPage.tsx';
+import Mypage from './pages/Mypage.tsx';
+import SettingPage from './pages/SettingPage.tsx';
+import MainPage from './pages/MainPage.tsx';
 
-  const handleOpenModal = () => {
-    console.log(Dispatch.showModal);
-    Dispatch?.showModal({
-      title: '해결 완료로 전환 하시겠습니까?',
-      message: '해결 완료로 전환 시 대기로 재 전환은 불가합니다.',
-    });
-  };
-  console.log(value);
+// TODO: 추후 논의
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <MainPage />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '/board/question',
+        element: <QuestionBoardPage />,
+      },
+      {
+        path: '/board/free',
+        element: <FreeBoardPage />,
+      },
+      {
+        path: '/write',
+        element: <PostWritePage />,
+      },
+      {
+        path: '/posts/:postId',
+        element: <PostDetailPage />,
+      },
+    ],
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/signup',
+    element: <SignupPage />,
+  },
+  {
+    path: '/mypage',
+    element: <Mypage />,
+  },
+  {
+    path: '/setting',
+    element: <SettingPage />,
+  },
+]);
 
-  // console.log(data, isLoading, isError);
-
-  return (
-    <div>
-      <header>헤더</header>
-      <Outlet />
-      <SolveModal />
-      <button onClick={handleOpenModal}>Open Modal</button>
-    </div>
-  );
-}
-
-export default App;
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <GlobalStyle />
+    <RecoilRoot>
+      <ModalProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </ModalProvider>
+    </RecoilRoot>
+  </React.StrictMode>,
+);

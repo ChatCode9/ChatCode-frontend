@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 interface Props {
-  avatar: string;
-  timeline?: string;
+  avatar?: string;
+  timeline: string;
   nickname: string;
 }
 
