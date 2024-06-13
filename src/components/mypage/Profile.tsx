@@ -1,14 +1,77 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { TextField, Chip, Autocomplete } from '@mui/material';
-
 import { SyntheticEvent } from 'react';
-interface UserInfo {
-  username: string;
-  userTag: string[];
-  userContent: string;
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { fetchUserNickname } from '../../services/http';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { useNavigate } from 'react-router-dom';
+// import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import LocalSeeIcon from '@mui/icons-material/LocalSee';
+import { postFile } from '../../services/http';
+
+interface User {
+  data: {
+    nickname: string;
+    picture: string;
+  };
 }
+
+//TODO 사진이랑 컨텐트만 수정해서 보낼 수 있도록
 function Profile() {
+  const navigate = useNavigate();
+  const [username, setUserName] = useState<string>('');
+  const [userTag, setUserTag] = useState<string[]>([]);
+  const [userContent, setUserContent] = useState<string>('');
+  const [image, setImage] = useState<string | null>(null);
+  const [isDefault, setIsDefault] = useState<boolean>(true);
+  const fileInput = useRef<HTMLInputElement | null>(null);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const {
+    data,
+    isLoading,
+    error: queryError,
+  } = useQuery<User>({
+    queryKey: ['userInfo'],
+    queryFn: fetchUserNickname,
+  });
+  const {
+    mutate,
+    isPending,
+    isError,
+    error: mutationError,
+  } = useMutation({
+    mutationFn: postFile,
+    onSuccess: () => {
+      console.log('성공!');
+    },
+  });
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (image) {
+      const base64File = image.split(',')[1];
+      mutate({ base64File, targetId: 1 });
+    }
+
+    console.log({
+      image,
+    });
+  };
+
+  useEffect(() => {
+    if (data && data.data.nickname) {
+      setUserName(data.data.nickname);
+      setImage(data.data.picture);
+      // setUserInfo((prevUserInfo) => ({
+      //   ...prevUserInfo,
+      //   userImg: data.data.picture,
+      //   username: data.data.nickname,
+      // }));
+    }
+  }, [data]);
+  if (isLoading) return <div>Loading...</div>;
+  if (mutationError) return <div>Error: {mutationError.message}</div>;
   const tagName: string[] = [
     'frontend',
     'backend',
@@ -38,95 +101,124 @@ function Profile() {
     'competition',
     'hackathon',
   ];
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    username: '유니',
-    userTag: ['프엔'],
-    userContent: '안녕하세요~',
-  });
+
   const handleTagChange = (event: SyntheticEvent, newValue: string[]) => {
     if (newValue.length <= 6) {
-      setUserInfo({ ...userInfo, userTag: newValue });
+      setUserTag([...userTag, ...newValue]);
     } else {
       alert('태그는 최대 6개까지 선택 가능합니다.');
     }
   };
-  const [isEditing, setIsEditing] = useState(false);
+
   const handleEdit = () => {
     setIsEditing(!isEditing);
+  };
+  // 사진이 있으면 업로드 하고 아니면 isDefault가 true 도록
+  const handleImgChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = async () => {
+        const base64String = reader.result as string;
+        setImage(base64String);
+        setIsDefault(false);
+
+        // 서버에 파일을 전송하는 코드 추가
+        try {
+          const base64File = `data:${file.type};base64,${base64String.split(',')[1]}`;
+          await postFile({ base64File, targetId: 3 });
+        } catch (error) {
+          console.error('Error uploading file:', error);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      setImage(null);
+      setIsDefault(true);
+    }
   };
 
   return (
     <PofileWrapper>
-      <ProfileImg>
-        <img></img>
-      </ProfileImg>
-
+      {/* 편집중일때 */}
       {isEditing ? (
-        <UserInfoWrapper>
-          <UserInfoInput
-            type="text"
-            value={userInfo.username}
-            onChange={(event) => {
-              setUserInfo({ ...userInfo, username: event.target.value });
-            }}
-          />
-          <UserInfoTag>
-            <Autocomplete
-              multiple
-              id="tags-outlined"
-              options={tagName}
-              value={userInfo.userTag}
-              onChange={handleTagChange}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    label={<span style={{ display: 'flex', alignItems: 'center' }}>{option}</span>}
-                    {...getTagProps({ index })}
-                    onDelete={() => {
-                      setUserInfo({
-                        ...userInfo,
-                        userTag: userInfo.userTag.filter((t) => t !== option),
-                      });
-                    }}
-                  />
-                ))
-              }
-              renderInput={(params) => (
-                <TextField {...params} variant="outlined" label="태그를 선택하세요" placeholder="태그를 선택하세요" />
+        <>
+          <form onSubmit={handleSubmit}>
+            <ProfileImg>
+              <input
+                type="file"
+                style={{ display: 'none' }}
+                accept="image/*"
+                name="profile_img"
+                onChange={handleImgChange}
+                ref={fileInput}
+              />
+              {isDefault ? (
+                <div
+                  onClick={() => {
+                    if (fileInput.current) {
+                      fileInput.current.click();
+                    }
+                  }}
+                >
+                  <LocalSeeIcon style={{ fontSize: '50px' }} />
+                </div>
+              ) : (
+                <img
+                  src={image as string}
+                  alt="Profile"
+                  onClick={() => {
+                    if (fileInput.current) {
+                      fileInput.current.click();
+                    }
+                  }}
+                />
               )}
-            />
-          </UserInfoTag>
-          <UserInfoInput
-            style={{ height: '57px' }}
-            type="text"
-            value={userInfo.userContent}
-            onChange={(event) => {
-              setUserInfo({ ...userInfo, userContent: event.target.value });
-            }}
-          />
-        </UserInfoWrapper>
+            </ProfileImg>
+            <UserInfoWrapper>
+              <UserInfoNickname>{username}</UserInfoNickname>
+              <UserInfoTag>{userTag}</UserInfoTag>
+              <UserInfoInput
+                style={{ height: '57px' }}
+                type="text"
+                value={userContent}
+                onChange={(event) => {
+                  setUserContent(event.target.value);
+                }}
+              />
+            </UserInfoWrapper>
+          </form>
+        </>
       ) : (
-        <InfoWrapper>
-          <p>{userInfo.username}</p>
-          <div>
-            {userInfo.userTag.map((item, i) => (
-              <span key={i}>{item}</span>
-            ))}
-          </div>
-
-          <p>{userInfo.userContent}</p>
-        </InfoWrapper>
+        <>
+          <ProfileImg>{image && <img src={image} alt="Received Image" />}</ProfileImg>
+          <InfoWrapper>
+            <p>{username}</p>
+            <div>
+              {userTag.map((item, i) => (
+                <span key={i}>{item}</span>
+              ))}
+            </div>
+            <p>{userContent}</p>
+          </InfoWrapper>
+        </>
       )}
 
       {isEditing ? (
         <>
-          <button onClick={handleEdit} style={{ margin: '10px' }}>
-            수정
+          <button type="submit" style={{ margin: '10px' }}>
+            Complete
           </button>
-          <button onClick={handleEdit}>취소</button>
+          <button onClick={() => navigate('/setting')} type="button">
+            <SettingsIcon />
+          </button>
         </>
       ) : (
-        <button onClick={handleEdit}>Edit</button>
+        <button onClick={handleEdit} type="button">
+          Edit
+        </button>
       )}
     </PofileWrapper>
   );
@@ -163,9 +255,20 @@ const PofileWrapper = styled.div`
 const ProfileImg = styled.div`
   width: 100px;
   height: 100px;
-  border: 1px solid #8d8ba7;
   border-radius: 50px;
-  background-color: #8d8ba7;
+  overflow: hidden;
+  img {
+    width: 100%;
+  }
+  div {
+    width: 100%;
+    height: 100%;
+    background-color: #6c6b76;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+  }
 `;
 const UserInfoWrapper = styled.div`
   display: flex;
@@ -174,6 +277,11 @@ const UserInfoWrapper = styled.div`
   width: 837px;
   height: auto;
   font-weight: 600;
+`;
+const UserInfoNickname = styled.div`
+  height: 32px;
+  /* border: 1px solid #d9d9d9; */
+  /* border-radius: 4px; */
 `;
 const UserInfoInput = styled.input`
   height: 32px;
