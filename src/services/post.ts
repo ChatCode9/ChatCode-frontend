@@ -39,6 +39,13 @@ export const PostsQuery = (filters: Filters) => {
   });
 };
 
+// 게시글 상세 내용 불러오기
+export const getPost = async (postId: number) => {
+  const response = await client.get(`articles/${postId}`);
+  console.log(response.data.data);
+  return response.data.data;
+}
+
 // 북마크 업데이트
 export const updateBookmark = async (data : {postId : number, bookmark : boolean}) => {
   try {

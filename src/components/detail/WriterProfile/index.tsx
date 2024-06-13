@@ -1,30 +1,26 @@
 import { Container } from './styles';
 
-interface UserProfile {
+interface Props {
   userId: number;
   userName: string;
   avatar: string;
-  tags: string[];
+  avatarTags: string[];
   comment: string;
 }
 
-interface WriterProfileProps {
-  userProfile: UserProfile;
-}
-
-function WriterProfile({ userProfile }: WriterProfileProps) {
+function WriterProfile({ userId, userName, avatar, avatarTags, comment }: Props) {
   return (
     <Container>
       <div className="inner">
-        <img className="avatar" src={userProfile.avatar} alt="프로필 이미지" />
+        <img className="avatar" src={avatar} alt="프로필 이미지" />
         <div className="info">
-          <div className="writer">{userProfile.userName}</div>
+          <div className="writer">{userName}</div>
           <ul className="tags">
-            {userProfile.tags.map(tag => (
+            {avatarTags.map((tag) => (
               <li key={tag}>{tag}</li>
             ))}
           </ul>
-          <p className="desc">{userProfile.comment}</p>
+          <p className="desc">{comment}</p>
         </div>
       </div>
     </Container>
