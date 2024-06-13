@@ -42,8 +42,8 @@ export const PostsQuery = (filters: Filters) => {
 // 게시글 상세 내용 불러오기
 export const getPost = async (postId: number) => {
   const response = await client.get(`articles/${postId}`);
-  console.log(response.data.data);
-  return response.data.data;
+  console.log(response.data);
+  return response.data;
 }
 
 // 북마크 업데이트

@@ -40,7 +40,6 @@ function Post({postId} : Props) {
     queryFn: () => getAvatar(postId),
   });
 
-
   const isLoading = isLoadingPost || isLoadingAvatar;
   const isError = isErrorPost || isErrorAvatar;
 
@@ -52,8 +51,8 @@ function Post({postId} : Props) {
     return <div>Error...</div>;
   }
 
-  const { title, timeline, updated, viewCount, status, bookmark, tags, content,  likeCount, isLiked } = postData;
-  const { userId, userName, avatar, tags:avatarTags, comment } = avatarData;
+  const { title, timeline, updated, viewCount, status, bookmark, tags, content,  likeCount, isLiked } = postData.data;
+  const { userId, userName, avatar, tags:avatarTags, comment } = avatarData.data;
 
   return (
     <Container>
