@@ -1,9 +1,11 @@
 import { Container } from './styles';
-import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai';
+import { AiOutlineDislike, AiOutlineLike, AiFillLike, AiFillDislike } from 'react-icons/ai';
 import styled from 'styled-components';
 import { timeDifference } from '../../../utils/timeDifference.ts';
 import ReplayInput from '../ReplayInput';
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import React, { MouseEvent, useCallback, useContext, useRef, useState } from 'react';
+import { SolveModal } from '../../SolveModal.tsx';
+import { ModalsDispatchContext } from '../../../context/ModalsContext.tsx';
 
 interface CommentType {
   commentId: number;
@@ -20,6 +22,7 @@ interface CommentType {
   likeCount: number;
   disLikeCount: number;
   replyCount: number;
+  isLiked: boolean | null;
   isRole: boolean;
 }
 
@@ -31,6 +34,8 @@ function CommentList({ comments }: Props) {
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
   const [visibleReplies, setVisibleReplies] = useState<number[]>([]);
   const prevButtonRef = useRef<HTMLDivElement | HTMLButtonElement | null>(null);
+
+  const dispatch = useContext(ModalsDispatchContext);
 
   const toggleButtonText = (target: HTMLDivElement | HTMLButtonElement) => {
     if (prevButtonRef.current && prevButtonRef.current !== target) {
@@ -83,12 +88,44 @@ function CommentList({ comments }: Props) {
     const target = event.currentTarget as HTMLButtonElement;
 
     // API 호출
-
+    console.log(`handleReplaySubmit API CALL`)
 
     // API Success Code
     toggleButtonText(target);
     setActiveReplyId(null);
   }
+
+  // 댓글 좋아요/싫어요 클릭
+  const handleLikeSubmit = (commentId: number, isLiked: boolean | null, actionLiked: boolean) => {
+    console.log(`commentId : ${commentId}, isLiked : ${isLiked}, actionLiked : ${actionLiked}`)
+
+    if(isLiked === null){
+      // API 호출
+      console.log(`handleLikeSubmit API CALL`)
+    } else {
+      console.log(`이미 좋아요 및 싫어요 버튼을 눌렀습니다`)
+    }
+  }
+
+  // 댓글 삭제
+  const handleDeleteSubmit = (commentId: number) => {
+    console.log(`commentId : ${commentId}`);
+
+    // 모달창으로 정말 삭제할건지 물어보기
+    dispatch.showModal({
+      title: '댓글 삭제 하시겠습니까?',
+      message: '',
+      confirm1: '삭제',
+      confirm2: '취소',
+      top: 100,
+      left: 120,
+      position : 'absolute'
+    });
+  }
+
+  const handleConfirm = useCallback(() => {
+    console.log('handleConfirm');
+  }, [dispatch]);
 
   return (
     <Container>
@@ -109,12 +146,12 @@ function CommentList({ comments }: Props) {
                   </div>
 
                   <div className="right">
-                    <button className="btn">
-                      <AiOutlineLike fontSize={20} />
+                    <button className="btn" onClick={() => handleLikeSubmit(comment.commentId, comment.isLiked, true)}>
+                      {comment.isLiked === true ? <AiFillLike fontSize={20} /> : <AiOutlineLike fontSize={20} />}
                       {comment.likeCount}
                     </button>
-                    <button className="btn">
-                      <AiOutlineDislike fontSize={20} />
+                    <button className="btn" onClick={() => handleLikeSubmit(comment.commentId, comment.isLiked, false)}>
+                      {comment.isLiked === false ? <AiFillDislike fontSize={20} /> : <AiOutlineDislike fontSize={20} />}
                       {comment.disLikeCount}
                     </button>
                   </div>
@@ -142,7 +179,7 @@ function CommentList({ comments }: Props) {
                     댓글달기
                   </ReaplyAdd>
                   {comment.isRole && (
-                    <ReaplyDelete>
+                    <ReaplyDelete onClick={() => handleDeleteSubmit(comment.commentId)}>
                       댓글삭제
                     </ReaplyDelete>
                   )}
@@ -159,6 +196,9 @@ function CommentList({ comments }: Props) {
           </Item>
         ))}
       </ul>
+
+      <SolveModal onConfirm={handleConfirm} />
+
     </Container>
   );
 }

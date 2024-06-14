@@ -5,49 +5,29 @@ import { ModalsStateContext, ModalsDispatchContext } from '../context/ModalsCont
 
 interface SolveModalProps {
   onConfirm: () => void;
-  data: {
-    top: number;
-    left: number;
-    confirm1?: string;
-    confirm2?: string;
-    postId?: number;
-    position?: string; // 추가된 부분
-  };
 }
 
-export const SolveModal = ({ data, onConfirm }: SolveModalProps) => {
+export const SolveModal = ({ onConfirm }: SolveModalProps) => {
   const Modals = useContext(ModalsStateContext); // Modals 상태를 가져옴
   const dispatch = useContext(ModalsDispatchContext);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    console.log("Modal Data Updated:", Modals);
+  }, [Modals]);
 
-  if (!Modals || !data) {
+  if (!Modals) {
     return null;
   }
 
-  const handleClickOk = () => {
-    if (dispatch) {
-      dispatch.hideModal();
-    }
-  };
-
   const handleClickSend = () => {
     if (dispatch) {
-      onConfirm();
       dispatch.hideModal();
+      onConfirm();
     }
   }
 
-  // Calculate the left position to center the modal horizontally
-  const leftPosition = data.position === 'absolute' ? data.left : (windowWidth - 650) / 2;
-
   return (
-    <Container $top={data.top} $left={leftPosition}>
+    <Container $top={Modals.top} $left={Modals.left}>
       <ModalBox>
         <ContentBox>
           <DescBox>
@@ -57,11 +37,11 @@ export const SolveModal = ({ data, onConfirm }: SolveModalProps) => {
           {/* Todo 확인 버튼 누르면 전환 되도록 */}
           <BtnBox>
             <button onClick={handleClickSend}>{Modals?.confirm1}</button>
-            <button onClick={handleClickOk}>{Modals?.confirm2}</button>
+            <button onClick={dispatch?.hideModal}>{Modals?.confirm2}</button>
           </BtnBox>
         </ContentBox>
         <CloseBox>
-          <CloseBtn onClick={handleClickOk}>
+          <CloseBtn onClick={dispatch?.hideModal}>
             <CloseIcon fontSize="large" color="inherit" />
           </CloseBtn>
         </CloseBox>

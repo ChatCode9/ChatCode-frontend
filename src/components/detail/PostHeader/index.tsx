@@ -40,7 +40,6 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-  const [isSolveModalVisible, setIsSolveModalVisible] = useState(false);
   const dispatch = useContext(ModalsDispatchContext);
 
   const [liked, setLiked] = useState<boolean | null>(isLiked);
@@ -126,27 +125,18 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
         message: '해결 완료로 전환 시 대기로 재 전환 불가합니다.',
         confirm1: '전환',
         confirm2: '취소',
-        postId: postId,
+        top: 300,
+        left: 120,
+        position : 'absolute'
       });
     }
-    setIsSolveModalVisible(true);
   }
 
   const handleConfirm = useCallback(() => {
     console.log('handleConfirm');
-    if (dispatch) {
-      dispatch.hideModal();
-    }
-
     const data = { status: 'finish' };
     updateStatusFn({ postId, data });
   }, [dispatch, postId]);
-
-  const modalData = {
-    top: 300,
-    left: 120,
-    position : 'absolute'
-  }
 
   return (
     <Wrapper>
@@ -179,9 +169,7 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
         onClose={handleCloseModal}
       />
 
-      {isSolveModalVisible && (
-        <SolveModal data={modalData} onConfirm={handleConfirm} />
-      )}
+      <SolveModal onConfirm={handleConfirm} />
 
     </Wrapper>
   );
