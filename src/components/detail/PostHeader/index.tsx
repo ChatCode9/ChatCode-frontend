@@ -15,10 +15,7 @@ import {
 } from '../../../services/post.ts';
 import { NotificationModal } from './NotificationModal.tsx';
 import VotingComponent from './VotingComponent.tsx';
-
-import { SolveModal } from '../../SolveModal.tsx';
-
-import { ModalsDispatchContext } from '../../../context/ModalsContext.tsx';
+import ModalCustom1 from '../../modal/ModalCustom1.tsx';
 
 interface Props {
   postId: number;
@@ -40,10 +37,11 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-  const dispatch = useContext(ModalsDispatchContext);
-
   const [liked, setLiked] = useState<boolean | null>(isLiked);
   const [voteCount, setVoteCount] = useState(likeCount);
+
+  const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
+  const [switchPostId, setSwitchPostId] = useState<number | null>(null);
 
   const { mutate : updateBookmarkFn } = useMutation({
     mutationFn: updateBookmark,
@@ -119,24 +117,20 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     if(postStatus === 'finish') {
       setModalMessage('이미 해결된 질문입니다');
       setModalVisible(true);
-    } else if (dispatch) {
-      dispatch.showModal({
-        title: '해결 완료로 전환 하시겠습니까?',
-        message: '해결 완료로 전환 시 대기로 재 전환 불가합니다.',
-        confirm1: '전환',
-        confirm2: '취소',
-        top: 300,
-        left: 120,
-        position : 'absolute'
-      });
+    } else {
+      setSwitchPostId(postId);
+      setIsFirstModalOpen(true);
     }
   }
 
-  const handleConfirm = useCallback(() => {
-    console.log('handleConfirm');
+  const handleFirstModalConfirm = () => {
+    console.log('First modal confirmed');
+    console.log(`해결 완료로 전환될 게시글 번호 : ${switchPostId}`);
+    // API 호출
     const data = { status: 'finish' };
     updateStatusFn({ postId, data });
-  }, [dispatch, postId]);
+    setIsFirstModalOpen(false);
+  };
 
   return (
     <Wrapper>
@@ -169,7 +163,16 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
         onClose={handleCloseModal}
       />
 
-      <SolveModal onConfirm={handleConfirm} />
+      <div>
+        <ModalCustom1
+          isOpen={isFirstModalOpen}
+          onClose={() => setIsFirstModalOpen(false)}
+          onConfirm={handleFirstModalConfirm}
+        >
+          <h3>해결 완료로 전환 하시겠습니까?</h3>
+          <p>*해결 완료로 전환 시 대기로 재 전환 불가합니다.</p>
+        </ModalCustom1>
+      </div>
 
     </Wrapper>
   );
