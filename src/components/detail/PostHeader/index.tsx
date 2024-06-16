@@ -13,7 +13,7 @@ import {
   updateLike,
   updateStatusWrapper,
 } from '../../../services/post.ts';
-import { NotificationModal } from './NotificationModal.tsx';
+import { NotificationModal } from '../../modal/NotificationModal.tsx';
 import VotingComponent from './VotingComponent.tsx';
 import ModalCustom1 from '../../modal/ModalCustom1.tsx';
 
@@ -43,6 +43,7 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
   const [switchPostId, setSwitchPostId] = useState<number | null>(null);
 
+  // 북마크 mutate
   const { mutate : updateBookmarkFn } = useMutation({
     mutationFn: updateBookmark,
     onSuccess: () => {
@@ -54,6 +55,8 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     }
   });
 
+  // 좋아요/싫어요 mutate
+  // API 성공후 해당 게시글 좋아요/싫어요수 조회 API 호출(GET)
   const { mutate : updateLikeFn } = useMutation({
     mutationFn : updateLike,
     onSuccess: async (_, variables) => {
@@ -72,6 +75,8 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     }
   });
 
+  // 게시글 상태 mutate
+  // 해결대기에서 해결완료로 변경
   const { mutate : updateStatusFn } = useMutation({
     mutationFn: updateStatusWrapper ,
     onSuccess: () => {
@@ -83,6 +88,7 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     }
   });
 
+  // 이미 좋아요/실어요 눌렀는지 체크후 안되어있다면 UPDATE API 호출
   const handleLikeStatus = (isLike: boolean) => {
     if (liked === null) {
       updateLikeFn({ data: { isLike }, postId });
@@ -92,27 +98,34 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     }
   };
 
+  // 좋아요/싫어요 함수
   const handleLike = () => handleLikeStatus(true);
   const handleDislike = () => handleLikeStatus(false);
 
+  // 북마크 함수
   const handleToggleBookmark = () => {
     updateBookmarkFn({postId : postId, bookmark : !isBookmark});
   };
 
+  // 공유하기 클릭시 클립보드에 현재 주소 복사 + 모달창으로 '복사되었습니다' 띄우기
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     setModalMessage('복사되었습니다');
     setModalVisible(true);
   };
 
+  // More 컴포넌트 호출 -> 글 수정, 글 삭제 버튼 보여줌
+  // 그리고 다른 컴포넌트로 이벤트 전파 막기
   const handleMoreClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, postId: number) => {
     event.stopPropagation();
   },[]);
 
+  // 모달창 Close 버튼 클릭시 동작 함수
   const handleCloseModal = () => {
     setModalVisible(false);
   };
 
+  // 해결대기 버튼 클릭시 동작 함수
   const handlePostStatus = () => {
     if(postStatus === 'finish') {
       setModalMessage('이미 해결된 질문입니다');
@@ -123,6 +136,7 @@ function PostHeader({ postId, title, timeline, updated, viewCount, status, bookm
     }
   }
 
+  // 해결대기에서 모달창 '전환' 클릭시 동작 함수
   const handleFirstModalConfirm = () => {
     console.log('First modal confirmed');
     console.log(`해결 완료로 전환될 게시글 번호 : ${switchPostId}`);

@@ -29,7 +29,7 @@ function BoardController({ filters, setFilters }: Props) {
     queryClient.invalidateQueries({ queryKey: ['posts'] });
   };
 
-  // 필터
+  // 필터 (오름차순, 내림차순)
   const handleFilterChange = (newSortby: string) => {
     // console.log('handleFilterChange');
     setFilters(prevFilters => ({
@@ -44,6 +44,7 @@ function BoardController({ filters, setFilters }: Props) {
     setActiveButton(newSortby);
   };
 
+  // 필터 (해결대기, 해결완료)
   const handleStatusChange = (status: string) => {
     // console.log('handleStatusChange');
     setFilters(prevFilters => {
@@ -60,6 +61,7 @@ function BoardController({ filters, setFilters }: Props) {
     setActiveButton(status);
   };
 
+  // 전체(검색 조건 리셋)
   const handleResetFilters = () => {
     // console.log('handleResetFilters');
     const initialFilters = {
@@ -80,6 +82,7 @@ function BoardController({ filters, setFilters }: Props) {
     setInputValue('');
   };
 
+  // 1페이지 몇개 볼 것인지 선택
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
     setFilters(prevFilters => ({
@@ -91,6 +94,7 @@ function BoardController({ filters, setFilters }: Props) {
     }));
   };
 
+  // 검색창에 입력되는 값
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     setFilters(prevFilters => ({
@@ -99,7 +103,7 @@ function BoardController({ filters, setFilters }: Props) {
     }));
   };
 
-  // 게시글 클릭 할 때
+  // 게시글 글쓰기 클릭 할 때
   const handlePostWriteClick = () => {
     navigate(`/write`);
   };
@@ -136,10 +140,6 @@ function BoardController({ filters, setFilters }: Props) {
             <div className="dot" />
             <div>내림차순</div>
           </FilterItem>
-          {/*<FilterItem onClick={() => handleFilterChange('popularity')}>*/}
-          {/*  <div className="dot" />*/}
-          {/*  <div>인기순</div>*/}
-          {/*</FilterItem>*/}
           <FilterItem
             className={isPending ? 'active' : ''}
             onClick={() => handleStatusChange( 'wait')}
@@ -155,7 +155,6 @@ function BoardController({ filters, setFilters }: Props) {
             <div>해결 완료</div>
           </FilterItem>
         </CategoryList>
-        {/*{extra && <div className="extra">{extra}</div>}*/}
         <SelectWrapper>
           <Select value={selectedValue} onChange={handleSelectChange}>
             <option value="15">15개씩 보기</option>

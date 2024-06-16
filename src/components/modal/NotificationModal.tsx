@@ -10,6 +10,7 @@ interface NotificationModalProps {
 export const NotificationModal = ({ message, isVisible, onClose } : NotificationModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
+  // 모달창 띄워지면 1.3초후 꺼지도록 설정
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(onClose, 1300); // 1.3초 후에 모달을 자동으로 닫기
@@ -17,7 +18,7 @@ export const NotificationModal = ({ message, isVisible, onClose } : Notification
     }
   }, [isVisible, onClose]);
 
-  // 모달 띄어진 상태에서 다른 영역 클릭시 바로 닫기
+  // 모달창 띄어진 상태에서 다른 영역 클릭시 바로 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {

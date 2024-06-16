@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import Editor from '../../Editor';
-import { BiRightArrowAlt } from 'react-icons/bi';
 import { Form } from './styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import styled from 'styled-components';

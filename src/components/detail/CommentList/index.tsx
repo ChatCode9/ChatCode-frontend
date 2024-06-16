@@ -37,6 +37,13 @@ function CommentList({ comments }: Props) {
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
 
+  // 대댓글 보기
+  const handleReplayView = (event: MouseEvent<HTMLDivElement>, groupId: number) => {
+    setVisibleReplies(prev =>
+      prev.includes(groupId) ? prev.filter(id => id !== groupId) : [...prev, groupId]
+    );
+  };
+
   const toggleButtonText = (target: HTMLDivElement | HTMLButtonElement) => {
     if (prevButtonRef.current && prevButtonRef.current !== target) {
       prevButtonRef.current.innerText = '댓글달기';
@@ -52,7 +59,7 @@ function CommentList({ comments }: Props) {
   };
 
   // 등록 버튼 근처 취소 버튼
-  const handleReplayAction = (event: MouseEvent<HTMLButtonElement>, commentId: number, groupId: number) => {
+  const handleReplayCancelAction2 = (event: MouseEvent<HTMLButtonElement>, commentId: number, groupId: number) => {
     const combinedId = `${commentId}-${groupId}`;
     console.log(combinedId);
     const target = event.currentTarget as HTMLButtonElement;
@@ -62,20 +69,13 @@ function CommentList({ comments }: Props) {
   };
 
   // 왼쪽 댓글 달기/취소 버튼
-  const handleAction = (event: MouseEvent<HTMLDivElement>, commentId: number, groupId: number) => {
+  const handleReaplyAddAndCancelAction = (event: MouseEvent<HTMLDivElement>, commentId: number, groupId: number) => {
     const target = event.currentTarget as HTMLDivElement;
     const combinedId = `${commentId}-${groupId}`;
     console.log(combinedId);
 
     toggleButtonText(target);
     setActiveReplyId(prev => (prev === combinedId ? null : combinedId));
-  };
-
-  // 대댓글 보기
-  const handleReplayView = (event: MouseEvent<HTMLDivElement>, groupId: number) => {
-    setVisibleReplies(prev =>
-      prev.includes(groupId) ? prev.filter(id => id !== groupId) : [...prev, groupId]
-    );
   };
 
 
@@ -174,7 +174,7 @@ function CommentList({ comments }: Props) {
                       </Replies>
                     )}
                     <ReaplyAdd
-                      onClick={(event) => handleAction(event, comment.commentId, comment.groupId)}
+                      onClick={(event) => handleReaplyAddAndCancelAction(event, comment.commentId, comment.groupId)}
                       $isComment={comment.replyCount > 0 && comment.depth === 0}
                     >
                       댓글달기
@@ -187,7 +187,7 @@ function CommentList({ comments }: Props) {
                   </ReplayButtons>
                   {activeReplyId === `${comment.commentId}-${comment.groupId}` && (
                     <ReplayInput
-                      handelCancelAction={(event) => handleReplayAction(event, comment.commentId, comment.groupId)}
+                      handelCancelAction={(event) => handleReplayCancelAction2(event, comment.commentId, comment.groupId)}
                       onClick={(event, replayContent: string) => handleReplaySubmit(event, comment.commentId, comment.groupId, replayContent)}
                       commentId={comment.commentId}
                     />
