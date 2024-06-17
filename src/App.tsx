@@ -12,10 +12,12 @@ import PostWritePage from './pages/PostWritePage.tsx';
 import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
 import FreeBoardPage from './pages/FreeBoardPage.tsx';
 import PostDetailPage from './pages/PostDetailPage.tsx';
-// import PostsPage from './pages/PostsPage.tsx';
+import PostsPage from './pages/PostsPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
 import SignupPage from './pages/SignupPage.tsx';
 import Mypage from './pages/Mypage.tsx';
+import SettingPage from './pages/SettingPage.tsx';
+import MainPage from './pages/MainPage.tsx';
 
 // TODO: 추후 논의
 const router = createBrowserRouter([
@@ -30,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: '/mypage',
     element: <Mypage />,
+  },
+  {
+    path: '/setting',
+    element: <SettingPage />,
   },
   {
     path: '/board/question',
@@ -50,14 +56,14 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <GlobalStyle />
-        <RecoilRoot>
-          <ModalProvider>
-            <QueryClientProvider client={queryClient}>
-              <RouterProvider router={router} />
-            </QueryClientProvider>
-          </ModalProvider>
-        </RecoilRoot>
-    </React.StrictMode>
+  <React.StrictMode>
+    <GlobalStyle />
+    <RecoilRoot>
+      <ModalProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </ModalProvider>
+    </RecoilRoot>
+  </React.StrictMode>,
 );
