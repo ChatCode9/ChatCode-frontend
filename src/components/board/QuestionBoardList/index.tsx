@@ -14,7 +14,6 @@ interface Props {
 
 function QuestionBoardList({ filters }: Props) {
   const navigate = useNavigate();
-  // const { position, showModal } = useModal();
   const { posts, showLoadingMessage, showNoDataMessage, showPagination, toggleStatus } = usePosts(filters);
   const BookMarkIconMemo = React.memo(BookMarkIcon);
 
@@ -30,6 +29,8 @@ function QuestionBoardList({ filters }: Props) {
     toggleStatus(id, 'blind', !posts.find(post => post.id === id)?.blind);
   }, [toggleStatus, posts]);
 
+  // 중요!!!
+  // handleMoreClick 와 같은 기능이므로 삭제될 예정
   const handleBlindDataAddClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: number) => {
     event.stopPropagation();
     toggleStatus(id, 'blind', !posts.find(post => post.id === id)?.blind);
@@ -38,10 +39,11 @@ function QuestionBoardList({ filters }: Props) {
   // 게시글 클릭 할 때
   const handlePostClick = useCallback((id: number, blind: boolean) => {
     if (!blind) {
-      navigate(`/post/${id}`);
+      navigate(`/posts/${id}`);
     }
   }, [navigate]);
 
+  // More 컴포넌트 클릭시 다른 곳 컴포넌트로 이벤트 퍼지는거 막기
   const eventStop = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }, []);

@@ -5,13 +5,15 @@ interface ModalData {
   message: string;
   confirm1: string;
   confirm2: string;
-  postId: number;
+  top: number,
+  left: number,
+  position?: string
 }
 
 export const ModalsStateContext = createContext<ModalData | null>(null);
 
 export const ModalsDispatchContext = createContext<{
-  showModal(ModalData: ModalData): void;
+  showModal(modalData: ModalData): void;
   hideModal(): void;
 } | null>(null);
 
@@ -19,15 +21,20 @@ export function ModalProvider(props: { children: React.ReactNode }) {
   const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const actions = useMemo(
     () => ({
-      showModal(ModalData: ModalData) {
-        setActiveModal(ModalData);
+      showModal(modalData: ModalData) {
+        console.log("showModal called", modalData);
+        setActiveModal(modalData);
       },
       hideModal() {
+        console.log("hideModal called");
         setActiveModal(null);
       },
     }),
     [],
   );
+
+  console.log("Current activeModal:", activeModal);
+
   return (
     <ModalsDispatchContext.Provider value={actions}>
       <ModalsStateContext.Provider value={activeModal}>{props.children}</ModalsStateContext.Provider>

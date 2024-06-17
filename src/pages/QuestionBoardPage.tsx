@@ -5,7 +5,6 @@ import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
 import Divider from '../components/board/Divider';
 import QuestionBoardList from '../components/board/QuestionBoardList';
-import PaginationRounded from '../components/board/Pagination';
 import { useEffect, useState } from 'react';
 import { Filters } from '../requestType/postType.ts';
 
@@ -15,7 +14,7 @@ function QuestionBoardPage() {
   const [filters, setFilters] = useState<Filters>({
     search: '',
     categories: 'question',
-    sortby: 'latest',
+    sortBy: 'latest',
     status: ['wait', 'finish'],
     pageInfo: {
       page: 1,
@@ -30,7 +29,7 @@ function QuestionBoardPage() {
 
   return (
     <Container>
-      <Navbar></Navbar>
+      <Navbar/>
       <PickFlow />
       <BoardInfo
         title="Q&A 게시판"

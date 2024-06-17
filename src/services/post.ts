@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Filters } from '../requestType/postType.ts';
 
 const fetchPosts = async (filters: Filters): Promise<Question> => {
-  const { search, categories, sortby, pageInfo } = filters;
+  const { search, categories, sortBy, pageInfo } = filters;
   let { status } = filters;
   if(status.length == 0){
     // 해결대기, 해결완료 모두 선택 했거나 또는 모두 선택하지 않는다면 API 전송시 데이터를 채워준다
@@ -14,13 +14,13 @@ const fetchPosts = async (filters: Filters): Promise<Question> => {
   const queryParams = new URLSearchParams({
     search,
     categories,
-    sortby,
+    sortBy,
     status: status.join(','), // Assuming the API expects a comma-separated string for status
     page: pageInfo.page.toString(),
     size: pageInfo.size.toString(),
   }).toString();
 
-  const res = await client.get(`board/question?${queryParams}`);
+  const res = await client.get(`article?${queryParams}`);
   // 응답전체 데이터
   // console.log(res);
   console.log(res.data);
@@ -38,6 +38,13 @@ export const PostsQuery = (filters: Filters) => {
     refetchOnMount:false
   });
 };
+
+// 게시글 상세 내용 불러오기
+export const getPost = async (postId: number) => {
+  const response = await client.get(`articles/${postId}`);
+  console.log(response.data);
+  return response.data;
+}
 
 // 북마크 업데이트
 export const updateBookmark = async (data : {postId : number, bookmark : boolean}) => {
@@ -63,10 +70,14 @@ export const updateBlind = async (data : {postId : number, blind : boolean}) => 
   }
 }
 
+interface UpdateStatusData {
+  status: string;
+}
+
 // 글 해결 대기에서 완료로 업데이트
-export const updateStatus = async (data : {postId : number, status : string}) => {
+const updateStatus = async (postId: number, data: UpdateStatusData) => {
   try {
-    const response = await client.post('status', data);
+    const response = await client.post(`articles/${postId}/status`, data);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -74,3 +85,34 @@ export const updateStatus = async (data : {postId : number, status : string}) =>
     throw error;
   }
 }
+
+export const updateStatusWrapper = ({ postId, data }: { postId: number, data: UpdateStatusData }) => {
+  return updateStatus(postId, data);
+}
+
+export const getLikesCount = async (postId: number) => {
+  const response = await client.get(`articles/${postId}/likesCount`);
+  console.log(response.data);
+  return response.data;
+}
+
+interface UpdateLikeData {
+  isLike: boolean;
+}
+
+interface UpdateLikeProps {
+  data: UpdateLikeData;
+  postId: number;
+}
+
+export const updateLike = async ({ data, postId }: UpdateLikeProps) => {
+  try {
+    const response = await client.post(`articles/${postId}/like`, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+

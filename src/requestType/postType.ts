@@ -1,7 +1,7 @@
 export type Filters = {
   search: string;
   categories: string;
-  sortby: string;
+  sortBy: string;
   status: string[];
   pageInfo: {
     page: number;

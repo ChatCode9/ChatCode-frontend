@@ -36,7 +36,7 @@ function PostWritePage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    mutate({ title, contentText: content });
+    mutate({ title, contentText: JSON.stringify(content)});
 
     console.log({
       category,
