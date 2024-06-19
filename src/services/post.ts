@@ -1,21 +1,21 @@
 import client from './client';
 import { Question } from '../responseType/postType.ts';
 import { useQuery } from '@tanstack/react-query';
-import { Filters } from '../requestType/postType.ts';
+import { Filters, RequestFilters } from '../requestType/postType.ts';
 
-const fetchPosts = async (filters: Filters): Promise<Question> => {
+const fetchPosts = async (filters: RequestFilters): Promise<Question> => {
   const { search, categories, sortBy, pageInfo } = filters;
   let { status } = filters;
-  if(status.length == 0){
+  if(status === '' || status === 'wait,finish' || status === 'finish,wait'){
     // 해결대기, 해결완료 모두 선택 했거나 또는 모두 선택하지 않는다면 API 전송시 데이터를 채워준다
-    status = ['wait', 'finish'];
+    status = 'emptyString';
   }
   // console.log('status After:',status);
   const queryParams = new URLSearchParams({
     search,
     categories,
     sortBy,
-    status: status.join(','), // Assuming the API expects a comma-separated string for status
+    status,
     page: pageInfo.page.toString(),
     size: pageInfo.size.toString(),
   }).toString();
@@ -27,11 +27,21 @@ const fetchPosts = async (filters: Filters): Promise<Question> => {
   return res.data;
 }
 
+// Filters -> RequestFilters 변환 함수
+const transformFilters = (filters: Filters): RequestFilters => {
+  return {
+    ...filters,
+    status: filters.status.join(','), // 배열을 문자열로 변환
+  };
+};
+
 // Search 데이터를 활용한 Question Post List 데이터 호출
 export const PostsQuery = (filters: Filters) => {
+  const requestFilters = transformFilters(filters);
+
   return useQuery<Question, Error>({
     queryKey: ['posts', filters],
-    queryFn: () => fetchPosts(filters),
+    queryFn: () => fetchPosts(requestFilters),
     // 사용자가 다른 창이나 탭으로 이동했다가 다시 돌아왔을 때 데이터를 자동으로 새로고침하지 않습니다
     refetchOnWindowFocus:true,
     // 인터넷 연결이 끊어졌다가 다시 연결되었을 때 데이터를 자동으로 새로고침하지 않습니다
