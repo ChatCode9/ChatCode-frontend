@@ -4,7 +4,7 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from '../../../requestType/postType.ts';
 
@@ -46,13 +46,7 @@ function BoardController({ filters, setFilters }: Props) {
 
   // 필터 (해결대기, 해결완료)
   const handleStatusChange = (status: string) => {
-    // console.log('handleStatusChange');
-    setFilters(prevFilters => {
-      const newStatus = prevFilters.status.includes(status)
-        ? prevFilters.status.filter(s => s !== status)
-        : [...prevFilters.status, status];
-      return { ...prevFilters, status: newStatus };
-    });
+    // console.log(`isPendingBefore : ${isPending}`)
     if (status === 'wait') {
       setIsPending(!isPending);
     } else if (status === 'finish') {
@@ -60,6 +54,24 @@ function BoardController({ filters, setFilters }: Props) {
     }
     setActiveButton(status);
   };
+
+  // 해결대기와 해결완료 데이터 변경시 setFilters 에 데이터 반영
+  useEffect(() => {
+    let newStaus;
+    if (isPending && isCompleted) {
+      newStaus = ['wait', 'finish']
+    } else if (!isPending && isCompleted) {
+      newStaus = ['finish']
+    } else if (isPending && !isCompleted) {
+      newStaus = ['wait']
+    } else {
+      newStaus = ['wait', 'finish']
+    }
+    // console.log(`newStaus : ${newStaus}`)
+    setFilters(prevFilters => {
+      return { ...prevFilters, status: newStaus };
+    });
+  }, [isPending, isCompleted]);
 
   // 전체(검색 조건 리셋)
   const handleResetFilters = () => {
