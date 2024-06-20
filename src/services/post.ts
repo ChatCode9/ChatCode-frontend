@@ -22,6 +22,23 @@ export const createNewArticle = async (newArticle: {
     }
 };
 
+// 게시글 수정
+export const updateArticle = async (postId: number, updateArticle: {
+      category: string | undefined;
+      title: string;
+      tagList: string[];
+      contentText: string;
+    }) => {
+    try {
+      const response = await client.put(`articles/${postId}`, updateArticle);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+};
+
 // 게시글 리스트 불러오기
 const fetchPosts = async (filters: RequestFilters): Promise<Question> => {
   const { search, categories, sortBy, pageInfo } = filters;
