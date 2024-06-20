@@ -3,6 +3,26 @@ import { Question } from '../responseType/postType.ts';
 import { useQuery } from '@tanstack/react-query';
 import { Filters, RequestFilters } from '../requestType/postType.ts';
 
+// 게시글 생성
+export const createNewArticle = async (newArticle: {
+      category: string | undefined;
+      title: string;
+      tagList: string[];
+      contentText: string;
+    }) => {
+    try {
+      // console.log(`Request : newArticle => ${newArticle.category} \n ${newArticle.title} \n ${newArticle.tagList} \n ${newArticle.contentText} `)
+      const response = await client.post('articles', newArticle);
+      // console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
+};
+
+// 게시글 리스트 불러오기
 const fetchPosts = async (filters: RequestFilters): Promise<Question> => {
   const { search, categories, sortBy, pageInfo } = filters;
   let { status } = filters;
@@ -100,6 +120,7 @@ export const updateStatusWrapper = ({ postId, data }: { postId: number, data: Up
   return updateStatus(postId, data);
 }
 
+// 좋아요 갯수 불러오기
 export const getLikesCount = async (postId: number) => {
   const response = await client.get(`articles/${postId}/likesCount`);
   console.log(response.data);
@@ -115,6 +136,7 @@ interface UpdateLikeProps {
   postId: number;
 }
 
+// 게시글 좋아요 업데이트
 export const updateLike = async ({ data, postId }: UpdateLikeProps) => {
   try {
     const response = await client.post(`articles/${postId}/like`, data);
