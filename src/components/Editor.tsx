@@ -72,8 +72,6 @@ function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
           mutate({ base64File, targetId: 1 });
         } catch (error) {
           console.error(error);
-        } finally {
-          // 임시
         }
       } else {
         alert('Please select a file.');
