@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { postFile } from '../services/http';
+import { useMutation } from '@tanstack/react-query';
 
 const modules = {
   toolbar: [
@@ -47,6 +48,16 @@ interface Props {
 function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
   const quillRef = useRef<ReactQuill | null>(null);
 
+  const {
+    mutate, error: mutationError,
+  } = useMutation({
+    mutationFn: postFile,
+    onSuccess: (data, variables, context) => {
+      const { imageUrl } = data;
+      insertImageToEditor(imageUrl);
+    },
+  });
+
   const handleImage = async () => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -58,7 +69,7 @@ function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
         try {
           const base64String = await readFileAsBase64(input.files[0]);
           const base64File = `data:${input.files[0].type};base64,${base64String}`;
-          await postFile({ base64File, targetId: 1 });
+          mutate({ base64File, targetId: 1 });
         } catch (error) {
           console.error(error);
         }
@@ -66,6 +77,17 @@ function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
         alert('Please select a file.');
       }
     });
+  };
+
+  const insertImageToEditor = (imageUrl: string) => {
+    const editor = quillRef.current?.getEditor();
+    const range = editor?.getSelection(true);
+
+    if (range) {
+      editor?.insertEmbed(range.index, 'image', imageUrl);
+      range.index += 1; // Move the cursor to the next position
+      editor?.setSelection(range.index);
+    }
   };
 
   useEffect(() => {

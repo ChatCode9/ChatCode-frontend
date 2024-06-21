@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Wrapper } from './styles';
 
 interface Props {
-  category: 'question' | 'free' | undefined;
+  category: 'question' | 'free';
   onCategoryChange: (category: 'question' | 'free') => void;
 }
 
