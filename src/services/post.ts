@@ -39,6 +39,17 @@ export const updateArticle = async (postId: number, updateArticle: {
     }
 };
 
+export const deleteArticle = async (postId: number) => {
+  try {
+    const response = await client.delete(`articles/${postId}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 // 게시글 리스트 불러오기
 const fetchPosts = async (filters: RequestFilters): Promise<Question> => {
   const { search, categories, sortBy, pageInfo } = filters;

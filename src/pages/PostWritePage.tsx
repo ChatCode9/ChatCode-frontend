@@ -6,7 +6,7 @@ import Editor from '../components/Editor';
 import CategorySelect from '../components/write/CategorySelect';
 import TagAutocomplete from '../components/write/TagAutocomplete';
 import ActionButtons from '../components/write/ActionButtons';
-import { createNewArticle, getPost, updateArticle } from '../services/post';
+import { createNewArticle, deleteArticle, getPost, updateArticle } from '../services/post';
 import Navbar from '../components/NavBar.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import { NotificationModal } from '../components/modal/NotificationModal.tsx';
@@ -93,6 +93,20 @@ function PostWritePage() {
     }
   });
 
+  // 게시글 삭제
+  const { mutate : deleteMutate } = useMutation({
+    mutationFn: deleteArticle,
+    onSuccess: () => {
+      console.log('성공!');
+      navigate("/board/question");
+    },
+    onError: () => {
+      setModalMessage('서버 통신 실패');
+      setModalVisible(true);
+    }
+  });
+
+
   const handleCategoryChange = (category: 'question' | 'free') => {
     setCategory(category);
   };
@@ -133,6 +147,12 @@ function PostWritePage() {
     updateMutate({ postId: Number(postId), updateArticle: updateData });
   };
 
+  // 삭제
+  const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    deleteMutate(Number(postId))
+  }
+
   // 모달창 Close 버튼 클릭시 동작 함수
   const handleCloseModal = () => {
     setModalVisible(false);
@@ -148,7 +168,7 @@ function PostWritePage() {
           <TagAutocomplete tagList={tagList} onTagListChange={handleTagListChange} />
         </Header>
         <Editor content={content} setContent={setContent} />
-        <ActionButtons onCancel={handelCancel} onSave={handleSave} onSubmit={handleSubmit} onUpdate={handleUpdate} editVisible={editVisible} />
+        <ActionButtons onCancel={handelCancel} onSave={handleSave} onSubmit={handleSubmit} onUpdate={handleUpdate} onDelete={handleDelete} editVisible={editVisible} />
       </Form>
       <NotificationModal
         message={modalMessage}
