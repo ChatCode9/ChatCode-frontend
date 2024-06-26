@@ -7,7 +7,6 @@ import { ModalProvider } from './context/ModalsContext.tsx';
 
 const queryClient = new QueryClient();
 
-import App from './App.tsx';
 import GlobalStyle from './styles/GlobalStyle.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
 import PostWritePage from './pages/PostWritePage.tsx';
@@ -29,22 +28,22 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/board/question',
-        element: <QuestionBoardPage />,
-      },
-      {
-        path: '/board/free',
+        path: 'board/free',
         element: <FreeBoardPage />,
       },
       {
-        path: '/write',
+        path: 'write',
         element: <PostWritePage />,
       },
       {
-        path: '/posts/:postId',
+        path: 'posts/:postId',
         element: <PostDetailPage />,
       },
     ],
+  },
+  {
+    path: '/board/question',
+    element: <QuestionBoardPage />,
   },
   {
     path: '/login',

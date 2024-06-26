@@ -1,37 +1,50 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePostTag } from '../../hooks/admin';
+import { usePutTag } from '../../hooks/admin';
+import { useGetTags } from '../../hooks/useQuery';
+import { useDeleteTag } from '../../hooks/admin';
+import { tagState } from '../../atoms/userInfoState';
+import { useRecoilState } from 'recoil';
 
+interface Tag {
+  id: number;
+  name: string;
+}
 function UserTag() {
-  const tagName: string[] = [
-    'frontend',
-    'backend',
-    'embeded',
-    'ui&ux',
-    'design',
-    'web',
-    'ios',
-    'mobile',
-    'ai',
-    'game',
-    'devops',
-    'deep learning',
-    'data',
-    'desktop',
-    'algorithm',
-    'native',
-    'app',
-    'protect',
-    'study',
-    'beginner',
-    'job',
-    'hire',
-    'employment',
-    'conference',
-    'job fair',
-    'competition',
-    'hackathon',
-  ];
-  const [clickedList, setClickedList] = useState(Array(tagName.length).fill(false));
+  //admin api 작업
+  const { mutate: postTagMutate } = usePostTag();
+
+  useEffect(() => {
+    const interest_tag = [{ name: 'New Tag1' }];
+    postTagMutate(interest_tag);
+  }, [postTagMutate]);
+
+  const { mutate: putTagMutate } = usePutTag();
+  useEffect(() => {
+    const updatedTag = [{ id: 1, name: 'frontend' }];
+    putTagMutate(updatedTag);
+  }, [putTagMutate]);
+
+  const { mutate: DeleteTagMutate } = useDeleteTag();
+  useEffect(() => {
+    const tagIdToDelete = 36;
+    DeleteTagMutate(tagIdToDelete);
+  }, [DeleteTagMutate]);
+
+  // 태그 전체 목록 불러오기
+  const { data } = useGetTags();
+  useEffect(() => {
+    if (data) {
+      setTagName(data.data);
+      setClickedList(Array(data.data.length).fill(false));
+    }
+  }, [data]);
+
+  const [tagName, setTagName] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useRecoilState<number[]>(tagState);
+  const [clickedList, setClickedList] = useState<boolean[]>([]);
+
   const handleClick = (index: number): void => {
     const updatedList = [...clickedList];
     const selectedCount = clickedList.filter((item) => item).length;
@@ -41,6 +54,13 @@ function UserTag() {
     }
     updatedList[index] = !updatedList[index];
     setClickedList(updatedList);
+
+    const selectedTag = tagName[index];
+    if (updatedList[index]) {
+      setSelectedTags([...selectedTags, selectedTag.id]);
+    } else {
+      setSelectedTags(selectedTags.filter((tag) => tag !== selectedTag.id));
+    }
   };
   return (
     <>
@@ -50,8 +70,8 @@ function UserTag() {
       </p>
 
       <TagContainer>
-        {tagName.map((tagname, index) => (
-          <li key={index}>
+        {tagName.map((tag, index) => (
+          <li key={tag.id}>
             <TagButton
               onClick={() => handleClick(index)}
               style={{
@@ -59,7 +79,7 @@ function UserTag() {
                 color: clickedList[index] ? '#ffff ' : '#353E5C',
               }}
             >
-              {tagname}
+              {tag.name}
             </TagButton>
           </li>
         ))}
@@ -92,7 +112,7 @@ const SignupInfoBox = styled.div`
 
 const TagContainer = styled.ul`
   width: 448px;
-  height: 288px;
+  height: auto;
   margin-top: 30px;
   display: flex;
   align-items: center;
@@ -114,5 +134,5 @@ const TagButton = styled.button`
   border: 1px solid #5d5a88;
   border-radius: 10px;
   padding: 5px 10px;
-  white-space: nowrap; /* 텍스트가 길어도 줄 바꿈 방지 */
+  white-space: nowrap;
 `;
