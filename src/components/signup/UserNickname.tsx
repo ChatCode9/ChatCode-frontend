@@ -1,31 +1,24 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { fetchUserNickname } from '../../services/http';
-
-interface User {
-  data: {
-    nickname: string;
-  };
-}
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { nickNameState } from '../../atoms/userInfoState';
+import { useGetInfo } from '../../hooks/mypageHooks';
 
 function Nickname() {
-  const [nickname, setNickname] = useState<string>('');
-  const handlechange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(event.target.value);
+  const [nickName, setNickName] = useRecoilState<string>(nickNameState);
+
+  const { data: userData } = useGetInfo();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNickName(event.target.value);
   };
 
-  const { data, isLoading, error }: UseQueryResult<User, Error> = useQuery({
-    queryKey: ['userInfo'],
-    queryFn: fetchUserNickname,
-  });
   useEffect(() => {
-    if (data && data.data.nickname) {
-      setNickname(data.data.nickname);
+    if (userData && userData.data && userData.data.nickname) {
+      console.log('닉네임data', userData);
+      setNickName(userData.data.nickname);
     }
-  }, [data]);
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  }, [userData, setNickName]);
+
   return (
     <>
       <SignupInfoBox>회원가입에 필요한 기본정보를 입력해주세요.</SignupInfoBox>
@@ -35,8 +28,8 @@ function Nickname() {
           <NicknameInput
             type="text"
             id="nickname_id"
-            value={nickname}
-            onChange={handlechange}
+            value={nickName}
+            onChange={handleChange}
             placeholder="별명을 알파벳, 한글, 숫자를 이용해 8자 이하로 입력해주세요"
           />
         </div>

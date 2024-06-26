@@ -1,119 +1,110 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { SyntheticEvent } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchUserNickname } from '../../services/http';
+import { useMutation } from '@tanstack/react-query';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate } from 'react-router-dom';
-// import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import LocalSeeIcon from '@mui/icons-material/LocalSee';
 import { postFile } from '../../services/http';
+import { useRecoilState } from 'recoil';
+import { nickNameState } from '../../atoms/userInfoState';
+import { ContentState } from '../../atoms/userInfoState';
+import { usePutContent } from '../../hooks/mypageHooks';
+import { useGetInfo } from '../../hooks/mypageHooks';
+import { fetchPutImage } from '../../services/http';
+import { useGetUserTags } from '../../hooks/mypageHooks';
 
-interface User {
-  data: {
-    nickname: string;
-    picture: string;
-  };
-}
-
-//TODO 사진이랑 컨텐트만 수정해서 보낼 수 있도록
 function Profile() {
   const navigate = useNavigate();
-  const [username, setUserName] = useState<string>('');
-  const [userTag, setUserTag] = useState<string[]>([]);
-  const [userContent, setUserContent] = useState<string>('');
+  const [username, setUserName] = useRecoilState<string>(nickNameState);
+  const [userTag, setUserTag] = useState<{ id: number; name: string }[]>([]);
+  const [userContent, setUserContent] = useRecoilState<string>(ContentState);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isContentChanged, setIsContentChanged] = useState<boolean>(false);
+
+  //사진관련 상태
   const [image, setImage] = useState<string | null>(null);
+  const [isImageChanged, setIsImageChanged] = useState<boolean>(false);
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const fileInput = useRef<HTMLInputElement | null>(null);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const {
-    data,
-    isLoading,
-    error: queryError,
-  } = useQuery<User>({
-    queryKey: ['userInfo'],
-    queryFn: fetchUserNickname,
-  });
-  const {
-    mutate,
-    isPending,
-    isError,
-    error: mutationError,
-  } = useMutation({
+  const { data: userData } = useGetInfo();
+  const { mutateAsync: contentMutate } = usePutContent();
+  const { data: userTags } = useGetUserTags();
+  const { mutateAsync: postImg, error: mutationError } = useMutation({
     mutationFn: postFile,
     onSuccess: () => {
-      console.log('성공!');
+      console.log('이미지 s3에 보내기 성공!');
+    },
+    onError: (error) => {
+      console.error('Mutation error:', error);
     },
   });
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (image) {
-      const base64File = image.split(',')[1];
-      mutate({ base64File, targetId: 1 });
-    }
-
-    console.log({
-      image,
-    });
-  };
 
   useEffect(() => {
-    if (data && data.data.nickname) {
-      setUserName(data.data.nickname);
-      setImage(data.data.picture);
-      // setUserInfo((prevUserInfo) => ({
-      //   ...prevUserInfo,
-      //   userImg: data.data.picture,
-      //   username: data.data.nickname,
-      // }));
+    if (userData && userData.data.content && userData.data.nickname && userTags) {
+      setUserName(userData.data.nickname);
+      setImage(userData.data.picture);
+      setUserContent(userData.data.content);
+      setUserTag(userTags.data);
     }
-  }, [data]);
-  if (isLoading) return <div>Loading...</div>;
-  if (mutationError) return <div>Error: {mutationError.message}</div>;
-  const tagName: string[] = [
-    'frontend',
-    'backend',
-    'embeded',
-    'ui&ux',
-    'design',
-    'web',
-    'ios',
-    'mobile',
-    'ai',
-    'game',
-    'devops',
-    'deep learning',
-    'data',
-    'desktop',
-    'algorithm',
-    'native',
-    'app',
-    'protect',
-    'study',
-    'beginner',
-    'job',
-    'hire',
-    'employment',
-    'conference',
-    'job fair',
-    'competition',
-    'hackathon',
-  ];
+  }, [userData, setUserName, setUserContent, userTags]);
 
-  const handleTagChange = (event: SyntheticEvent, newValue: string[]) => {
-    if (newValue.length <= 6) {
-      setUserTag([...userTag, ...newValue]);
-    } else {
-      alert('태그는 최대 6개까지 선택 가능합니다.');
+  const handleSave = async () => {
+    if (!isImageChanged && !isContentChanged) {
+      setIsEditing(false);
+      console.log('No changes to save');
+      return;
     }
+
+    const contentToSend = { content: userContent };
+    if (isContentChanged) {
+      try {
+        await contentMutate(contentToSend);
+        setIsEditing(false);
+      } catch (error) {
+        console.log('내용 저장 안됨', error);
+      }
+    }
+
+    if (image && isImageChanged) {
+      const base64File = image;
+      if (!base64File) {
+        console.error('Invalid image data format');
+        return;
+      }
+      try {
+        // 파일 전송
+        const data = await postImg({ base64File: base64File, targetId: 9 });
+        console.log('이미지 업로드 성공');
+
+        // S3로부터의 응답을 기다렸다가 서버에 다시 보내는 부분
+        if (data && data.data && data.data.url) {
+          console.log('data.url', data.data.url);
+
+          try {
+            await fetchPutImage({ picture: data.data.url });
+            console.log('S3 이미지 서버에 전송 성공');
+          } catch (error) {
+            console.error('S3 이미지 서버에 전송 실패:', error);
+          }
+        }
+
+        setIsEditing(false);
+      } catch (error) {
+        console.error('이미지 업로드 실패:', error);
+      }
+    }
+
+    setIsImageChanged(false);
+    setIsContentChanged(false);
   };
+
+  if (mutationError) return <div>Error: {mutationError.message}</div>;
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
   };
-  // 사진이 있으면 업로드 하고 아니면 isDefault가 true 도록
+
   const handleImgChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
@@ -123,14 +114,7 @@ function Profile() {
         const base64String = reader.result as string;
         setImage(base64String);
         setIsDefault(false);
-
-        // 서버에 파일을 전송하는 코드 추가
-        try {
-          const base64File = `data:${file.type};base64,${base64String.split(',')[1]}`;
-          await postFile({ base64File, targetId: 3 });
-        } catch (error) {
-          console.error('Error uploading file:', error);
-        }
+        setIsImageChanged(true);
       };
 
       reader.readAsDataURL(file);
@@ -142,10 +126,9 @@ function Profile() {
 
   return (
     <PofileWrapper>
-      {/* 편집중일때 */}
       {isEditing ? (
         <>
-          <form onSubmit={handleSubmit}>
+          <form>
             <ProfileImg>
               <input
                 type="file"
@@ -176,29 +159,36 @@ function Profile() {
                   }}
                 />
               )}
+              {/* 편집중일때 */}
             </ProfileImg>
-            <UserInfoWrapper>
+            <InfoWrapper>
               <UserInfoNickname>{username}</UserInfoNickname>
-              <UserInfoTag>{userTag}</UserInfoTag>
-              <UserInfoInput
+
+              <div>
+                {userTag.map((tag) => (
+                  <span key={tag.id}>{tag.name}</span>
+                ))}
+              </div>
+              <input
                 style={{ height: '57px' }}
                 type="text"
                 value={userContent}
                 onChange={(event) => {
                   setUserContent(event.target.value);
+                  setIsContentChanged(true);
                 }}
               />
-            </UserInfoWrapper>
+            </InfoWrapper>
           </form>
         </>
       ) : (
         <>
           <ProfileImg>{image && <img src={image} alt="Received Image" />}</ProfileImg>
           <InfoWrapper>
-            <p>{username}</p>
+            <UserInfoNickname>{username}</UserInfoNickname>
             <div>
-              {userTag.map((item, i) => (
-                <span key={i}>{item}</span>
+              {userTag.map((tag) => (
+                <span key={tag.id}>{tag.name}</span>
               ))}
             </div>
             <p>{userContent}</p>
@@ -208,7 +198,7 @@ function Profile() {
 
       {isEditing ? (
         <>
-          <button type="submit" style={{ margin: '10px' }}>
+          <button type="submit" style={{ margin: '10px' }} onClick={handleSave}>
             Complete
           </button>
           <button onClick={() => navigate('/setting')} type="button">
@@ -224,10 +214,6 @@ function Profile() {
   );
 }
 export default Profile;
-const UserInfoTag = styled.div`
-  margin: 10px 0 10px 0;
-  outline: none;
-`;
 
 const PofileWrapper = styled.div`
   display: flex;
@@ -236,7 +222,9 @@ const PofileWrapper = styled.div`
   align-content: center;
   width: 100%;
   height: 300px;
-
+  form {
+    display: flex;
+  }
   button {
     width: 83px;
     height: 37px;
@@ -270,24 +258,12 @@ const ProfileImg = styled.div`
     color: #ffffff;
   }
 `;
-const UserInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0 100px 0 100px;
-  width: 837px;
-  height: auto;
-  font-weight: 600;
-`;
+
 const UserInfoNickname = styled.div`
   height: 32px;
-  /* border: 1px solid #d9d9d9; */
-  /* border-radius: 4px; */
+  margin-bottom: 10px;
 `;
-const UserInfoInput = styled.input`
-  height: 32px;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-`;
+
 const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -309,8 +285,18 @@ const InfoWrapper = styled.div`
   span {
     margin-right: 10px;
     background-color: #d9d9d9;
-    height: 20px;
+    width: auto;
+    height: auto;
     padding: 5px;
     border-radius: 6px;
+  }
+  p {
+    margin-top: 10px;
+  }
+  input {
+    height: 32px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    margin-top: 10px;
   }
 `;

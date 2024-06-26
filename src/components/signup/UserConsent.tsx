@@ -3,7 +3,13 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Switch from '@mui/material/Switch';
+import { usePutNickname } from '../../hooks/signup';
 import { useState } from 'react';
+import { nickNameState } from '../../atoms/userInfoState';
+import { useRecoilState } from 'recoil';
+import { tagState } from '../../atoms/userInfoState';
+import { usePostTags } from '../../hooks/signup';
+
 interface ConsentStates {
   totalConsent: boolean;
   serviceTerms: boolean;
@@ -11,6 +17,10 @@ interface ConsentStates {
   [key: string]: boolean;
 }
 function UserConsent() {
+  const [nickName] = useRecoilState<string>(nickNameState);
+  const [selectedTags] = useRecoilState<number[]>(tagState);
+  const { mutate: PutNickname } = usePutNickname();
+  const { mutate: PostUserTags } = usePostTags();
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const [consentStates, setConsentStates] = useState<ConsentStates>({
     totalConsent: false,
@@ -38,6 +48,15 @@ function UserConsent() {
   };
   const handleMouseLeave = (event: React.MouseEvent<HTMLSpanElement>) => {
     (event.target as HTMLSpanElement).style.color = '#0E43F3';
+  };
+
+  const handleSave = () => {
+    const updatedName = { nickname: nickName };
+    const tagsToSend = selectedTags.map((tagId) => ({ id: tagId }));
+    console.log('tagsToSend', tagsToSend);
+    PostUserTags(tagsToSend);
+    PutNickname(updatedName);
+    window.location.href = '/mypage';
   };
   return (
     <>
@@ -90,7 +109,9 @@ function UserConsent() {
         </div>
       </ConsentContainer>
       <JoinBtn>
-        <button type="submit">Join</button>
+        <button type="submit" onClick={handleSave}>
+          Join
+        </button>
       </JoinBtn>
     </>
   );

@@ -6,21 +6,20 @@ import UserConsent from '../components/signup/UserConsent';
 import { useEffect } from 'react';
 
 function SignupPage() {
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("https://chatcode.store/avatars/me");
-      const json = await response.json();
-      console.log(json);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await fetch('https://chatcode.store/avatars/3');
+  //     const json = await response.json();
+  //     console.log(json);
+  //   })();
+  // }, []);
 
   return (
     <Container>
       <Navbar></Navbar>
       <LoginBox>
         <SnsLogin>
-          {/*<Nickname />*/}
+          <Nickname />
           <UserTag />
           <UserConsent />
         </SnsLogin>

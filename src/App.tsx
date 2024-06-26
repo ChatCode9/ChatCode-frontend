@@ -22,6 +22,7 @@ import MainPage from './pages/MainPage.tsx';
 // TODO: 추후 논의
 const router = createBrowserRouter([
   {
+
     path: '/login',
     element: <LoginPage />,
   },
