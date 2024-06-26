@@ -3,7 +3,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styled from 'styled-components';
 
 interface Props {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>, id: string) => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
   id: number;
   isUserPost?: boolean; // 필수값이 아닌 옵션값
 }

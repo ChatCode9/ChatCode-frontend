@@ -1,13 +1,19 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.header`
+export const Wrapper = styled.div`
   position: relative;
 
+  .voting {
+    position: absolute;
+    left: -10px;
+  }
+    
   .more {
     position: absolute;
     right: -10px;
     top: -10px;
   }
+    
 `;
 
 export const Title = styled.h1`

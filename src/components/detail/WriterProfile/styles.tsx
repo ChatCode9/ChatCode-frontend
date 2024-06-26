@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 200px;
+  margin-top: 150px;
 
   .inner {
     display: flex;
@@ -22,6 +22,7 @@ export const Container = styled.div`
 
   .info {
     margin-left: 20px;
+    max-width: 350px;
 
     .writer {
       font-size: 18px;
@@ -29,17 +30,20 @@ export const Container = styled.div`
     }
 
     .tags {
+      max-width: 100%;
+      white-space: wrap;
+      overflow: hidden;
       margin-top: 5px;
       display: flex;
+      flex-wrap: wrap;
+      margin-left: -5px;
 
       li {
+        display: inline-block;
         background-color: #d9d9d9;
         padding: 5px;
         font-size: 12px;
-      }
-
-      li + li {
-        margin-left: 10px;
+        margin: 5px;
       }
     }
 

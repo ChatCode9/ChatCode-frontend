@@ -8,7 +8,6 @@ import { ModalProvider } from './context/ModalsContext.tsx';
 const queryClient = new QueryClient();
 
 import GlobalStyle from './styles/GlobalStyle.tsx';
-import ErrorPage from './pages/ErrorPage.tsx';
 import PostWritePage from './pages/PostWritePage.tsx';
 import QuestionBoardPage from './pages/QuestionBoardPage.tsx';
 import FreeBoardPage from './pages/FreeBoardPage.tsx';
@@ -23,29 +22,7 @@ import MainPage from './pages/MainPage.tsx';
 // TODO: 추후 논의
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <MainPage />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: 'board/free',
-        element: <FreeBoardPage />,
-      },
-      {
-        path: 'write',
-        element: <PostWritePage />,
-      },
-      {
-        path: 'posts/:postId',
-        element: <PostDetailPage />,
-      },
-    ],
-  },
-  {
-    path: '/board/question',
-    element: <QuestionBoardPage />,
-  },
-  {
+
     path: '/login',
     element: <LoginPage />,
   },
@@ -60,6 +37,26 @@ const router = createBrowserRouter([
   {
     path: '/setting',
     element: <SettingPage />,
+  },
+  {
+    path: '/board/question',
+    element: <QuestionBoardPage />,
+  },
+  {
+    path: '/board/free',
+    element: <FreeBoardPage />,
+  },
+  {
+    path: '/write',
+    element: <PostWritePage />,
+  },
+  {
+    path: '/edit/:postId',
+    element: <PostWritePage />
+  },
+  {
+    path: '/posts/:postId',
+    element: <PostDetailPage />,
   },
 ]);
 

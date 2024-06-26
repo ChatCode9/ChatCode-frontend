@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom';
 
 import Post from '../components/detail/Post';
 import Comments from '../components/detail/Comments';
+import Navbar from '../components/NavBar.tsx';
+import { Container } from '@mui/material';
 
 function PostDetailPage() {
   const { postId } = useParams();
@@ -10,8 +12,11 @@ function PostDetailPage() {
 
   return (
     <>
-      <Post />
-      <Comments />
+      <Container>
+        <Navbar/>
+        <Post postId={Number(postId)} />
+        <Comments postId={Number(postId)} />
+      </Container>
     </>
   );
 }

@@ -1,25 +1,15 @@
 import axios, { AxiosError } from 'axios';
 import client from './client';
 
-export const createNewArticle = async (newArticle: { title: string; contentText: string }) => {
-  try {
-    const response = await client.post('articles', newArticle);
 
-    console.log(response.data);
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-
-    throw error;
-  }
-};
 
 // 이미지를 S3에 업로드
 export const postFile = async (file: { base64File: string; targetId: number }) => {
   try {
     const response = await client.post('files', file);
+
     console.log('사진 응답', response.data);
+
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

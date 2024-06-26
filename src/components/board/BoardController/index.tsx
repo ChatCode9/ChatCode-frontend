@@ -4,7 +4,7 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from '../../../requestType/postType.ts';
 
@@ -29,7 +29,7 @@ function BoardController({ filters, setFilters }: Props) {
     queryClient.invalidateQueries({ queryKey: ['posts'] });
   };
 
-  // 필터
+  // 필터 (오름차순, 내림차순)
   const handleFilterChange = (newSortby: string) => {
     // console.log('handleFilterChange');
     setFilters(prevFilters => ({
@@ -44,14 +44,9 @@ function BoardController({ filters, setFilters }: Props) {
     setActiveButton(newSortby);
   };
 
+  // 필터 (해결대기, 해결완료)
   const handleStatusChange = (status: string) => {
-    // console.log('handleStatusChange');
-    setFilters(prevFilters => {
-      const newStatus = prevFilters.status.includes(status)
-        ? prevFilters.status.filter(s => s !== status)
-        : [...prevFilters.status, status];
-      return { ...prevFilters, status: newStatus };
-    });
+    // console.log(`isPendingBefore : ${isPending}`)
     if (status === 'wait') {
       setIsPending(!isPending);
     } else if (status === 'finish') {
@@ -60,12 +55,31 @@ function BoardController({ filters, setFilters }: Props) {
     setActiveButton(status);
   };
 
+  // 해결대기와 해결완료 데이터 변경시 setFilters 에 데이터 반영
+  useEffect(() => {
+    let newStaus;
+    if (isPending && isCompleted) {
+      newStaus = ['wait', 'finish']
+    } else if (!isPending && isCompleted) {
+      newStaus = ['finish']
+    } else if (isPending && !isCompleted) {
+      newStaus = ['wait']
+    } else {
+      newStaus = ['wait', 'finish']
+    }
+    // console.log(`newStaus : ${newStaus}`)
+    setFilters(prevFilters => {
+      return { ...prevFilters, status: newStaus };
+    });
+  }, [isPending, isCompleted]);
+
+  // 전체(검색 조건 리셋)
   const handleResetFilters = () => {
     // console.log('handleResetFilters');
     const initialFilters = {
       search: '',
       categories: 'question',
-      sortby: 'latest',
+      sortBy: 'latest',
       status: ['wait', 'finish'],
       pageInfo: {
         page: 1,
@@ -80,6 +94,7 @@ function BoardController({ filters, setFilters }: Props) {
     setInputValue('');
   };
 
+  // 1페이지 몇개 볼 것인지 선택
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
     setFilters(prevFilters => ({
@@ -91,6 +106,7 @@ function BoardController({ filters, setFilters }: Props) {
     }));
   };
 
+  // 검색창에 입력되는 값
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
     setFilters(prevFilters => ({
@@ -99,7 +115,7 @@ function BoardController({ filters, setFilters }: Props) {
     }));
   };
 
-  // 게시글 클릭 할 때
+  // 게시글 글쓰기 클릭 할 때
   const handlePostWriteClick = () => {
     navigate(`/write`);
   };
@@ -136,10 +152,6 @@ function BoardController({ filters, setFilters }: Props) {
             <div className="dot" />
             <div>내림차순</div>
           </FilterItem>
-          {/*<FilterItem onClick={() => handleFilterChange('popularity')}>*/}
-          {/*  <div className="dot" />*/}
-          {/*  <div>인기순</div>*/}
-          {/*</FilterItem>*/}
           <FilterItem
             className={isPending ? 'active' : ''}
             onClick={() => handleStatusChange( 'wait')}
@@ -155,7 +167,6 @@ function BoardController({ filters, setFilters }: Props) {
             <div>해결 완료</div>
           </FilterItem>
         </CategoryList>
-        {/*{extra && <div className="extra">{extra}</div>}*/}
         <SelectWrapper>
           <Select value={selectedValue} onChange={handleSelectChange}>
             <option value="15">15개씩 보기</option>

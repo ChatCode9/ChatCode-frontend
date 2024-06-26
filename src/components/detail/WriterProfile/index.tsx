@@ -1,25 +1,26 @@
 import { Container } from './styles';
 
 interface Props {
-  writer: string;
+  userId: number;
+  userName: string;
+  avatar: string;
+  avatarTags: string[];
+  comment: string;
 }
 
-function WriterProfile({ writer }: Props) {
+function WriterProfile({ userId, userName, avatar, avatarTags, comment }: Props) {
   return (
     <Container>
       <div className="inner">
-        <img className="avatar" src="https://placehold.co/60" alt="프로필 이미지" />
+        <img className="avatar" src={avatar} alt="프로필 이미지" />
         <div className="info">
-          <div className="writer">{writer}</div>
-
+          <div className="writer">{userName}</div>
           <ul className="tags">
-            <li>frontend</li>
-            <li>backend</li>
-            <li>ui/ux engineer</li>
-            <li>beginner</li>
+            {avatarTags.map((tag) => (
+              <li key={tag}>{tag}</li>
+            ))}
           </ul>
-
-          <p className="desc">This is test user profile</p>
+          <p className="desc">{comment}</p>
         </div>
       </div>
     </Container>
