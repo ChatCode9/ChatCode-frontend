@@ -60,10 +60,6 @@ const fetchPosts = async (filters: RequestFilters): Promise<Question> => {
     status = 'emptyString';
   }
 
-  if(search === ''){
-    search = '""';
-  }
-
   // console.log('status After:',status);
   const queryParams = new URLSearchParams({
     category: categories,
