@@ -34,7 +34,7 @@ function BoardController({ filters, setFilters }: Props) {
     // console.log('handleFilterChange');
     setFilters(prevFilters => ({
       ...prevFilters,
-      sortby: newSortby,
+      sortBy: newSortby,
     }));
     if (newSortby === 'latest') {
       setIsAscending(true);

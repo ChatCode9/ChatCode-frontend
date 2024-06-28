@@ -53,23 +53,42 @@ export const deleteArticle = async (postId: number) => {
 
 // 게시글 리스트 불러오기
 const fetchPosts = async (filters: RequestFilters): Promise<Question> => {
-  const { search, categories, sortBy, pageInfo } = filters;
-  let { status } = filters;
+  const { categories, sortBy, pageInfo } = filters;
+  let { search, status } = filters;
   if(status === '' || status === 'wait,finish' || status === 'finish,wait'){
     // 해결대기, 해결완료 모두 선택 했거나 또는 모두 선택하지 않는다면 API 전송시 데이터를 채워준다
     status = 'emptyString';
   }
+
+  if(search === ''){
+    search = '""';
+  }
+
   // console.log('status After:',status);
   const queryParams = new URLSearchParams({
-    search,
-    categories,
-    sortBy,
-    status,
-    page: pageInfo.page.toString(),
-    size: pageInfo.size.toString(),
-  }).toString();
+    category: categories,
+    sortBy: sortBy,
+    status: status,
+  });
 
-  const res = await client.get(`article?${queryParams}`);
+  const pageInfoParams = {
+    page: pageInfo.page,
+    size: pageInfo.size,
+    offset: pageInfo.offset,
+  };
+
+  queryParams.append('pageInfo', JSON.stringify(pageInfoParams));
+
+  const res = await client.get(`articles`, {
+    params: {
+      search: search,
+      category : categories,
+      sortBy: sortBy,
+      status: status,
+      pageInfo: pageInfoParams
+    }
+  });
+
   // 응답전체 데이터
   // console.log(res);
   console.log(res.data);

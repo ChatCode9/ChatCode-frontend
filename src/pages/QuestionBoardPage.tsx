@@ -19,6 +19,7 @@ function QuestionBoardPage() {
     pageInfo: {
       page: 1,
       size: 15,
+      offset: 0,
     },
   });
 
