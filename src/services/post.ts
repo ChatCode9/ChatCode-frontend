@@ -53,8 +53,8 @@ export const deleteArticle = async (postId: number) => {
 
 // 게시글 리스트 불러오기
 const fetchPosts = async (filters: RequestFilters): Promise<Question> => {
-  const { categories, sortBy, pageInfo } = filters;
-  let { search, status } = filters;
+  const { search, categories, sortBy, pageInfo } = filters;
+  let { status } = filters;
   if(status === '' || status === 'wait,finish' || status === 'finish,wait'){
     // 해결대기, 해결완료 모두 선택 했거나 또는 모두 선택하지 않는다면 API 전송시 데이터를 채워준다
     status = 'emptyString';
