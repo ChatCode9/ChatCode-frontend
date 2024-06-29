@@ -6,6 +6,7 @@ export type Filters = {
   pageInfo: {
     page: number;
     size: number;
+    offset: number;
   };
 };
 
@@ -17,5 +18,6 @@ export type RequestFilters = {
   pageInfo: {
     page: number;
     size: number;
+    offset: number;
   };
 };
