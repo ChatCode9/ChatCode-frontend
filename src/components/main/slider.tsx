@@ -37,7 +37,6 @@ export default function Slider() {
 const StyledSwiper = styled(Swiper)`
   width: 100%;
   height: 500px;
-
   .swiper-button-prev,
   .swiper-button-next {
     color: #5d5a88;

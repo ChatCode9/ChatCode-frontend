@@ -22,7 +22,10 @@ import MainPage from './pages/MainPage.tsx';
 // TODO: 추후 논의
 const router = createBrowserRouter([
   {
-
+    path: '/',
+    element: <MainPage />,
+  },
+  {
     path: '/login',
     element: <LoginPage />,
   },
@@ -52,7 +55,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/edit/:postId',
-    element: <PostWritePage />
+    element: <PostWritePage />,
   },
   {
     path: '/posts/:postId',

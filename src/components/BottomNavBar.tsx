@@ -7,7 +7,7 @@ function BottomNavBar() {
       <TopFooter>
         <LeftFooterBox>
           <FooterLogo>
-            <img src="public/FooterLogo.svg" alt="Chat Code logo" width="261px" height="35px" />
+            <img src="public/FooterLogo.svg" alt="Chat Code logo" width="227px" height="65px" />
           </FooterLogo>
         </LeftFooterBox>
         <MidPolicy>
@@ -26,21 +26,24 @@ function BottomNavBar() {
           </GitLinkBox>
         </MidPolicy>
         <RightFooterBox>
-          <RightBottonTitle>Do you need any help?</RightBottonTitle>
+          <div>
+            <RightBottonTitle>Do you need any help?</RightBottonTitle>
 
-          <Button
-            variant="contained"
-            endIcon={<EastIcon />}
-            sx={{
-              backgroundColor: '#5D5A88',
-              borderRadius: '30px',
+            <Button
+              variant="contained"
+              endIcon={<EastIcon />}
+              sx={{
+                width: '122px',
+                backgroundColor: '#5D5A88',
+                borderRadius: '10px',
 
-              ':hover': { backgroundColor: '#6D758F' },
-              '.MuiButton-icon': { marginLeft: '10px' },
-            }}
-          >
-            HELP
-          </Button>
+                ':hover': { backgroundColor: '#6D758F' },
+                '.MuiButton-icon': { marginLeft: '10px' },
+              }}
+            >
+              HELP
+            </Button>
+          </div>
         </RightFooterBox>
       </TopFooter>
       <BottomFooter>
@@ -56,25 +59,29 @@ const Footer = styled.footer`
   flex-direction: column;
   position: relative;
   z-index: 20;
+  transform: translateY(100%);
   overflow: hidden;
   bottom: 0;
   left: 0;
   width: 100%;
   border-top: 3px solid #f2f1fa;
-  height: 260px;
+  height: 200px;
 `;
 const TopFooter = styled.div`
   display: flex;
   justify-content: space-between;
+  height: 155px;
 `;
 const LeftFooterBox = styled.div`
+  display: flex;
+  align-items: center;
   width: 280px;
   margin-left: 20px;
 `;
 
 const FooterLogo = styled.div`
   display: flex;
-  margin: 10px;
+  margin: 20px;
 `;
 
 const MidPolicy = styled.div`
@@ -101,9 +108,10 @@ const GitLinkBox = styled.div`
   height: 40px;
 `;
 const SubTitle = styled.p`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
   color: #5d5a88;
+  margin-bottom: 10px;
 `;
 
 const PrivacyPolicy = styled.p`
@@ -125,16 +133,18 @@ const Link = styled.a`
 const RightFooterBox = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 400px;
-  height: 40px;
-  margin: 100px 30px 0 0;
+  div {
+    width: 352px;
+    height: 38px;
+    display: flex;
+    margin-right: 30px;
+  }
 `;
 
 const BottomFooter = styled.div`
   border-top: 1px solid #d4d2e3;
   width: 100%;
-  height: 55px;
+  height: 45px;
   color: #767494;
   display: flex;
   align-items: center;

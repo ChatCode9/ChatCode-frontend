@@ -3,17 +3,8 @@ import Navbar from '../components/NavBar';
 import Nickname from '../components/signup/UserNickname';
 import UserTag from '../components/signup/UserTag';
 import UserConsent from '../components/signup/UserConsent';
-import { useEffect } from 'react';
 
 function SignupPage() {
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch('https://chatcode.store/avatars/3');
-  //     const json = await response.json();
-  //     console.log(json);
-  //   })();
-  // }, []);
-
   return (
     <Container>
       <Navbar></Navbar>
