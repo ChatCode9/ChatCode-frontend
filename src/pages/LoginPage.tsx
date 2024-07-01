@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Navbar from '../components/NavBar';
 import BottomNavBar from '../components/BottomNavBar';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 function LoginPage() {
   const location = useLocation();
@@ -46,12 +46,13 @@ export default LoginPage;
 
 const LoginBox = styled.div`
   display: flex;
-
+  height: auto;
   min-height: 100%;
   position: relative;
   z-index: 10;
-  margin-top: -110px 0 -260px 0;
+  margin-top: -160px 0 -260px 0;
   justify-content: center;
+  padding-bottom: 110px;
 `;
 const LoginTitle = styled.div`
   width: 328px;
