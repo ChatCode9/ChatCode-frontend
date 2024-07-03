@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { nickNameState } from '../../atoms/userInfoState';
-import { useGetInfo } from '../../hooks/mypageHooks';
+import { useInfoQuery } from '../../hooks/api/useInfoQuery';
 
 function Nickname() {
   const [nickName, setNickName] = useRecoilState<string>(nickNameState);
 
-  const { data: userData } = useGetInfo();
+  const { data: userData } = useInfoQuery();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(event.target.value);
   };

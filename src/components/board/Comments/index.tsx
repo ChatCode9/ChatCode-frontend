@@ -1,7 +1,7 @@
 import { Header, Wrapper } from './styles';
 import Divider from '../Divider';
 import CommentList from '../CommentList';
-import CommentInput from '../CommentInput';
+import CommentInput from '../../detail/CommentInput';
 
 const data = [
   {

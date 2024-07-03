@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Filters } from '../../../requestType/postType';
+
+import { Filters } from '../../../types/filter';
 import BoardItem from './BoardItem';
 import { Board, BoardListWrapper } from './styles';
 import BookMarkIcon from '../BookMarkIcon';
 import PaginationRounded from '../Pagination';
-import usePosts from './usePosts.ts';
-
+import usePosts from '../../../hooks/usePosts.ts';
 
 interface Props {
   filters: Filters;
@@ -18,30 +18,42 @@ function QuestionBoardList({ filters }: Props) {
   const BookMarkIconMemo = React.memo(BookMarkIcon);
 
   // 게시글 북마크 하고자 할 때
-  const handleBookMarkIconClick = useCallback((event: React.MouseEvent<HTMLDivElement>, id: number) => {
-    event.stopPropagation();
-    toggleStatus(id, 'bookmark', !posts.find(post => post.id === id)?.bookmark);
-  }, [toggleStatus, posts]);
+  const handleBookMarkIconClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>, id: number) => {
+      event.stopPropagation();
+      toggleStatus(id, 'bookmark', !posts.find((post) => post.id === id)?.bookmark);
+    },
+    [toggleStatus, posts],
+  );
 
   // 블라인드 상태 토글하고자 할 때
-  const handleMoreClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    event.stopPropagation();
-    toggleStatus(id, 'blind', !posts.find(post => post.id === id)?.blind);
-  }, [toggleStatus, posts]);
+  const handleMoreClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
+      event.stopPropagation();
+      toggleStatus(id, 'blind', !posts.find((post) => post.id === id)?.blind);
+    },
+    [toggleStatus, posts],
+  );
 
   // 중요!!!
   // handleMoreClick 와 같은 기능이므로 삭제될 예정
-  const handleBlindDataAddClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    event.stopPropagation();
-    toggleStatus(id, 'blind', !posts.find(post => post.id === id)?.blind);
-  }, [toggleStatus, posts]);
+  const handleBlindDataAddClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
+      event.stopPropagation();
+      toggleStatus(id, 'blind', !posts.find((post) => post.id === id)?.blind);
+    },
+    [toggleStatus, posts],
+  );
 
   // 게시글 클릭 할 때
-  const handlePostClick = useCallback((id: number, blind: boolean) => {
-    if (!blind) {
-      navigate(`/posts/${id}`);
-    }
-  }, [navigate]);
+  const handlePostClick = useCallback(
+    (id: number, blind: boolean) => {
+      if (!blind) {
+        navigate(`/posts/${id}`);
+      }
+    },
+    [navigate],
+  );
 
   // More 컴포넌트 클릭시 다른 곳 컴포넌트로 이벤트 퍼지는거 막기
   const eventStop = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
@@ -66,7 +78,7 @@ function QuestionBoardList({ filters }: Props) {
 
   return (
     <BoardListWrapper>
-      {posts.map(post => (
+      {posts.map((post) => (
         <BoardItem
           key={post.id}
           post={post}
@@ -78,7 +90,7 @@ function QuestionBoardList({ filters }: Props) {
           BookMarkIconMemo={BookMarkIconMemo}
         />
       ))}
-      {showPagination && (<PaginationRounded />)}
+      {showPagination && <PaginationRounded />}
     </BoardListWrapper>
   );
 }

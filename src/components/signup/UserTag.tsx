@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import { usePostTag } from '../../hooks/admin';
-import { usePutTag } from '../../hooks/admin';
-import { useGetTags } from '../../hooks/useQuery';
-import { useDeleteTag } from '../../hooks/admin';
-import { tagState } from '../../atoms/userInfoState';
 import { useRecoilState } from 'recoil';
+import { useState, useEffect } from 'react';
+
+import { useTagsQuery } from '../../hooks/api/useTagsQuery';
+import { useDeleteTag } from '../../hooks/api/useDeleteTag';
+import { tagState } from '../../atoms/userInfoState';
+import { usePostTag } from '../../hooks/api/usePostTag';
+import { usePutTag } from '../../hooks/api/usePutTag';
 
 interface Tag {
   id: number;
@@ -33,7 +34,7 @@ function UserTag() {
   }, [DeleteTagMutate]);
 
   // 태그 전체 목록 불러오기
-  const { data } = useGetTags();
+  const { data } = useTagsQuery();
   useEffect(() => {
     if (data) {
       setTagName(data.data);

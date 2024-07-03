@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
+
 import Editor from '../components/Editor';
 import CategorySelect from '../components/write/CategorySelect';
 import TagAutocomplete from '../components/write/TagAutocomplete';
 import ActionButtons from '../components/write/ActionButtons';
-import { createNewArticle, deleteArticle, getPost, updateArticle } from '../services/post';
 import Navbar from '../components/NavBar.tsx';
-import { useNavigate, useParams } from 'react-router-dom';
-import { NotificationModal } from '../components/modal/NotificationModal.tsx';
+import { NotificationToast } from '../components/modal/NotificationToast.tsx';
+import { getPost } from '../services/post/getPost.ts';
+import { useToastControl } from '../hooks/useToastControl.ts';
+import { usePostArticle } from '../hooks/api/usePostArticle.ts';
+import { usePutArticle } from '../hooks/api/usePutArticle.ts';
+import { useDeleteArticle } from '../hooks/api/useDeleteArticle.ts';
 
 interface PostData {
   title: string;
@@ -18,19 +22,21 @@ interface PostData {
 }
 
 function PostWritePage() {
+  const { hideToast } = useToastControl();
   const [category, setCategory] = useState<'question' | 'free'>('question');
   const [title, setTitle] = useState('');
   const [tagList, setTagList] = useState<string[]>([]);
   const [content, setContent] = useState('');
 
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-
   const navigate = useNavigate();
 
   const { postId } = useParams();
-  const [editData, setEditData ] = useState<PostData>();
+  const [editData, setEditData] = useState<PostData>();
   const [editVisible, setEditVisible] = useState(false);
+
+  const { createMutate } = usePostArticle();
+  const { updateMutate } = usePutArticle();
+  const { deleteMutate } = useDeleteArticle();
 
   // postId 데이터 있으면 한 번 실행
   // edit 로 들어오는 경우
@@ -58,55 +64,6 @@ function PostWritePage() {
     }
   }, [editData]);
 
-  // 게시글 생성
-  const { mutate: createMutate } = useMutation({
-    mutationFn: createNewArticle,
-    onSuccess: () => {
-      console.log('성공!');
-      navigate("/board/question");
-    },
-    onError: () => {
-      setModalMessage('서버 통신 실패');
-      setModalVisible(true);
-    }
-  });
-
-  // 게시글 수정
-  const { mutate : updateMutate } = useMutation({
-    mutationFn: (
-      data: {
-        postId: number,
-        updateArticle: {
-          category: string | undefined;
-          title: string;
-          tagList: string[];
-          contentText: string;
-        }
-      }) => updateArticle(data.postId, data.updateArticle),
-    onSuccess: () => {
-      console.log('성공!');
-      navigate("/board/question");
-    },
-    onError: () => {
-      setModalMessage('서버 통신 실패');
-      setModalVisible(true);
-    }
-  });
-
-  // 게시글 삭제
-  const { mutate : deleteMutate } = useMutation({
-    mutationFn: deleteArticle,
-    onSuccess: () => {
-      console.log('성공!');
-      navigate("/board/question");
-    },
-    onError: () => {
-      setModalMessage('서버 통신 실패');
-      setModalVisible(true);
-    }
-  });
-
-
   const handleCategoryChange = (category: 'question' | 'free') => {
     setCategory(category);
   };
@@ -121,8 +78,8 @@ function PostWritePage() {
 
   // 취소
   const handelCancel = () => {
-    navigate("/board/question");
-  }
+    navigate('/board/question');
+  };
 
   // 임시저장
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
@@ -132,35 +89,30 @@ function PostWritePage() {
   // 저장
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createMutate({ category: category, title: title, tagList:tagList, contentText: JSON.stringify(content)});
+    createMutate({ category: category, title: title, tagList: tagList, contentText: JSON.stringify(content) });
   };
-  
+
   // 수정
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const updateData = {
       category: category,
       title: title,
-      tagList:tagList,
-      contentText: JSON.stringify(content)
-    }
+      tagList: tagList,
+      contentText: JSON.stringify(content),
+    };
     updateMutate({ postId: Number(postId), updateArticle: updateData });
   };
 
   // 삭제
   const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    deleteMutate(Number(postId))
-  }
-
-  // 모달창 Close 버튼 클릭시 동작 함수
-  const handleCloseModal = () => {
-    setModalVisible(false);
+    deleteMutate(Number(postId));
   };
 
   return (
     <Container>
-      <Navbar/>
+      <Navbar />
       <Form onSubmit={handleSubmit}>
         <Header>
           <CategorySelect category={category} onCategoryChange={handleCategoryChange} />
@@ -168,13 +120,16 @@ function PostWritePage() {
           <TagAutocomplete tagList={tagList} onTagListChange={handleTagListChange} />
         </Header>
         <Editor content={content} setContent={setContent} />
-        <ActionButtons onCancel={handelCancel} onSave={handleSave} onSubmit={handleSubmit} onUpdate={handleUpdate} onDelete={handleDelete} editVisible={editVisible} />
+        <ActionButtons
+          onCancel={handelCancel}
+          onSave={handleSave}
+          onSubmit={handleSubmit}
+          onUpdate={handleUpdate}
+          onDelete={handleDelete}
+          editVisible={editVisible}
+        />
       </Form>
-      <NotificationModal
-        message={modalMessage}
-        isVisible={isModalVisible}
-        onClose={handleCloseModal}
-      />
+      <NotificationToast onClose={hideToast} />
     </Container>
   );
 }
