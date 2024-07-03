@@ -11,7 +11,7 @@ import Navbar from '../components/NavBar.tsx';
 import { NotificationToast } from '../components/modal/NotificationToast.tsx';
 import { getPost } from '../services/post/getPost.ts';
 import { useToastControl } from '../hooks/useToastControl.ts';
-import { usePostArticle } from '../hooks/api/usepostArticle.ts';
+import { usePostArticle } from '../hooks/api/usePostArticle.ts';
 import { usePutArticle } from '../hooks/api/usePutArticle.ts';
 import { useDeleteArticle } from '../hooks/api/useDeleteArticle.ts';
 
