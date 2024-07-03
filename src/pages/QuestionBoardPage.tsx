@@ -6,7 +6,7 @@ import BoardController from '../components/board/BoardController';
 import Divider from '../components/board/Divider';
 import QuestionBoardList from '../components/board/QuestionBoardList';
 import { useEffect, useState } from 'react';
-import { Filters } from '../requestType/postType.ts';
+import { Filters } from '../types/filter';
 
 // const category = ['전체', '최신순', '인기순', '해결 대기', '해결 완료'];
 
@@ -24,21 +24,21 @@ function QuestionBoardPage() {
   });
 
   useEffect(() => {
-    console.log("filters 상태 변경:", filters);
+    console.log('filters 상태 변경:', filters);
     // 여기에 상태 변화에 따른 추가 작업을 수행할 수 있습니다.
   }, [filters]);
 
   return (
     <Container>
-      <Navbar/>
+      <Navbar />
       <PickFlow />
       <BoardInfo
         title="Q&A 게시판"
         description="질문은 정중하게~~ 어쩌고 저쩌고 이용 수칙을 따르지 않을 경우 제재할 수 있습니다."
       />
-      <BoardController filters={filters} setFilters={setFilters}/>
+      <BoardController filters={filters} setFilters={setFilters} />
       <Divider />
-      <QuestionBoardList filters={filters}/>
+      <QuestionBoardList filters={filters} />
     </Container>
   );
 }
