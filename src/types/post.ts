@@ -1,4 +1,3 @@
-// types.ts
 export interface Post {
   id: number;
   timeline: string;
@@ -13,18 +12,4 @@ export interface Post {
   viewCount: number;
   commentCount: number;
   likeCount: number;
-}
-
-export interface PageInfo {
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface Question {
-  code: number;
-  data: Post[];
-  message: string;
-  pageInfo: PageInfo;
 }
