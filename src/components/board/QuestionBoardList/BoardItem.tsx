@@ -1,5 +1,4 @@
 import React from 'react';
-import { Post } from '../../../responseType/postType';
 import {
   BoardItemWrapper,
   StatusWrapper,
@@ -7,13 +6,14 @@ import {
   BoardWrapper,
   BoardContent,
   BookMarkWrapper,
-  MoreWrapper
+  MoreWrapper,
 } from './styles';
 import More from '../More';
 import Profile from '../Profile';
 import Status from '../Status';
 import Block from '../Block';
 import TagList from '../TagList';
+import { Post } from '../../../types/post';
 
 interface BoardItemProps {
   post: Post;
@@ -26,23 +26,22 @@ interface BoardItemProps {
 }
 
 const BoardItem: React.FC<BoardItemProps> = ({
-                                               post,
-                                               handlePostClick,
-                                               handleBookMarkIconClick,
-                                               handleMoreClick,
-                                               handleBlindDataAddClick,
-                                               eventStop,
-                                               BookMarkIconMemo,
-                                             }) => {
-  const { id, status, viewCount, commentCount, likeCount, nickname, timeline, title, tags, content, bookmark, blind } = post;
+  post,
+  handlePostClick,
+  handleBookMarkIconClick,
+  handleMoreClick,
+  handleBlindDataAddClick,
+  eventStop,
+  BookMarkIconMemo,
+}) => {
+  const { id, status, viewCount, commentCount, likeCount, nickname, timeline, title, tags, content, bookmark, blind } =
+    post;
 
   return (
     <BoardItemWrapper $status={status} onClick={() => handlePostClick(id, blind)} key={status}>
-      {blind && <Block onClick={(event) => handleBlindDataAddClick(event, id)} id={id}/>}
+      {blind && <Block onClick={(event) => handleBlindDataAddClick(event, id)} id={id} />}
       <StatusWrapper>
-        <BoardStatus $status={status}>
-          {status === 'wait' ? '해결 대기' : '해결 완료'}
-        </BoardStatus>
+        <BoardStatus $status={status}>{status === 'wait' ? '해결 대기' : '해결 완료'}</BoardStatus>
         <Status viewCount={viewCount} commentCount={commentCount} likeCount={likeCount} />
       </StatusWrapper>
       <BoardWrapper>
@@ -60,7 +59,7 @@ const BoardItem: React.FC<BoardItemProps> = ({
       )}
       {!blind && (
         <MoreWrapper onClick={eventStop}>
-          <More onClick={(event) => handleMoreClick(event, id)} id={id}/>
+          <More onClick={(event) => handleMoreClick(event, id)} id={id} />
         </MoreWrapper>
       )}
     </BoardItemWrapper>
