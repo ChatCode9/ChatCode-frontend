@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { postFile } from '../services/image/postFile';
@@ -51,8 +51,9 @@ function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
   const { mutate, error: mutationError } = useMutation({
     mutationFn: postFile,
     onSuccess: (data, variables, context) => {
-      const { imageUrl } = data;
-      insertImageToEditor(imageUrl);
+      // const { imageUrl } = data;
+      // insertImageToEditor(imageUrl);
+      console.log(variables, context, mutationError, data);
     },
   });
 
@@ -77,16 +78,16 @@ function Editor({ content, setContent, width = 'auto', height = 600 }: Props) {
     });
   };
 
-  const insertImageToEditor = (imageUrl: string) => {
-    const editor = quillRef.current?.getEditor();
-    const range = editor?.getSelection(true);
+  // const insertImageToEditor = (imageUrl: string) => {
+  //   const editor = quillRef.current?.getEditor();
+  //   const range = editor?.getSelection(true);
 
-    if (range) {
-      editor?.insertEmbed(range.index, 'image', imageUrl);
-      range.index += 1; // Move the cursor to the next position
-      editor?.setSelection(range.index);
-    }
-  };
+  //   if (range) {
+  //     editor?.insertEmbed(range.index, 'image', imageUrl);
+  //     range.index += 1; // Move the cursor to the next position
+  //     editor?.setSelection(range.index);
+  //   }
+  // };
 
   useEffect(() => {
     if (quillRef.current) {

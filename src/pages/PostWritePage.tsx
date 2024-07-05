@@ -122,10 +122,10 @@ function PostWritePage() {
         <Editor content={content} setContent={setContent} />
         <ActionButtons
           onCancel={handelCancel}
-          onSave={handleSave}
-          onSubmit={handleSubmit}
-          onUpdate={handleUpdate}
-          onDelete={handleDelete}
+          onSave={() => handleSave}
+          onSubmit={() => handleSubmit}
+          onUpdate={() => handleUpdate}
+          onDelete={() => handleDelete}
           editVisible={editVisible}
         />
       </Form>

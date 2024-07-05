@@ -4,7 +4,7 @@ import PostWritePage from '../pages/PostWritePage.tsx';
 import QuestionBoardPage from '../pages/QuestionBoardPage.tsx';
 import FreeBoardPage from '../pages/FreeBoardPage.tsx';
 import PostDetailPage from '../pages/PostDetailPage.tsx';
-import PostsPage from '../pages/PostsPage.tsx';
+// import PostsPage from '../pages/PostsPage.tsx';
 import LoginPage from '../pages/LoginPage.tsx';
 import SignupPage from '../pages/SignupPage.tsx';
 import Mypage from '../pages/Mypage.tsx';

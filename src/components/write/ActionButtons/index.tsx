@@ -1,9 +1,15 @@
 import { BiRightArrowAlt } from 'react-icons/bi';
 import { Container } from './styles';
 import { useEffect, useState } from 'react';
-
-function ActionButtons({ onCancel, onSave, onSubmit, onUpdate, onDelete, editVisible }) {
-
+interface ActionButtonsProps {
+  onCancel: () => void;
+  onSave: () => void;
+  onSubmit: () => void;
+  onUpdate: () => void;
+  onDelete: () => void;
+  editVisible: boolean;
+}
+function ActionButtons({ onCancel, onSave, onSubmit, onUpdate, onDelete, editVisible }: ActionButtonsProps) {
   // 수정 페이지 진입시 저장 버튼이 나왔다가 사라짐
   // 원인은 랜더링이 너무 빨라서 딜레이가 필요해보임
   const [isVisible, setIsVisible] = useState(false);
@@ -22,45 +28,25 @@ function ActionButtons({ onCancel, onSave, onSubmit, onUpdate, onDelete, editVis
 
   return (
     <Container>
-      <button
-        className="btn-save"
-        type="button"
-        onClick={onCancel}
-      >
+      <button className="btn-save" type="button" onClick={onCancel}>
         취소
       </button>
-      <button
-        className="btn-save"
-        type="button"
-        onClick={onSave}
-      >
+      <button className="btn-save" type="button" onClick={onSave}>
         임시저장
       </button>
       {editVisible && (
-        <button
-          className="btn-delete"
-          type="button"
-          onClick={onDelete}
-        >
+        <button className="btn-delete" type="button" onClick={onDelete}>
           삭제
         </button>
       )}
       {!editVisible && (
-        <button
-          className="btn-post"
-          type="button"
-          onClick={onSubmit}
-        >
+        <button className="btn-post" type="button" onClick={onSubmit}>
           저장
           <BiRightArrowAlt />
         </button>
       )}
       {editVisible && (
-        <button
-          className="btn-post"
-          type="button"
-          onClick={onUpdate}
-        >
+        <button className="btn-post" type="button" onClick={onUpdate}>
           수정
           <BiRightArrowAlt />
         </button>

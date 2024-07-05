@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query';
 
 import { Container } from './styles';
 import PostHeader from '../PostHeader';
 import WriterProfile from '../WriterProfile';
-import { getAvatar } from '../../../services/user/getAvatar.ts';
-import { getPost } from '../../../services/post/getPost.ts';
+// import { getAvatar } from '../../../services/user/getAvatar.ts';
+// import { getPost } from '../../../services/post/getPost.ts';
 import { usePostQuery } from '../../../hooks/api/usePostQuery.ts';
 import { useAvatarQuery } from '../../../hooks/api/useAvatarQuery.ts';
 
@@ -29,9 +29,10 @@ function Post({ postId }: Props) {
     if (contentRef.current && postData) {
       contentRef.current.innerHTML = postData.data.content;
       const images = contentRef.current.getElementsByTagName('img');
-      for (let img of images) {
-        img.src = img.src; // force reload the image
-      }
+      // for (const img of images) {
+      //   img.src = img.src; // force reload the image
+      // }
+      console.log(images);
     }
   }, [postData]);
 
@@ -44,6 +45,7 @@ function Post({ postId }: Props) {
   }
 
   const { title, timeline, updated, viewCount, status, bookmark, tags, content, likeCount, isLiked } = postData.data;
+  console.log(content);
   const { userId, userName, avatar, tags: avatarTags, comment } = avatarData.data;
 
   return (

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import Slider from '../components/main/Slider';
 import Navbar from '../components/NavBar';
 import PickFlow from '../components/board/PickFlow';

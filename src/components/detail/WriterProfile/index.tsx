@@ -9,6 +9,7 @@ interface Props {
 }
 
 function WriterProfile({ userId, userName, avatar, avatarTags, comment }: Props) {
+  console.log(userId);
   return (
     <Container>
       <div className="inner">

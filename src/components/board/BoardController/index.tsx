@@ -13,9 +13,10 @@ import FilterItem from './FilterItem';
 interface Props {
   filters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+  extra?: JSX.Element;
 }
 
-function BoardController({ filters, setFilters }: Props) {
+function BoardController({ filters, setFilters, extra }: Props) {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState('전체');
   const [isAscending, setIsAscending] = useState<boolean | null>(null);
@@ -24,6 +25,8 @@ function BoardController({ filters, setFilters }: Props) {
   const [selectedValue, setSelectedValue] = useState('10');
   const [inputValue, setInputValue] = useState('');
 
+  console.log(filters);
+  console.log(extra);
   // 데이터 재호출
   const queryClient = useQueryClient();
   const handleRefetch = () => {
@@ -72,7 +75,7 @@ function BoardController({ filters, setFilters }: Props) {
     setFilters((prevFilters) => {
       return { ...prevFilters, status: newStaus };
     });
-  }, [isPending, isCompleted]);
+  }, [isPending, isCompleted, setFilters]);
 
   // 전체(검색 조건 리셋)
   const handleResetFilters = () => {

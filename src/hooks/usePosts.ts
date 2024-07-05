@@ -40,7 +40,7 @@ const usePosts = (filters: Filters) => {
       });
       setPosts(updatedPosts);
     },
-    onError: (error, variables) => {
+    onError: (error /*, variables*/) => {
       console.error(`${key} 업데이트 오류:`, error);
     },
   });

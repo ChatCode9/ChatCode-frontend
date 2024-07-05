@@ -37,12 +37,11 @@ function CommentInput({ type }: Props) {
           {/*  등록*/}
           {/*  <BiRightArrowAlt />*/}
           {/*</button>*/}
-          <SubmitButton onClick={(event) => handleSubmit(event)}>
+          <SubmitButton type="submit">
             <span>등록</span>
-            <ArrowForwardIcon sx={{fontSize : '20px'}}/>
+            <ArrowForwardIcon sx={{ fontSize: '20px' }} />
           </SubmitButton>
         </div>
-
       </>
     );
   }
@@ -56,9 +55,9 @@ function CommentInput({ type }: Props) {
           {/*  등록*/}
           {/*  <BiRightArrowAlt fontSize={20} />*/}
           {/*</button>*/}
-          <SubmitButton>
+          <SubmitButton type="submit">
             <span>등록</span>
-            <ArrowForwardIcon sx={{fontSize : '20px'}}/>
+            <ArrowForwardIcon sx={{ fontSize: '20px' }} />
           </SubmitButton>
         </div>
       </>
@@ -71,24 +70,24 @@ function CommentInput({ type }: Props) {
 export default CommentInput;
 
 const SubmitButton = styled.button`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 7px 12px;
-    background-color: #6D758F;
-    border: 1px solid #E1E4ED;
-    border-radius: 6px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    margin-left: 15px;
-    margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  background-color: #6d758f;
+  border: 1px solid #e1e4ed;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 15px;
+  margin-top: 5px;
 
-    &:hover {
-        background-color: #717171;
-    }
+  &:hover {
+    background-color: #717171;
+  }
 
-    span {
-        margin-right: 5px;
-    }
+  span {
+    margin-right: 5px;
+  }
 `;

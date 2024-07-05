@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Wrapper } from './styles';
 
 import { useCategoriesQuery } from '../../../hooks/api/useCategoriesQuery.ts';
+import { TagsType } from '../../../types/tags.ts';
 
 interface Props {
   tagList: string[];
@@ -17,12 +18,12 @@ function TagAutocomplete({ tagList, onTagListChange }: Props) {
   const loading = open && options.length === 0;
 
   // 게시글 데이터 호출
-  const { tagListData, isLoadingTagListData, isErrorTagListData } = useCategoriesQuery();
+  const { tagListData /*, isLoadingTagListData, isErrorTagListData*/ } = useCategoriesQuery();
 
   useEffect(() => {
     console.log(tagListData);
     if (tagListData) {
-      const names = tagListData.data.map((item) => item.name);
+      const names = tagListData.data.map((item: TagsType) => item.name);
       setOptions(names);
     }
   }, [tagListData]);

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback /*, useContext, useEffect,*/, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 import { Sub, Title, Wrapper } from './styles';
@@ -116,6 +116,7 @@ function PostHeader({
   // More 컴포넌트 호출 -> 글 수정, 글 삭제 버튼 보여줌
   // 그리고 다른 컴포넌트로 이벤트 전파 막기
   const handleMoreClick = useCallback((event: React.MouseEvent<HTMLButtonElement>, postId: number) => {
+    console.log(postId);
     event.stopPropagation();
   }, []);
 

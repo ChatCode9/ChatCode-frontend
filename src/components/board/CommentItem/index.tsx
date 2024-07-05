@@ -16,8 +16,8 @@ interface Props {
   reply: ReplyType[];
 }
 
-function CommentItem({ avatar, username, timestamp, likeCount, disLikeCount, comment, reply }: Props) {
-  const [isOpenInput, setIsOpenInput] = useState<boolean>(false);
+function CommentItem({ avatar, username, timestamp, likeCount, disLikeCount, comment }: Props) {
+  const [isOpenInput] = useState<boolean>(false);
 
   return (
     <>
