@@ -38,10 +38,8 @@ function CommentList({ comments }: Props) {
   const [deleteCommentId, setDeleteCommentId] = useState<number | null>(null);
 
   // 대댓글 보기
-  const handleReplayView = (event: MouseEvent<HTMLDivElement>, groupId: number) => {
-    setVisibleReplies(prev =>
-      prev.includes(groupId) ? prev.filter(id => id !== groupId) : [...prev, groupId]
-    );
+  const handleReplayView = (_: MouseEvent<HTMLDivElement>, groupId: number) => {
+    setVisibleReplies((prev) => (prev.includes(groupId) ? prev.filter((id) => id !== groupId) : [...prev, groupId]));
   };
 
   const toggleButtonText = (target: HTMLDivElement | HTMLButtonElement) => {
@@ -65,7 +63,7 @@ function CommentList({ comments }: Props) {
     const target = event.currentTarget as HTMLButtonElement;
 
     toggleButtonText(target);
-    setActiveReplyId(prev => (prev === combinedId ? null : combinedId));
+    setActiveReplyId((prev) => (prev === combinedId ? null : combinedId));
   };
 
   // 왼쪽 댓글 달기/취소 버튼
@@ -75,12 +73,16 @@ function CommentList({ comments }: Props) {
     console.log(combinedId);
 
     toggleButtonText(target);
-    setActiveReplyId(prev => (prev === combinedId ? null : combinedId));
+    setActiveReplyId((prev) => (prev === combinedId ? null : combinedId));
   };
 
-
   // 댓글 등록 버튼 누를시 실행될 함수
-  const handleReplaySubmit = (event: MouseEvent<HTMLButtonElement>, commentId: number, groupId: number, replayContent: string) => {
+  const handleReplaySubmit = (
+    event: MouseEvent<HTMLButtonElement>,
+    commentId: number,
+    groupId: number,
+    replayContent: string,
+  ) => {
     console.log(`Reply to comment ${commentId} in group ${groupId}: ${replayContent}`);
 
     const combinedId = `${commentId}-${groupId}`;
@@ -88,39 +90,38 @@ function CommentList({ comments }: Props) {
     const target = event.currentTarget as HTMLButtonElement;
 
     // API 호출
-    console.log(`handleReplaySubmit API CALL`)
+    console.log(`handleReplaySubmit API CALL`);
 
     // API Success Code
     toggleButtonText(target);
     setActiveReplyId(null);
-  }
+  };
 
   // 댓글 좋아요/싫어요 클릭시 실행될 함수
   const handleLikeSubmit = (commentId: number, isLiked: boolean | null, actionLiked: boolean) => {
-    console.log(`commentId : ${commentId}, isLiked : ${isLiked}, actionLiked : ${actionLiked}`)
+    console.log(`commentId : ${commentId}, isLiked : ${isLiked}, actionLiked : ${actionLiked}`);
 
-    if(isLiked === null){
+    if (isLiked === null) {
       // API 호출
-      console.log(`handleLikeSubmit API CALL`)
-
+      console.log(`handleLikeSubmit API CALL`);
     } else {
-      console.log(`이미 좋아요 및 싫어요 버튼을 눌렀습니다`)
+      console.log(`이미 좋아요 및 싫어요 버튼을 눌렀습니다`);
     }
-  }
+  };
 
   // 댓글 삭제 클릭시 실행될 함수
   const handleDeleteSubmit = (commentId: number) => {
     console.log(`commentId : ${commentId}`);
     setDeleteCommentId(commentId);
     setIsSecondModalOpen(true);
-  }
+  };
 
   // 댓글 삭제 확인 누르면 실행될 함수
   const handleSecondModalConfirm = () => {
     console.log('Second modal confirmed');
     console.log(`삭제할 댓글 번호 : ${deleteCommentId}`);
     // 댓글 삭제 API 호출
-    console.log(`handleSecondModalConfirm API CALL`)
+    console.log(`handleSecondModalConfirm API CALL`);
 
     setIsSecondModalOpen(false);
   };
@@ -128,13 +129,12 @@ function CommentList({ comments }: Props) {
   return (
     <Container>
       <ul className="comment-list">
-        {comments.filter(comment => comment.depth === 0 || visibleReplies.includes(comment.groupId))
-          .map(comment => (
+        {comments
+          .filter((comment) => comment.depth === 0 || visibleReplies.includes(comment.groupId))
+          .map((comment) => (
             <Item key={`${comment.commentId}-${comment.groupId}`} $depth={comment.depth}>
               <ItemGroup>
-                {comment.depth > 0 && (
-                  <CommentReplyBox />
-                )}
+                {comment.depth > 0 && <CommentReplyBox />}
                 <div style={{ width: '100%' }}>
                   <div className="header">
                     <div className="left">
@@ -144,21 +144,28 @@ function CommentList({ comments }: Props) {
                     </div>
 
                     <div className="right">
-                      <button className="btn"
-                              onClick={() => handleLikeSubmit(comment.commentId, comment.isLiked, true)}>
+                      <button
+                        className="btn"
+                        onClick={() => handleLikeSubmit(comment.commentId, comment.isLiked, true)}
+                      >
                         {comment.isLiked === true ? <AiFillLike fontSize={20} /> : <AiOutlineLike fontSize={20} />}
                         {comment.likeCount}
                       </button>
-                      <button className="btn"
-                              onClick={() => handleLikeSubmit(comment.commentId, comment.isLiked, false)}>
-                        {comment.isLiked === false ? <AiFillDislike fontSize={20} /> :
-                          <AiOutlineDislike fontSize={20} />}
+                      <button
+                        className="btn"
+                        onClick={() => handleLikeSubmit(comment.commentId, comment.isLiked, false)}
+                      >
+                        {comment.isLiked === false ? (
+                          <AiFillDislike fontSize={20} />
+                        ) : (
+                          <AiOutlineDislike fontSize={20} />
+                        )}
                         {comment.disLikeCount}
                       </button>
                     </div>
                   </div>
 
-                  {comment.mentionedUser && (<div className="mentionedUser">@{comment.mentionedUser}</div>)}
+                  {comment.mentionedUser && <div className="mentionedUser">@{comment.mentionedUser}</div>}
 
                   <div className="comment">{comment.comment}</div>
 
@@ -169,9 +176,7 @@ function CommentList({ comments }: Props) {
                       </Replies>
                     )}
                     {comment.depth === 0 && visibleReplies.includes(comment.groupId) && (
-                      <Replies onClick={(event) => handleReplayView(event, comment.groupId)}>
-                        댓글닫기
-                      </Replies>
+                      <Replies onClick={(event) => handleReplayView(event, comment.groupId)}>댓글닫기</Replies>
                     )}
                     <ReaplyAdd
                       onClick={(event) => handleReaplyAddAndCancelAction(event, comment.commentId, comment.groupId)}
@@ -180,15 +185,17 @@ function CommentList({ comments }: Props) {
                       댓글달기
                     </ReaplyAdd>
                     {comment.isRole && (
-                      <ReaplyDelete onClick={() => handleDeleteSubmit(comment.commentId)}>
-                        댓글삭제
-                      </ReaplyDelete>
+                      <ReaplyDelete onClick={() => handleDeleteSubmit(comment.commentId)}>댓글삭제</ReaplyDelete>
                     )}
                   </ReplayButtons>
                   {activeReplyId === `${comment.commentId}-${comment.groupId}` && (
                     <ReplayInput
-                      handelCancelAction={(event) => handleReplayCancelAction2(event, comment.commentId, comment.groupId)}
-                      onClick={(event, replayContent: string) => handleReplaySubmit(event, comment.commentId, comment.groupId, replayContent)}
+                      handelCancelAction={(event) =>
+                        handleReplayCancelAction2(event, comment.commentId, comment.groupId)
+                      }
+                      onClick={(event, replayContent: string) =>
+                        handleReplaySubmit(event, comment.commentId, comment.groupId, replayContent)
+                      }
                       commentId={comment.commentId}
                     />
                   )}
@@ -210,7 +217,6 @@ function CommentList({ comments }: Props) {
           <p>*재복구 불가합니다.</p>
         </ModalCustom1>
       </div>
-
     </Container>
   );
 }
@@ -218,46 +224,46 @@ function CommentList({ comments }: Props) {
 export default CommentList;
 
 const ItemGroup = styled.div`
-    display: flex;
+  display: flex;
 `;
 
 const Item = styled.li<{ $depth: number }>`
-    overflow-wrap: break-word;
-    margin-left: ${({ $depth }) => $depth > 0 ? `${Math.min((2 * $depth - 1) * 40, 200)}px` : '0px'};
+  overflow-wrap: break-word;
+  margin-left: ${({ $depth }) => ($depth > 0 ? `${Math.min((2 * $depth - 1) * 40, 200)}px` : '0px')};
 
-    & + li {
-        margin-top: 25px;
+  & + li {
+    margin-top: 25px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+
+    .left {
+      display: flex;
+      align-items: center;
     }
 
-    .header {
-        display: flex;
-        justify-content: space-between;
+    .right {
+      display: flex;
+      align-items: center;
+    }
 
-        .left {
-            display: flex;
-            align-items: center;
-        }
+    .avatar {
+      margin-right: 5px;
+      border-radius: 100%;
+    }
 
-        .right {
-            display: flex;
-            align-items: center;
-        }
+    .writer {
+      margin-right: 5px;
+      font-size: 15px;
+      font-weight: 700;
+    }
 
-        .avatar {
-            margin-right: 5px;
-            border-radius: 100%;
-        }
-
-        .writer {
-            margin-right: 5px;
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .timestamp {
-            font-size: 13px;
-            padding-left: 5px;
-        }
+    .timestamp {
+      font-size: 13px;
+      padding-left: 5px;
+    }
 
     button {
       display: flex;
@@ -269,7 +275,7 @@ const Item = styled.li<{ $depth: number }>`
       font-size: 15px;
     }
   }
-    
+
   .mentionedUser {
     display: inline-block;
     padding-right: 5px;
@@ -286,8 +292,8 @@ const CommentReplyBox = styled.div`
   display: inline-block;
   width: 30px;
   height: 60px;
-  border-bottom: 2px solid #8D8BA7;
-  border-left: 2px solid #8D8BA7;
+  border-bottom: 2px solid #8d8ba7;
+  border-left: 2px solid #8d8ba7;
   margin-right: 10px;
 `;
 

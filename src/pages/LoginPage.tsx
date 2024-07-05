@@ -1,16 +1,20 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import Navbar from '../components/NavBar';
 import BottomNavBar from '../components/BottomNavBar';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { AXIOS_BASE_URL } from '../constants/api';
 
 function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const porfile = params.get('profile');
-    if (porfile === '0') {
+    const profile = params.get('profile');
+
+    if (profile === '0') {
       navigate('/signup');
     }
   }, [location, navigate]);
@@ -18,12 +22,12 @@ function LoginPage() {
   const handleLogin = () => {
     const currentUrl = window.location.href;
     const encodedUrl = encodeURIComponent(currentUrl);
-    window.location.href = `https://chatcode.store/login/oauth2/google?url=${encodedUrl}`;
+    window.location.href = `${AXIOS_BASE_URL}/login/oauth2/google?url=${encodedUrl}`;
   };
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <LoginBox>
         <SnsLogin>
           <LoginTitle>SNS로 간편하게 시작하기</LoginTitle>
@@ -37,8 +41,7 @@ function LoginPage() {
           </SnsBtn>
         </SnsLogin>
       </LoginBox>
-
-      <BottomNavBar></BottomNavBar>
+      <BottomNavBar />
     </>
   );
 }
@@ -54,12 +57,14 @@ const LoginBox = styled.div`
   justify-content: center;
   padding-bottom: 110px;
 `;
+
 const LoginTitle = styled.div`
   width: 328px;
   height: 30px;
   color: #6d758f;
   font-weight: bold;
 `;
+
 const SnsLogin = styled.div`
   display: flex;
   flex-direction: column;
@@ -67,6 +72,7 @@ const SnsLogin = styled.div`
   justify-content: center;
   padding-top: 150px;
 `;
+
 const SnsBtn = styled.div`
   display: flex;
   flex-direction: column;
@@ -74,6 +80,7 @@ const SnsBtn = styled.div`
   padding: 15px;
   height: 70%;
 `;
+
 const GoogleBox = styled.button`
   display: flex;
   align-content: flex-start;
@@ -89,6 +96,7 @@ const GoogleBox = styled.button`
     margin: 10px;
   }
 `;
+
 const GithubBox = styled.button`
   display: flex;
   align-content: flex-start;

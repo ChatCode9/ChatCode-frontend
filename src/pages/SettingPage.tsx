@@ -1,9 +1,11 @@
 import styled from 'styled-components';
+
 import Navbar from '../components/NavBar';
 import Nickname from '../components/signup/UserNickname';
 import UserTag from '../components/signup/UserTag';
 import LoginManagement from '../components/setting/LoginManagement';
 import Footer from '../components/BottomNavBar';
+
 function SettingPage() {
   return (
     <>
@@ -21,6 +23,7 @@ function SettingPage() {
     </>
   );
 }
+
 export default SettingPage;
 
 const Container = styled.div`

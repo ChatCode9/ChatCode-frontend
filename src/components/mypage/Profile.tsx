@@ -4,14 +4,15 @@ import { useMutation } from '@tanstack/react-query';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate } from 'react-router-dom';
 import LocalSeeIcon from '@mui/icons-material/LocalSee';
-import { postFile } from '../../services/http';
+
+import { postFile } from '../../services/image/postFile';
 import { useRecoilState } from 'recoil';
 import { nickNameState } from '../../atoms/userInfoState';
 import { ContentState } from '../../atoms/userInfoState';
-import { usePutContent } from '../../hooks/mypageHooks';
-import { useGetInfo } from '../../hooks/mypageHooks';
-import { fetchPutImage } from '../../services/http';
-import { useGetUserTags } from '../../hooks/mypageHooks';
+import { usePutUserContent } from '../../hooks/api/usePutUserContent';
+import { useInfoQuery } from '../../hooks/api/useInfoQuery';
+import { useUserTagsQuery } from '../../hooks/api/useUserTagsQuery';
+import { putImage } from '../../services/image/putImage';
 
 function Profile() {
   const navigate = useNavigate();
@@ -27,9 +28,9 @@ function Profile() {
   const [isDefault, setIsDefault] = useState<boolean>(true);
   const fileInput = useRef<HTMLInputElement | null>(null);
 
-  const { data: userData } = useGetInfo();
-  const { mutateAsync: contentMutate } = usePutContent();
-  const { data: userTags } = useGetUserTags();
+  const { data: userData } = useInfoQuery();
+  const { mutateAsync: contentMutate } = usePutUserContent();
+  const { data: userTags } = useUserTagsQuery();
   const { mutateAsync: postImg, error: mutationError } = useMutation({
     mutationFn: postFile,
     onSuccess: () => {
@@ -82,7 +83,7 @@ function Profile() {
           console.log('data.url', data.data.url);
 
           try {
-            await fetchPutImage({ picture: data.data.url });
+            await putImage({ picture: data.data.url });
             console.log('S3 이미지 서버에 전송 성공');
           } catch (error) {
             console.error('S3 이미지 서버에 전송 실패:', error);

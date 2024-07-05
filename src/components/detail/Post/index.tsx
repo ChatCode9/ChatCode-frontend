@@ -1,30 +1,26 @@
+import { useEffect, useRef } from 'react';
+// import { useQuery } from '@tanstack/react-query';
+
+import { Container } from './styles';
 import PostHeader from '../PostHeader';
 import WriterProfile from '../WriterProfile';
-import { Container } from './styles';
-import { useQuery } from '@tanstack/react-query';
-import { getPost } from '../../../services/post.ts';
-import { getAvatar } from '../../../services/avatar.ts';
-import { useEffect, useRef } from 'react';
+// import { getAvatar } from '../../../services/user/getAvatar.ts';
+// import { getPost } from '../../../services/post/getPost.ts';
+import { usePostQuery } from '../../../hooks/api/usePostQuery.ts';
+import { useAvatarQuery } from '../../../hooks/api/useAvatarQuery.ts';
 
 interface Props {
-  postId : number;
+  postId: number;
 }
 
-function Post({postId} : Props) {
+function Post({ postId }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
 
-
   // 게시글 데이터 호출
-  const { data : postData, isLoading: isLoadingPost, isError: isErrorPost} = useQuery({
-    queryKey : ["postData", postId],
-    queryFn: () => getPost(postId),
-  });
+  const { postData, isLoadingPost, isErrorPost } = usePostQuery({ postId });
 
   // 프로필 데이터 호출
-  const { data : avatarData, isLoading: isLoadingAvatar, isError: isErrorAvatar} = useQuery({
-    queryKey : ["avatarData", postId],
-    queryFn: () => getAvatar(postId),
-  });
+  const { avatarData, isLoadingAvatar, isErrorAvatar } = useAvatarQuery({ postId });
 
   const isLoading = isLoadingPost || isLoadingAvatar;
   const isError = isErrorPost || isErrorAvatar;
@@ -33,9 +29,10 @@ function Post({postId} : Props) {
     if (contentRef.current && postData) {
       contentRef.current.innerHTML = postData.data.content;
       const images = contentRef.current.getElementsByTagName('img');
-      for (let img of images) {
-        img.src = img.src; // force reload the image
-      }
+      // for (const img of images) {
+      //   img.src = img.src; // force reload the image
+      // }
+      console.log(images);
     }
   }, [postData]);
 
@@ -47,13 +44,23 @@ function Post({postId} : Props) {
     return <div>Error...</div>;
   }
 
-  const { title, timeline, updated, viewCount, status, bookmark, tags, content,  likeCount, isLiked } = postData.data;
-  const { userId, userName, avatar, tags:avatarTags, comment } = avatarData.data;
+  const { title, timeline, updated, viewCount, status, bookmark, tags, content, likeCount, isLiked } = postData.data;
+  console.log(content);
+  const { userId, userName, avatar, tags: avatarTags, comment } = avatarData.data;
 
   return (
     <Container>
-      <PostHeader postId={postId} title={title} timeline={timeline} updated={updated} viewCount={viewCount}
-                  status={status} bookmark={bookmark} likeCount={likeCount} isLiked={isLiked} />
+      <PostHeader
+        postId={postId}
+        title={title}
+        timeline={timeline}
+        updated={updated}
+        viewCount={viewCount}
+        status={status}
+        bookmark={bookmark}
+        likeCount={likeCount}
+        isLiked={isLiked}
+      />
       <div className="tags">
         {tags.map((tag: string) => (
           <li key={tag}>#{tag}</li>

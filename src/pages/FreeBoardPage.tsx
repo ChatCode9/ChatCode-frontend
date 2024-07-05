@@ -1,16 +1,31 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+
 import PickFlow from '../components/board/PickFlow';
 import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
 import PaginationRounded from '../components/board/Pagination';
 import Divider from '../components/board/Divider';
 import FreeBoardList from '../components/board/FreeBoardList';
+import { Filters } from '../types/filter';
 
-const filters = ['전체', '최신순', '인기순'];
+// const filters = ['전체', '최신순', '인기순'];
 
 function FreeBoardPage() {
+  const [filters, setFilters] = useState<Filters>({
+    search: '',
+    categories: 'question',
+    sortBy: 'latest',
+    status: ['wait', 'finish'],
+    pageInfo: {
+      page: 1,
+      size: 15,
+      offset: 0,
+    },
+  });
+
   return (
     <Container>
       <PickFlow />
@@ -20,6 +35,7 @@ function FreeBoardPage() {
       />
       <BoardController
         filters={filters}
+        setFilters={setFilters}
         extra={
           <Select
             displayEmpty

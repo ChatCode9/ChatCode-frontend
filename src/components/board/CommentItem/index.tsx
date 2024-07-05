@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import { BiLike } from 'react-icons/bi';
 import { BiDislike } from 'react-icons/bi';
+
 import { Content, Header, ToggleBtn } from './styles';
-import { useState } from 'react';
 import { ReplyType } from '../CommentList';
-import CommentInput from '../CommentInput';
+import CommentInput from '../../detail/CommentInput';
 
 interface Props {
   avatar: string;
@@ -15,8 +16,8 @@ interface Props {
   reply: ReplyType[];
 }
 
-function CommentItem({ avatar, username, timestamp, likeCount, disLikeCount, comment, reply }: Props) {
-  const [isOpenInput, setIsOpenInput] = useState();
+function CommentItem({ avatar, username, timestamp, likeCount, disLikeCount, comment }: Props) {
+  const [isOpenInput] = useState<boolean>(false);
 
   return (
     <>

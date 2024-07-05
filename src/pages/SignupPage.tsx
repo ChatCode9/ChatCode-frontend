@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import Navbar from '../components/NavBar';
 import Nickname from '../components/signup/UserNickname';
 import UserTag from '../components/signup/UserTag';
@@ -7,7 +8,7 @@ import UserConsent from '../components/signup/UserConsent';
 function SignupPage() {
   return (
     <Container>
-      <Navbar></Navbar>
+      <Navbar />
       <LoginBox>
         <SnsLogin>
           <Nickname />
@@ -18,7 +19,9 @@ function SignupPage() {
     </Container>
   );
 }
+
 export default SignupPage;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;

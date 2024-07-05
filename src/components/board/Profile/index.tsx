@@ -6,7 +6,7 @@ interface Props {
   nickname: string;
 }
 
-function Profile({ avatar, timeline, nickname }: Props) {
+function Profile({ /*avatar,*/ timeline, nickname }: Props) {
   // console.log(avatar);
 
   return (

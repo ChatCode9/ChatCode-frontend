@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { ModalsStateContext, ModalsDispatchContext } from '../context/ModalsContext';
 
 interface SolveModalProps {
@@ -12,7 +12,7 @@ export const SolveModal = ({ onConfirm }: SolveModalProps) => {
   const dispatch = useContext(ModalsDispatchContext);
 
   useEffect(() => {
-    console.log("Modal Data Updated:", Modals);
+    console.log('Modal Data Updated:', Modals);
   }, [Modals]);
 
   if (!Modals) {
@@ -24,7 +24,7 @@ export const SolveModal = ({ onConfirm }: SolveModalProps) => {
       dispatch.hideModal();
       onConfirm();
     }
-  }
+  };
 
   return (
     <Container $top={Modals.top} $left={Modals.left}>
@@ -56,18 +56,18 @@ interface ContainerProps {
 }
 
 const Container = styled.div<ContainerProps>`
-    position: absolute;
-    top: ${(props) => props.$top-60}px;
-    left: ${(props) => props.$left}px;
-    width: 650px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(93, 90, 136, 0.7);
-    backdrop-filter: blur(3px);
-    border-radius: 30px;
-    z-index: 30;
+  position: absolute;
+  top: ${(props) => props.$top - 60}px;
+  left: ${(props) => props.$left}px;
+  width: 650px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(93, 90, 136, 0.7);
+  backdrop-filter: blur(3px);
+  border-radius: 30px;
+  z-index: 30;
 `;
 
 const ModalBox = styled.div`
@@ -107,7 +107,7 @@ const DescBox = styled.div`
   flex-direction: column;
   color: #ffffff;
   align-items: center;
-  justify-content: center;  
+  justify-content: center;
 
   h3 {
     font-size: 30px;

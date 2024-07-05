@@ -4,8 +4,15 @@ import TagList from '../TagList';
 import Status from '../Status';
 import BookMarkIcon from '../BookMarkIcon';
 import Block from '../Block';
-import More from '../More';
+// import More from '../More';
 
+// interface Option {
+//   label: string;
+//   callback: () => void;
+// }
+// interface Props {
+//   options: Option[];
+// }
 const list = [
   {
     id: 1,
@@ -32,12 +39,16 @@ const list = [
 ];
 
 function FreeBoardList() {
+  const handleClick = () => {
+    console.log('블럭처리 작업 ');
+  };
+
   return (
     <Container>
       {list.map(({ id, nickname, title, tags, viewCount, commentCount, likeCount, bookmark, block }) => (
         <BoardItem key={id}>
-          {block && <Block />}
-          <Profile avatar="" nickname={nickname} />
+          {block && <Block onClick={handleClick} id={id} />}
+          <Profile avatar="" nickname={nickname} timeline="" />
           <div className="title">
             <h1>{title}</h1>
             <TagList tags={tags} />
@@ -52,7 +63,7 @@ function FreeBoardList() {
 
           {!block && (
             <MoreWrapper>
-              <More options={[{ label: '이 글 더 이상 그만보기', callback: () => {} }]} />
+              {/* <More options={[{ label: '이 글 더 이상 그만보기', callback: () => {} }]} /> */}
             </MoreWrapper>
           )}
         </BoardItem>

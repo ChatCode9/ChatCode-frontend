@@ -1,20 +1,22 @@
 import styled from 'styled-components';
+import { useQueryClient } from '@tanstack/react-query';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useQueryClient } from '@tanstack/react-query';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Filters } from '../../../requestType/postType.ts';
-
+import { Filters } from '../../../types/filter';
+import FilterItem from './FilterItem';
 
 interface Props {
   filters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+  extra?: JSX.Element;
 }
 
-function BoardController({ filters, setFilters }: Props) {
+function BoardController({ filters, setFilters, extra }: Props) {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState('전체');
   const [isAscending, setIsAscending] = useState<boolean | null>(null);
@@ -23,6 +25,8 @@ function BoardController({ filters, setFilters }: Props) {
   const [selectedValue, setSelectedValue] = useState('10');
   const [inputValue, setInputValue] = useState('');
 
+  console.log(filters);
+  console.log(extra);
   // 데이터 재호출
   const queryClient = useQueryClient();
   const handleRefetch = () => {
@@ -32,7 +36,7 @@ function BoardController({ filters, setFilters }: Props) {
   // 필터 (오름차순, 내림차순)
   const handleFilterChange = (newSortby: string) => {
     // console.log('handleFilterChange');
-    setFilters(prevFilters => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
       sortBy: newSortby,
     }));
@@ -59,19 +63,19 @@ function BoardController({ filters, setFilters }: Props) {
   useEffect(() => {
     let newStaus;
     if (isPending && isCompleted) {
-      newStaus = ['wait', 'finish']
+      newStaus = ['wait', 'finish'];
     } else if (!isPending && isCompleted) {
-      newStaus = ['finish']
+      newStaus = ['finish'];
     } else if (isPending && !isCompleted) {
-      newStaus = ['wait']
+      newStaus = ['wait'];
     } else {
-      newStaus = ['wait', 'finish']
+      newStaus = ['wait', 'finish'];
     }
     // console.log(`newStaus : ${newStaus}`)
-    setFilters(prevFilters => {
+    setFilters((prevFilters) => {
       return { ...prevFilters, status: newStaus };
     });
-  }, [isPending, isCompleted]);
+  }, [isPending, isCompleted, setFilters]);
 
   // 전체(검색 조건 리셋)
   const handleResetFilters = () => {
@@ -84,6 +88,7 @@ function BoardController({ filters, setFilters }: Props) {
       pageInfo: {
         page: 1,
         size: 15,
+        offset: 10,
       },
     };
     setFilters(initialFilters);
@@ -97,21 +102,21 @@ function BoardController({ filters, setFilters }: Props) {
   // 1페이지 몇개 볼 것인지 선택
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
-    setFilters(prevFilters => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
       pageInfo: {
         ...prevFilters.pageInfo,
-        size: Number(event.target.value)
-      }
+        size: Number(event.target.value),
+      },
     }));
   };
 
   // 검색창에 입력되는 값
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
-    setFilters(prevFilters => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
-      search: event.target.value
+      search: event.target.value,
     }));
   };
 
@@ -128,43 +133,26 @@ function BoardController({ filters, setFilters }: Props) {
           <CreateOutlinedIcon className="icon" />
         </WriteButton>
         <ReloadButton>
-          <RefreshOutlinedIcon onClick={handleRefetch}/>
+          <RefreshOutlinedIcon onClick={handleRefetch} />
         </ReloadButton>
       </Wrapper>
 
       <Wrapper>
         <CategoryList>
-          <FilterItem className={activeButton === '전체' ? 'active' : ''} onClick={handleResetFilters}>
-            <div className="dot" />
-            <div>전체</div>
+          <FilterItem isActive={activeButton === '전체'} onClick={handleResetFilters}>
+            전체
           </FilterItem>
-          <FilterItem
-            className={isAscending === false ? 'active' : ''}
-            onClick={() => handleFilterChange('earliest')}
-          >
-            <div className="dot" />
-            <div>오름차순</div>
+          <FilterItem isActive={isAscending === false} onClick={() => handleFilterChange('earliest')}>
+            오름차순
           </FilterItem>
-          <FilterItem
-            className={isAscending === true ? 'active' : ''}
-            onClick={() => handleFilterChange('latest')}
-          >
-            <div className="dot" />
-            <div>내림차순</div>
+          <FilterItem isActive={isAscending === true} onClick={() => handleFilterChange('latest')}>
+            내림차순
           </FilterItem>
-          <FilterItem
-            className={isPending ? 'active' : ''}
-            onClick={() => handleStatusChange( 'wait')}
-          >
-            <div className="dot" />
-            <div>해결 대기</div>
+          <FilterItem isActive={isPending} onClick={() => handleStatusChange('wait')}>
+            해결 대기
           </FilterItem>
-          <FilterItem
-            className={isCompleted ? 'active' : ''}
-            onClick={() => handleStatusChange('finish')}
-          >
-            <div className="dot" />
-            <div>해결 완료</div>
+          <FilterItem isActive={isCompleted} onClick={() => handleStatusChange('finish')}>
+            해결 완료
           </FilterItem>
         </CategoryList>
         <SelectWrapper>
@@ -174,7 +162,7 @@ function BoardController({ filters, setFilters }: Props) {
             <option value="50">50개씩 보기</option>
             <option value="100">100개씩 보기</option>
           </Select>
-          <Icon  />
+          <Icon />
         </SelectWrapper>
         <SearchForm>
           <SearchInput value={inputValue} onChange={handleInputChange} type="text" placeholder="find in Q&A" />
@@ -243,31 +231,6 @@ const CategoryList = styled.ul`
   }
 `;
 
-const FilterItem = styled.li`
-  display: flex;
-  align-items: center;
-  color: #8d8ba7;
-  font-weight: 700;
-  cursor: pointer;
-
-  .dot {
-    width: 10px;
-    height: 10px;
-    background-color: #8d8ba7;
-    border-radius: 100%;
-    margin-right: 5px;
-    margin-bottom: 3px;
-  }
-
-  &.active {
-      color: #353E5C; /* 활성화된 항목의 텍스트 색상 변경 */
-  }
-
-  &.active .dot {
-      background-color: #353E5C; /* 활성화된 항목의 점 색상 변경 */
-  }
-`;
-
 const SearchForm = styled.form`
   position: relative;
 `;
@@ -292,25 +255,25 @@ const SearchButton = styled.button`
 `;
 
 const SelectWrapper = styled.div`
-    position: relative;
-    display: inline-block;
-    width: 130px; // 원하는 크기로 변경하세요
-    margin-left: 10px;
+  position: relative;
+  display: inline-block;
+  width: 130px; // 원하는 크기로 변경하세요
+  margin-left: 10px;
 `;
 
 const Select = styled.select`
-    width: 92%;
-    padding: 8px 14px;
-    border: 1px solid #8d8ba7;
-    border-radius: 10px;
-    background-color: white;
-    color: #8d8ba7;
-    font-weight: bold;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
-    outline: none;
+  width: 92%;
+  padding: 8px 14px;
+  border: 1px solid #8d8ba7;
+  border-radius: 10px;
+  background-color: white;
+  color: #8d8ba7;
+  font-weight: bold;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  outline: none;
 `;
 
 const Icon = styled(KeyboardArrowDownIcon)`

@@ -1,19 +1,15 @@
 import { Container } from './styles';
 import CommentInput from '../CommentInput';
 import CommentList from '../CommentList';
-import { useQuery } from '@tanstack/react-query';
-import { getCommentList } from '../../../services/comment.ts';
+import { useCommentListQuery } from '../../../hooks/api/useCommentListQuery.ts';
 
 interface Props {
-  postId : number;
+  postId: number;
 }
 
-function Comments({postId} : Props) {
+function Comments({ postId }: Props) {
   // 댓글, 대댓글 데이터 호출
-  const { data : commentListData, isLoading: isLoadingComment, isError: isErrorComment} = useQuery({
-    queryKey : ["commentListData", postId],
-    queryFn: () => getCommentList(postId),
-  });
+  const { commentListData, isLoadingComment, isErrorComment } = useCommentListQuery({ postId });
 
   if (isLoadingComment) {
     return <div>Loading...</div>;
@@ -23,8 +19,8 @@ function Comments({postId} : Props) {
     return <div>Error...</div>;
   }
 
-  console.log(commentListData.data)
-  console.log(commentListData.data.length)
+  console.log(commentListData.data);
+  console.log(commentListData.data.length);
 
   return (
     <Container>
