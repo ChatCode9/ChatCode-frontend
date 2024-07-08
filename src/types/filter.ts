@@ -1,12 +1,14 @@
+export type PostStatus = 'wait' | 'finish' | '';
+
 export type Filters = {
   search: string;
   categories: string;
   sortBy: string;
-  status: string[];
+  status: PostStatus;
   pageInfo: {
     page: number;
     size: number;
-    offset: number;
+    offset?: number;
   };
 };
 
@@ -14,10 +16,10 @@ export type RequestFilters = {
   search: string;
   categories: string;
   sortBy: string;
-  status: string;
+  status: PostStatus;
   pageInfo: {
     page: number;
     size: number;
-    offset: number;
+    offset?: number;
   };
 };

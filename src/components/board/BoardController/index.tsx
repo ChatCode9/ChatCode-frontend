@@ -9,6 +9,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Filters } from '../../../types/filter';
 import FilterItem from './FilterItem';
+import { FILTERS_LIST, INITIAL_FILTERS } from '../../../constants/filters';
 
 interface Props {
   filters: Filters;
@@ -63,13 +64,13 @@ function BoardController({ filters, setFilters, extra }: Props) {
   useEffect(() => {
     let newStaus;
     if (isPending && isCompleted) {
-      newStaus = ['wait', 'finish'];
+      newStaus = FILTERS_LIST.ALL;
     } else if (!isPending && isCompleted) {
-      newStaus = ['finish'];
+      newStaus = FILTERS_LIST.FINISH;
     } else if (isPending && !isCompleted) {
-      newStaus = ['wait'];
+      newStaus = FILTERS_LIST.WAIT;
     } else {
-      newStaus = ['wait', 'finish'];
+      newStaus = FILTERS_LIST.ALL;
     }
     // console.log(`newStaus : ${newStaus}`)
     setFilters((prevFilters) => {
@@ -80,18 +81,7 @@ function BoardController({ filters, setFilters, extra }: Props) {
   // 전체(검색 조건 리셋)
   const handleResetFilters = () => {
     // console.log('handleResetFilters');
-    const initialFilters = {
-      search: '',
-      categories: 'question',
-      sortBy: 'latest',
-      status: ['wait', 'finish'],
-      pageInfo: {
-        page: 1,
-        size: 15,
-        offset: 10,
-      },
-    };
-    setFilters(initialFilters);
+    setFilters(INITIAL_FILTERS);
     setActiveButton('전체');
     setIsAscending(null);
     setIsPending(false);
