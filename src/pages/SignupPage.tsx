@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Navbar from '../components/NavBar';
+import Navbar from '../components/header/NavBar';
 import Nickname from '../components/signup/UserNickname';
 import UserTag from '../components/signup/UserTag';
 import UserConsent from '../components/signup/UserConsent';

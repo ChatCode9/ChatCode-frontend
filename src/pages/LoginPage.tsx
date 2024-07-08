@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import Navbar from '../components/NavBar';
+import Navbar from '../components/header/NavBar';
 import BottomNavBar from '../components/BottomNavBar';
 import { AXIOS_BASE_URL } from '../constants/api';
 
