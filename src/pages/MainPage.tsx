@@ -1,14 +1,15 @@
 import styled from 'styled-components';
-
 import Slider from '../components/main/Slider';
 import Navbar from '../components/header/NavBar';
 import PickFlow from '../components/board/PickFlow';
 import RecentPostsAndThumbnails from '../components/main/RecentPostsAndThumbnails';
+import Topic from '../components/main/Topic';
+import Competition from '../components/main/Competition';
 
 const MainPage: React.FC = () => {
   const pickFlowProps = {
     justifyContent: 'space-between',
-    margin: '50px',
+    margin: '100px',
     border: '1px solid #8D8BA7',
     borderRadius: '10px',
     padding: '20px',
@@ -25,6 +26,8 @@ const MainPage: React.FC = () => {
       <MainContent>
         <PickFlow {...pickFlowProps} />
         <RecentPostsAndThumbnails />
+        <Topic />
+        <Competition />
       </MainContent>
     </>
   );

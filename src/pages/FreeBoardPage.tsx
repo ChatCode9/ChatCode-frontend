@@ -10,12 +10,16 @@ import PaginationRounded from '../components/board/Pagination';
 import Divider from '../components/board/Divider';
 import FreeBoardList from '../components/board/FreeBoardList';
 import { Filters } from '../types/filter';
+
 import Navbar from '../components/header/NavBar';
 import { INITIAL_FILTERS } from '../constants/filters';
+
 
 // const filters = ['전체', '최신순', '인기순'];
 
 function FreeBoardPage() {
+
+
   const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
 
   return (
