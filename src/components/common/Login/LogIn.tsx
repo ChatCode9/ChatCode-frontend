@@ -2,20 +2,23 @@ import { useLayoutEffect, type PropsWithChildren } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 import { isLoggedInState } from '../../../atoms/authState';
-import { getMyInfo } from '../../../services/user/getMyInfo';
+import { useMyInfoQuery } from '../../../hooks/api/useMyInfoQuery';
 
 interface LogInProps extends PropsWithChildren {}
 
 const LogIn = ({ children }: LogInProps) => {
   const setIsLoggedIn = useSetRecoilState(isLoggedInState);
 
-  const myInfo = getMyInfo();
+  const { data: myInfo } = useMyInfoQuery();
   console.log(myInfo);
 
   useLayoutEffect(() => {
-    if (localStorage.getItem('Authorization')) {
+    if (myInfo?.data) {
       setIsLoggedIn(true);
     }
+    // if (localStorage.getItem('Authorization')) {
+    //   setIsLoggedIn(true);
+    // }
   }, [setIsLoggedIn]);
 
   return <>{children}</>;

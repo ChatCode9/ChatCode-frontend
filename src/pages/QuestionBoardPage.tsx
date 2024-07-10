@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import Navbar from '../components/header/NavBar';
@@ -7,18 +6,11 @@ import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
 import Divider from '../components/board/Divider';
 import QuestionBoardList from '../components/board/QuestionBoardList';
-import { Filters } from '../types/filter';
-import { INITIAL_FILTERS } from '../constants/filters';
-
-// const category = ['전체', '최신순', '인기순', '해결 대기', '해결 완료'];
+import useFilters from '../hooks/useFilters';
+import { FILTERS_CATEGORIES_LIST } from '../constants/filters';
 
 function QuestionBoardPage() {
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
-
-  useEffect(() => {
-    console.log('filters 상태 변경:', filters);
-    // 여기에 상태 변화에 따른 추가 작업을 수행할 수 있습니다.
-  }, [filters]);
+  const { filters, setFilters } = useFilters(FILTERS_CATEGORIES_LIST.QUESTION);
 
   return (
     <Container>

@@ -1,118 +1,40 @@
 import styled from 'styled-components';
-import { useQueryClient } from '@tanstack/react-query';
-import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Filters } from '../../../types/filter';
+import { BoardControlType } from '../../../types/filter';
 import FilterItem from './FilterItem';
-import { FILTERS_LIST, INITIAL_FILTERS } from '../../../constants/filters';
+import useBoardControl from '../../../hooks/useBoardControl';
+import { FILTERS_POST_LIST, FILTERS_SORT_LIST } from '../../../constants/filters';
+import { FormEvent, useRef } from 'react';
 
-interface Props {
-  filters: Filters;
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-  extra?: JSX.Element;
-}
-
-function BoardController({ filters, setFilters, extra }: Props) {
+function BoardController({ filters, setFilters }: BoardControlType) {
   const navigate = useNavigate();
-  const [activeButton, setActiveButton] = useState('전체');
-  const [isAscending, setIsAscending] = useState<boolean | null>(null);
-  const [isPending, setIsPending] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('10');
-  const [inputValue, setInputValue] = useState('');
-
-  console.log(filters);
-  console.log(extra);
-  // 데이터 재호출
-  const queryClient = useQueryClient();
-  const handleRefetch = () => {
-    queryClient.invalidateQueries({ queryKey: ['posts'] });
-  };
-
-  // 필터 (오름차순, 내림차순)
-  const handleFilterChange = (newSortby: string) => {
-    // console.log('handleFilterChange');
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      sortBy: newSortby,
-    }));
-    if (newSortby === 'latest') {
-      setIsAscending(true);
-    } else if (newSortby === 'earliest') {
-      setIsAscending(false);
-    }
-    setActiveButton(newSortby);
-  };
-
-  // 필터 (해결대기, 해결완료)
-  const handleStatusChange = (status: string) => {
-    // console.log(`isPendingBefore : ${isPending}`)
-    if (status === 'wait') {
-      setIsPending(!isPending);
-    } else if (status === 'finish') {
-      setIsCompleted(!isCompleted);
-    }
-    setActiveButton(status);
-  };
-
-  // 해결대기와 해결완료 데이터 변경시 setFilters 에 데이터 반영
-  useEffect(() => {
-    let newStaus;
-    if (isPending && isCompleted) {
-      newStaus = FILTERS_LIST.ALL;
-    } else if (!isPending && isCompleted) {
-      newStaus = FILTERS_LIST.FINISH;
-    } else if (isPending && !isCompleted) {
-      newStaus = FILTERS_LIST.WAIT;
-    } else {
-      newStaus = FILTERS_LIST.ALL;
-    }
-    // console.log(`newStaus : ${newStaus}`)
-    setFilters((prevFilters) => {
-      return { ...prevFilters, status: newStaus };
-    });
-  }, [isPending, isCompleted, setFilters]);
-
-  // 전체(검색 조건 리셋)
-  const handleResetFilters = () => {
-    // console.log('handleResetFilters');
-    setFilters(INITIAL_FILTERS);
-    setActiveButton('전체');
-    setIsAscending(null);
-    setIsPending(false);
-    setIsCompleted(false);
-    setInputValue('');
-  };
-
-  // 1페이지 몇개 볼 것인지 선택
-  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedValue(event.target.value);
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      pageInfo: {
-        ...prevFilters.pageInfo,
-        size: Number(event.target.value),
-      },
-    }));
-  };
-
-  // 검색창에 입력되는 값
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      search: event.target.value,
-    }));
-  };
+  const inputRef = useRef<HTMLInputElement>(null);
+  const {
+    selectedValue,
+    handleRefetch,
+    handleResetFilters,
+    handleFilterChange,
+    handleStatusChange,
+    handleSelectChange,
+  } = useBoardControl({ filters, setFilters });
 
   // 게시글 글쓰기 클릭 할 때
   const handlePostWriteClick = () => {
     navigate(`/write`);
+  };
+
+  const handleSearchPosts = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const searchValue = inputRef.current?.value || '';
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
   };
 
   return (
@@ -129,19 +51,31 @@ function BoardController({ filters, setFilters, extra }: Props) {
 
       <Wrapper>
         <CategoryList>
-          <FilterItem isActive={activeButton === '전체'} onClick={handleResetFilters}>
+          <FilterItem isActive={filters.status === FILTERS_POST_LIST.ALL} onClick={handleResetFilters}>
             전체
           </FilterItem>
-          <FilterItem isActive={isAscending === false} onClick={() => handleFilterChange('earliest')}>
-            오름차순
+          <FilterItem
+            isActive={filters.sortBy === FILTERS_SORT_LIST.LATEST}
+            onClick={() => handleFilterChange(FILTERS_SORT_LIST.LATEST)}
+          >
+            최신순
           </FilterItem>
-          <FilterItem isActive={isAscending === true} onClick={() => handleFilterChange('latest')}>
-            내림차순
+          <FilterItem
+            isActive={filters.sortBy === FILTERS_SORT_LIST.OLDEST}
+            onClick={() => handleFilterChange(FILTERS_SORT_LIST.OLDEST)}
+          >
+            오래된순
           </FilterItem>
-          <FilterItem isActive={isPending} onClick={() => handleStatusChange('wait')}>
+          <FilterItem
+            isActive={filters.status === FILTERS_POST_LIST.WAIT}
+            onClick={() => handleStatusChange(FILTERS_POST_LIST.WAIT)}
+          >
             해결 대기
           </FilterItem>
-          <FilterItem isActive={isCompleted} onClick={() => handleStatusChange('finish')}>
+          <FilterItem
+            isActive={filters.status === FILTERS_POST_LIST.FINISH}
+            onClick={() => handleStatusChange(FILTERS_POST_LIST.FINISH)}
+          >
             해결 완료
           </FilterItem>
         </CategoryList>
@@ -154,8 +88,8 @@ function BoardController({ filters, setFilters, extra }: Props) {
           </Select>
           <Icon />
         </SelectWrapper>
-        <SearchForm>
-          <SearchInput value={inputValue} onChange={handleInputChange} type="text" placeholder="find in Q&A" />
+        <SearchForm onSubmit={handleSearchPosts}>
+          <SearchInput ref={inputRef} type="text" placeholder="find in Q&A" />
           <SearchButton type="submit">
             <SearchOutlinedIcon />
           </SearchButton>

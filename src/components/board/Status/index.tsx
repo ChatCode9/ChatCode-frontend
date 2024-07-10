@@ -5,7 +5,7 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 
 interface Props {
   viewCount: number;
-  commentCount: number;
+  commentCount?: number;
   likeCount: number;
 }
 

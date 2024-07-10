@@ -17,7 +17,7 @@ import { Post } from '../../../types/post';
 
 interface BoardItemProps {
   post: Post;
-  handlePostClick: (id: number, blind: boolean) => void;
+  handlePostClick: (id: number, blind?: boolean) => void;
   handleBookMarkIconClick: (event: React.MouseEvent<HTMLDivElement>, id: number) => void;
   handleMoreClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
   handleBlindDataAddClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;

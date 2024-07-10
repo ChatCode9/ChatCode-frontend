@@ -1,17 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useMutation, MutationOptions } from '@tanstack/react-query';
 
-import { Post } from '../types/post';
+import { BlindVariables, BookmarkVariables, Post, ToggleKey, ToggleValue, UpdateFunction } from '../types/post';
 import { Filters } from '../types/filter';
 import { usePostsQuery } from './api/usePostsQuery';
 import { postBookmark } from '../services/post/postBookmark';
 import { postBlind } from '../services/post/postBlind';
-
-type ToggleKey = 'bookmark' | 'blind' | 'status';
-type ToggleValue = boolean | string;
-type UpdateFunction<T> = (variables: T) => Promise<void>;
-type BookmarkVariables = { postId: number; bookmark: boolean };
-type BlindVariables = { postId: number; blind: boolean };
 
 const usePosts = (filters: Filters) => {
   const [posts, setPosts] = useState<Post[]>([]);

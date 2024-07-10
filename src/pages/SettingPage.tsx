@@ -10,7 +10,7 @@ function SettingPage() {
   return (
     <>
       <Container>
-        <Navbar></Navbar>
+        <Navbar />
         <LoginBox>
           <SnsLogin>
             <Nickname />
@@ -19,7 +19,7 @@ function SettingPage() {
           </SnsLogin>
         </LoginBox>
       </Container>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 }

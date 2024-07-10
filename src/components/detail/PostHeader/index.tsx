@@ -5,7 +5,7 @@ import { Sub, Title, Wrapper } from './styles';
 import ActionButtons from './ActionButtons';
 import Divider from '../../board/Divider';
 import { timeDifference } from '../../../utils/timeDifference.ts';
-import { formatDate } from '../../../utils/formatDate.ts';
+// import { formatDate } from '../../../utils/formatDate.ts';
 import { formatViewCount } from '../../../utils/formatViewCount.ts';
 import More from '../../board/More';
 import { postLike } from '../../../services/post/postLike.ts';
@@ -21,7 +21,6 @@ interface Props {
   postId: number;
   title: string;
   timeline: string | number | Date;
-  updated: boolean;
   viewCount: number;
   status: string;
   bookmark: boolean;
@@ -34,7 +33,6 @@ function PostHeader({
   postId,
   title,
   timeline,
-  updated,
   viewCount,
   status,
   bookmark,
@@ -47,7 +45,7 @@ function PostHeader({
   const [isBookmark, setIsBookmark] = useState(bookmark);
 
   const [liked, setLiked] = useState<boolean | null>(isLiked);
-  const [voteCount, setVoteCount] = useState(likeCount);
+  const [likedCount, setLikedCount] = useState(likeCount);
 
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
   const [switchPostId, setSwitchPostId] = useState<number | null>(null);
@@ -70,7 +68,7 @@ function PostHeader({
     onSuccess: async (_, variables) => {
       setLiked(variables.data.isLike);
       const likesCountResponse = await getLikesCount(postId); // API CALL
-      setVoteCount(likesCountResponse.data);
+      setLikedCount(likesCountResponse.data);
     },
     onError: () => {
       showToast('서버 통신 실패');
@@ -143,14 +141,14 @@ function PostHeader({
   return (
     <Wrapper>
       <div className="voting">
-        <VotingComponent voteCount={voteCount} isLiked={liked} onLike={handleLike} onDislike={handleDislike} />
+        <VotingComponent voteCount={likedCount} isLiked={liked} onLike={handleLike} onDislike={handleDislike} />
       </div>
       <Title>{title}</Title>
       <Sub>
         <span>{timeDifference(timeline)} 작성</span>
-        <span>
+        {/* <span>
           {formatDate(timeline)} {updated ? '수정' : ''}
-        </span>
+        </span> */}
         <span>조회수 {formatViewCount(viewCount)}</span>
       </Sub>
       <ActionButtons
