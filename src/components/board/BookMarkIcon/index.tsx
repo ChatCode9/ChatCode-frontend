@@ -1,3 +1,5 @@
+import React from 'react';
+
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
 
@@ -9,4 +11,4 @@ function BookMarkIcon({ isActive }: Props) {
   return <>{isActive ? <BookmarkOutlinedIcon fontSize="large" /> : <BookmarkBorderOutlinedIcon fontSize="large" />}</>;
 }
 
-export default BookMarkIcon;
+export default React.memo(BookMarkIcon);

@@ -3,11 +3,11 @@ import styled from 'styled-components';
 interface Props {
   avatar?: string;
   timeline: string;
-  nickname: string;
+  nickname?: string;
 }
 
-function Profile({ /*avatar,*/ timeline, nickname }: Props) {
-  // console.log(avatar);
+function Profile({ avatar, timeline, nickname }: Props) {
+  console.log(avatar);
 
   return (
     <Container>

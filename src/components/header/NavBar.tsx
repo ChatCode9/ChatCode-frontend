@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -5,6 +6,7 @@ import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import LoginButton from './LoginButton';
 import { isLoggedInState } from '../../atoms/authState';
+import LogoutButton from './LogoutButton';
 
 function Navbar() {
   const isLoggedIn = useRecoilValue(isLoggedInState);
@@ -37,13 +39,14 @@ function Navbar() {
             </IconBox>
           </StyledSearchInput>
 
-          {isLoggedIn ? '로그아웃' : <LoginButton />}
+          {isLoggedIn ? <LogoutButton /> : <LoginButton />}
         </RightMenu>
       </Nav>
     </Header>
   );
 }
-export default Navbar;
+
+export default React.memo(Navbar);
 
 const Header = styled.header`
   display: flex;

@@ -3,7 +3,7 @@ import Profile from '../components/mypage/Profile';
 import Tabs from '../components/Tabs';
 import PostStats from '../components/mypage/PostStats';
 
-function Mypage() {
+function MyPage() {
   return (
     <>
       <Navbar />
@@ -13,4 +13,4 @@ function Mypage() {
     </>
   );
 }
-export default Mypage;
+export default MyPage;
