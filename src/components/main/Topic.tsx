@@ -12,7 +12,7 @@ import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
 type TopicData = {
   title: string;
   content: string;
-  image: string; // 이미지 URL을 가져오는 키를 image로 수정
+  image: string;
   url: string;
 };
 
@@ -25,11 +25,11 @@ function Topic() {
     <Container>
       <h1 className="title">TODAY’S IT TOPIC</h1>
       <Swiper
-        effect={'coverflow'} // 슬라이더의 효과를 'coverflow'로 설정합니다.
+        effect={'coverflow'}
         grabCursor={true}
         centeredSlides={true}
         loop={true}
-        slidesPerView={'auto'} // 슬라이더에 표시되는 슬라이드 수를 자동으로 설정합니다.
+        slidesPerView={'auto'}
         coverflowEffect={{
           rotate: 0,
           stretch: 0,

@@ -4,6 +4,7 @@ import Navbar from '../components/NavBar';
 import PickFlow from '../components/board/PickFlow';
 import RecentPostsAndThumbnails from '../components/main/RecentPostsAndThumbnails';
 import Topic from '../components/main/Topic';
+import Competition from '../components/main/Competition';
 
 const MainPage: React.FC = () => {
   const pickFlowProps = {
@@ -26,6 +27,7 @@ const MainPage: React.FC = () => {
         <PickFlow {...pickFlowProps} />
         <RecentPostsAndThumbnails />
         <Topic />
+        <Competition />
       </MainContent>
     </>
   );
