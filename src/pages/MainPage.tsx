@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Slider from '../components/main/Slider';
-import Navbar from '../components/NavBar';
+import Navbar from '../components/header/NavBar';
 import PickFlow from '../components/board/PickFlow';
 import RecentPostsAndThumbnails from '../components/main/RecentPostsAndThumbnails';
 import Topic from '../components/main/Topic';

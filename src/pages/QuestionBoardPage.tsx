@@ -1,27 +1,19 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Navbar from '../components/NavBar';
+
+import Navbar from '../components/header/NavBar';
 import PickFlow from '../components/board/PickFlow';
 import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
 import Divider from '../components/board/Divider';
 import QuestionBoardList from '../components/board/QuestionBoardList';
-import { useEffect, useState } from 'react';
 import { Filters } from '../types/filter';
+import { INITIAL_FILTERS } from '../constants/filters';
 
 // const category = ['전체', '최신순', '인기순', '해결 대기', '해결 완료'];
 
 function QuestionBoardPage() {
-  const [filters, setFilters] = useState<Filters>({
-    search: '',
-    categories: 'question',
-    sortBy: 'latest',
-    status: ['wait', 'finish'],
-    pageInfo: {
-      page: 1,
-      size: 15,
-      offset: 0,
-    },
-  });
+  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
 
   useEffect(() => {
     console.log('filters 상태 변경:', filters);

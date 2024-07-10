@@ -11,23 +11,20 @@ import Divider from '../components/board/Divider';
 import FreeBoardList from '../components/board/FreeBoardList';
 import { Filters } from '../types/filter';
 
+import Navbar from '../components/header/NavBar';
+import { INITIAL_FILTERS } from '../constants/filters';
+
+
 // const filters = ['전체', '최신순', '인기순'];
 
 function FreeBoardPage() {
-  const [filters, setFilters] = useState<Filters>({
-    search: '',
-    categories: 'question',
-    sortBy: 'latest',
-    status: ['wait', 'finish'],
-    pageInfo: {
-      page: 1,
-      size: 15,
-      offset: 0,
-    },
-  });
+
+
+  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
 
   return (
     <Container>
+      <Navbar />
       <PickFlow />
       <BoardInfo
         title="자유 게시판"

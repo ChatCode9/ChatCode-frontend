@@ -7,7 +7,7 @@ import Editor from '../components/Editor';
 import CategorySelect from '../components/write/CategorySelect';
 import TagAutocomplete from '../components/write/TagAutocomplete';
 import ActionButtons from '../components/write/ActionButtons';
-import Navbar from '../components/NavBar.tsx';
+import Navbar from '../components/header/NavBar.tsx';
 import { NotificationToast } from '../components/modal/NotificationToast.tsx';
 import { getPost } from '../services/post/getPost.ts';
 import { useToastControl } from '../hooks/useToastControl.ts';
