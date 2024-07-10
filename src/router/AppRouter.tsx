@@ -1,58 +1,96 @@
+import { Suspense } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import PostWritePage from '../pages/PostWritePage.tsx';
-import QuestionBoardPage from '../pages/QuestionBoardPage.tsx';
-import FreeBoardPage from '../pages/FreeBoardPage.tsx';
-import PostDetailPage from '../pages/PostDetailPage.tsx';
 // import PostsPage from '../pages/PostsPage.tsx';
-import LoginPage from '../pages/LoginPage.tsx';
-import SignupPage from '../pages/SignupPage.tsx';
-import Mypage from '../pages/Mypage.tsx';
-import SettingPage from '../pages/SettingPage.tsx';
-import MainPage from '../pages/MainPage.tsx';
+import * as Lazy from './lazy';
+import ErrorPage from '../pages/ErrorPage';
 
 // TODO: 추후 논의
 const AppRouter = () => {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <MainPage />,
+      element: (
+        <Suspense>
+          <Lazy.MainPage />
+        </Suspense>
+      ),
     },
     {
       path: '/login',
-      element: <LoginPage />,
+      element: (
+        <Suspense>
+          <Lazy.LoginPage />
+        </Suspense>
+      ),
     },
     {
       path: '/signup',
-      element: <SignupPage />,
+      element: (
+        <Suspense>
+          <Lazy.SignupPage />
+        </Suspense>
+      ),
     },
     {
       path: '/mypage',
-      element: <Mypage />,
+      element: (
+        <Suspense>
+          <Lazy.MyPage />
+        </Suspense>
+      ),
     },
     {
       path: '/setting',
-      element: <SettingPage />,
+      element: (
+        <Suspense>
+          <Lazy.SettingPage />
+        </Suspense>
+      ),
     },
     {
       path: '/board/question',
-      element: <QuestionBoardPage />,
+      element: (
+        <Suspense>
+          <Lazy.QuestionBoardPage />
+        </Suspense>
+      ),
     },
     {
       path: '/board/free',
-      element: <FreeBoardPage />,
+      element: (
+        <Suspense>
+          <Lazy.FreeBoardPage />
+        </Suspense>
+      ),
     },
     {
       path: '/write',
-      element: <PostWritePage />,
+      element: (
+        <Suspense>
+          <Lazy.PostWritePage />
+        </Suspense>
+      ),
     },
     {
       path: '/edit/:postId',
-      element: <PostWritePage />,
+      element: (
+        <Suspense>
+          <Lazy.PostWritePage />
+        </Suspense>
+      ),
     },
     {
       path: '/posts/:postId',
-      element: <PostDetailPage />,
+      element: (
+        <Suspense>
+          <Lazy.PostDetailPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: '/*',
+      element: <ErrorPage />,
     },
   ]);
 
