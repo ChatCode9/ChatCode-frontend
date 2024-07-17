@@ -1,7 +1,7 @@
 import Navbar from '../components/header/NavBar';
-import Profile from '../components/mypage/Profile';
+import Profile from '../components/myPage/Profile';
 import Tabs from '../components/Tabs';
-import PostStats from '../components/mypage/PostStats';
+import PostStats from '../components/myPage/PostStats';
 
 function MyPage() {
   return (

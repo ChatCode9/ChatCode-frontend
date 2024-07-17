@@ -6,7 +6,7 @@ export const LoginPage = lazy(() => import(/* webpackChunkName: "LoginPage" */ '
 
 export const SignupPage = lazy(() => import(/* webpackChunkName: "SignupPage" */ '../pages/SignupPage'));
 
-export const MyPage = lazy(() => import(/* webpackChunkName: "MyPage" */ '../pages/MyPage'));
+export const MyPage = lazy(() => import(/* webpackChunkName: "MyPage" */ '../pages/Mypage'));
 
 export const SettingPage = lazy(() => import(/* webpackChunkName: "SettingPage" */ '../pages/SettingPage'));
 

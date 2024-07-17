@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import ScrapPost from './mypage/ScrapPost';
+import ScrapPost from './myPage/ScrapPost';
 
 function Tabs() {
   const menuArr = [
