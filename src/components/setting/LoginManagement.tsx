@@ -1,7 +1,12 @@
+import { useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { tagState } from '../../atoms/userInfoState';
+import { usePostTags } from '../../hooks/api/usePostTags';
 import styled from 'styled-components';
 import googleLogo from '../../../public/googleLogo.svg';
 import githubLogo from '../../../public/githubLogo.png';
 import Checkbox from '@mui/material/Checkbox';
+import { clickedListState } from '../../atoms/userInfoState';
 
 interface LoginBtnProps {
   bgColor: string;
@@ -9,7 +14,21 @@ interface LoginBtnProps {
 }
 
 function LoginManagement() {
+  const navigate = useNavigate();
+  const selectedTags: number[] = useRecoilValue(tagState);
+  const clickedList = useRecoilValue(clickedListState);
+  console.log('selectedTags', selectedTags);
+  console.log('clickedList', clickedList);
+  const { mutate: postUserTags } = usePostTags();
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+  const handleSubmitTags = () => {
+    const formattedTags = selectedTags.map((tagId) => {
+      return { id: tagId };
+    });
+    postUserTags(formattedTags);
+    navigate('/mypage');
+  };
+
   return (
     <>
       <LoginInfoBox>로그인 관리</LoginInfoBox>
@@ -21,7 +40,7 @@ function LoginManagement() {
         <img src={githubLogo} />
         Continue with Github
       </LoginBtn>
-      <SaveBtn>수정 완료</SaveBtn>
+      <SaveBtn onClick={handleSubmitTags}>수정 완료</SaveBtn>
       <DeleteUserInfo>
         <div className="deleteTitle">회원탈퇴</div>
         <textarea name="deleteContent"></textarea>

@@ -7,6 +7,8 @@ import { useDeleteTag } from '../../hooks/api/useDeleteTag';
 import { tagState } from '../../atoms/userInfoState';
 import { usePostTag } from '../../hooks/api/usePostTag';
 import { usePutTag } from '../../hooks/api/usePutTag';
+import { useUserTagsQuery } from '../../hooks/api/useUserTagsQuery';
+import { clickedListState } from '../../atoms/userInfoState';
 
 interface Tag {
   id: number;
@@ -44,11 +46,24 @@ function UserTag() {
 
   const [tagName, setTagName] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useRecoilState<number[]>(tagState);
-  const [clickedList, setClickedList] = useState<boolean[]>([]);
+  const [clickedList, setClickedList] = useRecoilState(clickedListState);
+
+  const { data: userTags } = useUserTagsQuery();
+
+  useEffect(() => {
+    if (userTags) {
+      const initialClickedList = tagName.map((tag) => userTags.data.some((userTag: Tag) => userTag.id === tag.id));
+      setClickedList(initialClickedList);
+      setSelectedTags(userTags.data.map((tag: Tag) => tag.id));
+    }
+  }, [userTags, tagName, setClickedList, setSelectedTags]);
 
   const handleClick = (index: number): void => {
     const updatedList = [...clickedList];
-    const selectedCount = clickedList.filter((item) => item).length;
+    const selectedTag = tagName[index];
+
+    const selectedCount = updatedList.filter((item) => item).length;
+
     if (!updatedList[index] && selectedCount >= 6) {
       alert('6개까지만 선택 가능합니다.');
       return;
@@ -56,13 +71,13 @@ function UserTag() {
     updatedList[index] = !updatedList[index];
     setClickedList(updatedList);
 
-    const selectedTag = tagName[index];
     if (updatedList[index]) {
       setSelectedTags([...selectedTags, selectedTag.id]);
     } else {
-      setSelectedTags(selectedTags.filter((tag) => tag !== selectedTag.id));
+      setSelectedTags(selectedTags.filter((tagId) => tagId !== selectedTag.id));
     }
   };
+
   return (
     <>
       <SignupInfoBox>회원님의 관심사에 대해 알려주세요</SignupInfoBox>
