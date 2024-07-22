@@ -61,8 +61,8 @@ function BoardController({ filters, setFilters }: BoardControlType) {
             최신순
           </FilterItem>
           <FilterItem
-            isActive={filters.sortBy === FILTERS_SORT_LIST.OLDEST}
-            onClick={() => handleFilterChange(FILTERS_SORT_LIST.OLDEST)}
+            isActive={filters.sortBy === FILTERS_SORT_LIST.EARLIEST}
+            onClick={() => handleFilterChange(FILTERS_SORT_LIST.EARLIEST)}
           >
             오래된순
           </FilterItem>

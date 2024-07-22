@@ -1,6 +1,8 @@
+export type PostCategoryStatus = 1 | 2;
+
 export type CategoriesStatus = 'question' | 'free';
 
-export type SortByStatus = 'latest' | 'oldest';
+export type SortByStatus = 'latest' | 'earliest';
 
 export type PostStatus = 'wait' | 'finish' | '';
 

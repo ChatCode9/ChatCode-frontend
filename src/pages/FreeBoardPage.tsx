@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import PickFlow from '../components/board/PickFlow';
 import BoardInfo from '../components/board/BoardInfo';
 import BoardController from '../components/board/BoardController';
-import PaginationRounded from '../components/board/Pagination';
 import Divider from '../components/board/Divider';
 import FreeBoardList from '../components/board/FreeBoardList';
 import Navbar from '../components/header/NavBar';
@@ -23,8 +22,7 @@ function FreeBoardPage() {
       />
       <BoardController filters={filters} setFilters={setFilters} />
       <Divider />
-      <FreeBoardList filters={filters} />
-      <PaginationRounded />
+      <FreeBoardList filters={filters} setFilters={setFilters} />
     </Container>
   );
 }

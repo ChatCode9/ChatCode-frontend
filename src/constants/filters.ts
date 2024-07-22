@@ -5,7 +5,7 @@ export const FILTERS_CATEGORIES_LIST = {
 
 export const FILTERS_SORT_LIST = {
   LATEST: 'latest',
-  OLDEST: 'oldest',
+  EARLIEST: 'earliest',
 } as const;
 
 export const FILTERS_POST_LIST = {

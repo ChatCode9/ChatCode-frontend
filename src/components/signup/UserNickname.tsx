@@ -1,23 +1,26 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useRecoilState } from 'recoil';
+
 import { nickNameState } from '../../atoms/userInfoState';
 import { useInfoQuery } from '../../hooks/api/useInfoQuery';
+import { useMyInfoQuery } from '../../hooks/api/useMyInfoQuery';
 
 function Nickname() {
   const [nickName, setNickName] = useRecoilState<string>(nickNameState);
 
-  const { data: userData } = useInfoQuery();
+  const { data: myInfo } = useMyInfoQuery();
+  const { data: userData } = useInfoQuery({ id: myInfo.data.id });
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(event.target.value);
   };
 
-  useEffect(() => {
-    if (userData && userData.data && userData.data.nickname) {
+  useLayoutEffect(() => {
+    if (userData?.data?.nickname) {
       console.log('닉네임data', userData);
       setNickName(userData.data.nickname);
     }
-  }, [userData, setNickName]);
+  }, []);
 
   return (
     <>

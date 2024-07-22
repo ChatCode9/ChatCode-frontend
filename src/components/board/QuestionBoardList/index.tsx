@@ -1,21 +1,11 @@
-import { Filters } from '../../../types/filter';
+import { BoardControlType } from '../../../types/filter';
 import BoardItem from './BoardItem';
 import { Board, BoardListWrapper } from './styles';
-import BookMarkIcon from '../BookMarkIcon';
 import PaginationRounded from '../Pagination';
 import usePosts from '../../../hooks/usePosts.ts';
-import usePost from '../../../hooks/usePost.ts';
 
-interface Props {
-  filters: Filters;
-}
-
-function QuestionBoardList({ filters }: Props) {
-  const { posts, showLoadingMessage, showNoDataMessage, showPagination, toggleStatus } = usePosts(filters);
-  const { handleBookMarkIconClick, handleMoreClick, handleBlindDataAddClick, handlePostClick, eventStop } = usePost({
-    posts,
-    toggleStatus,
-  });
+function QuestionBoardList({ filters, setFilters }: BoardControlType) {
+  const { posts, showLoadingMessage, showNoDataMessage, showPagination, toggleStatus, pagesCount } = usePosts(filters);
 
   if (showLoadingMessage) {
     return (
@@ -36,18 +26,9 @@ function QuestionBoardList({ filters }: Props) {
   return (
     <BoardListWrapper>
       {posts.map((post) => (
-        <BoardItem
-          key={post.id}
-          post={post}
-          handlePostClick={handlePostClick}
-          handleBookMarkIconClick={handleBookMarkIconClick}
-          handleMoreClick={handleMoreClick}
-          handleBlindDataAddClick={handleBlindDataAddClick}
-          eventStop={eventStop}
-          BookMarkIconMemo={BookMarkIcon}
-        />
+        <BoardItem key={post.id} post={post} toggleStatus={toggleStatus} />
       ))}
-      {showPagination && <PaginationRounded />}
+      {showPagination && <PaginationRounded pagesCount={pagesCount} setFilters={setFilters} />}
     </BoardListWrapper>
   );
 }

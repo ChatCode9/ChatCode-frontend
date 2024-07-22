@@ -4,9 +4,9 @@ import client from '../client';
 export const putArticle = async (
   postId: number,
   updateArticle: {
-    category: string | undefined;
+    categoryId: number;
     title: string;
-    tagList: string[];
+    tags: string[];
     contentText: string;
   },
 ) => {

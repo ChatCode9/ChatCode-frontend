@@ -16,42 +16,25 @@ import { getLikesCount } from '../../../services/post/getLikesCount.ts';
 import { postBookmark } from '../../../services/post/postBookmark.ts';
 import { updateStatusWrapper } from '../../../services/post/updateStatusWrapper.ts';
 import { useToastControl } from '../../../hooks/useToastControl.ts';
+import { Post } from '../../../types/post.ts';
 
 interface Props {
-  postId: number;
-  title: string;
-  timeline: string | number | Date;
-  viewCount: number;
-  status: string;
-  bookmark: boolean;
-  likeCount: number;
-  isLiked: boolean | null;
+  postData?: Post;
   isGuest?: boolean;
 }
 
-function PostHeader({
-  postId,
-  title,
-  timeline,
-  viewCount,
-  status,
-  bookmark,
-  likeCount,
-  isLiked,
-  isGuest = false,
-}: Props) {
+function PostHeader({ postData, isGuest = false }: Props) {
   const { showToast, hideToast } = useToastControl();
-  const [postStatus, setPostStatus] = useState(status);
-  const [isBookmark, setIsBookmark] = useState(bookmark);
-
-  const [liked, setLiked] = useState<boolean | null>(isLiked);
-  const [likedCount, setLikedCount] = useState(likeCount);
+  const [postStatus, setPostStatus] = useState<string>(postData?.status || '');
+  const [isBookmark, setIsBookmark] = useState<boolean>(postData?.bookmark || false);
+  const [liked, setLiked] = useState<boolean | null>(postData?.isLiked || null);
+  const [likedCount, setLikedCount] = useState<number>(postData?.likeCount || 0);
 
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
   const [switchPostId, setSwitchPostId] = useState<number | null>(null);
 
   // 북마크 mutate
-  const { mutate: updateBookmarkFn } = useMutation({
+  const { mutate: postBookmarkMutate } = useMutation({
     mutationFn: postBookmark,
     onSuccess: () => {
       setIsBookmark(!isBookmark);
@@ -67,7 +50,7 @@ function PostHeader({
     mutationFn: postLike,
     onSuccess: async (_, variables) => {
       setLiked(variables.data.isLike);
-      const likesCountResponse = await getLikesCount(postId); // API CALL
+      const likesCountResponse = await getLikesCount(postData?.id as number); // API CALL
       setLikedCount(likesCountResponse.data);
     },
     onError: () => {
@@ -90,7 +73,7 @@ function PostHeader({
   // 이미 좋아요/싫어요 눌렀는지 체크후 안되어있다면 UPDATE API 호출
   const handleLikeStatus = (isLike: boolean) => {
     if (liked === null) {
-      updateLikeFn({ data: { isLike }, postId });
+      updateLikeFn({ data: { isLike }, postId: postData?.id as number });
     } else {
       showToast('이미 좋아요/싫어요 클릭하셨습니다');
     }
@@ -102,7 +85,7 @@ function PostHeader({
 
   // 북마크 함수
   const handleToggleBookmark = () => {
-    updateBookmarkFn({ postId: postId, bookmark: !isBookmark });
+    postBookmarkMutate({ postId: postData?.id as number });
   };
 
   // 공유하기 클릭시 클립보드에 현재 주소 복사 + 모달창으로 '복사되었습니다' 띄우기
@@ -123,7 +106,7 @@ function PostHeader({
     if (postStatus === 'finish') {
       showToast('이미 해결된 질문입니다');
     } else {
-      setSwitchPostId(postId);
+      setSwitchPostId(postData?.id as number);
       setIsFirstModalOpen(true);
     }
   };
@@ -134,14 +117,20 @@ function PostHeader({
     console.log(`해결 완료로 전환될 게시글 번호 : ${switchPostId}`);
     // API 호출
     const data = { status: 'finish' };
-    updateStatusFn({ postId, data });
+    updateStatusFn({ postId: postData?.id as number, data });
     setIsFirstModalOpen(false);
   };
+
+  if (!postData) {
+    return null;
+  }
+
+  const { title, timeline, viewCount, isLiked } = postData;
 
   return (
     <Wrapper>
       <div className="voting">
-        <VotingComponent voteCount={likedCount} isLiked={liked} onLike={handleLike} onDislike={handleDislike} />
+        <VotingComponent voteCount={likedCount} isLiked={isLiked} onLike={handleLike} onDislike={handleDislike} />
       </div>
       <Title>{title}</Title>
       <Sub>
@@ -160,7 +149,7 @@ function PostHeader({
       />
       {!isGuest && (
         <div className="more">
-          <More onClick={(event) => handleMoreClick(event, postId)} id={postId} isUserPost={true} />
+          <More onClick={(event) => handleMoreClick(event, postData.id)} id={postData?.id} isUserPost={true} />
         </div>
       )}
       <Divider />

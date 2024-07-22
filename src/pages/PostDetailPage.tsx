@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Post from '../components/detail/Post';
-import Comments from '../components/detail/Comments';
+// import Comments from '../components/detail/Comments';
 import Navbar from '../components/header/NavBar.tsx';
 import { Container } from '@mui/material';
 
@@ -14,8 +15,10 @@ function PostDetailPage() {
     <>
       <Container>
         <Navbar />
-        <Post postId={Number(postId)} />
-        <Comments postId={Number(postId)} />
+        <Suspense fallback={<div>로딩하는 중....</div>}>
+          <Post postId={Number(postId)} />
+        </Suspense>
+        {/* <Comments postId={Number(postId)} /> */}
       </Container>
     </>
   );

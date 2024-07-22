@@ -7,13 +7,13 @@ export const Wrapper = styled.div`
     position: absolute;
     left: -10px;
   }
-    
+
   .more {
     position: absolute;
+    cursor: pointer;
     right: -10px;
     top: -10px;
   }
-    
 `;
 
 export const Title = styled.h1`

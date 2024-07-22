@@ -3,15 +3,17 @@ import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { Wrapper } from './styles';
+import { CategoriesStatus } from '../../../types/filter';
+import { FILTERS_CATEGORIES_LIST } from '../../../constants/filters';
 
 interface Props {
-  category: 'question' | 'free';
-  onCategoryChange: (category: 'question' | 'free') => void;
+  category: CategoriesStatus;
+  onCategoryChange: (category: CategoriesStatus) => void;
 }
 
 function CategorySelect({ category, onCategoryChange }: Props) {
   const handleChange = (e: SelectChangeEvent) => {
-    onCategoryChange(e.target.value as 'question' | 'free');
+    onCategoryChange(e.target.value as CategoriesStatus);
   };
 
   return (
@@ -19,8 +21,8 @@ function CategorySelect({ category, onCategoryChange }: Props) {
       <FormControl style={{ width: '250px' }} size="medium">
         <InputLabel>게시판 선택</InputLabel>
         <Select label="게시판 선택" value={category} onChange={handleChange}>
-          <MenuItem value={'question'}>Q&A</MenuItem>
-          <MenuItem value={'free'}>자유</MenuItem>
+          <MenuItem value={FILTERS_CATEGORIES_LIST.FREE}>자유</MenuItem>
+          <MenuItem value={FILTERS_CATEGORIES_LIST.QUESTION}>Q&A</MenuItem>
         </Select>
       </FormControl>
     </Wrapper>
