@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
+import { useMutation } from '@tanstack/react-query';
+
 import 'react-quill/dist/quill.snow.css';
 import { postFile } from '../services/image/postFile';
-import { useMutation } from '@tanstack/react-query';
 
 const modules = {
   toolbar: [
