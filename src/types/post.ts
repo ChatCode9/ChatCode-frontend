@@ -9,11 +9,12 @@ export interface Post {
   viewCount: number;
   likeCount: number;
   isLiked: boolean;
+  blind: boolean;
 
+  dateCreated?: string;
   commentCount?: number;
   profileImg?: string;
   nickname?: string;
-  blind?: boolean;
 }
 
 export interface PostData {

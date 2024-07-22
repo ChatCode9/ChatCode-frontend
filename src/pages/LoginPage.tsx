@@ -16,6 +16,8 @@ function LoginPage() {
 
     if (profile === '0') {
       navigate('/signup');
+    } else if (profile === '1') {
+      navigate('/');
     }
   }, [location, navigate]);
 

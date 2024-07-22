@@ -7,15 +7,15 @@ import { putArticle } from '../../services/post/putArticle';
 interface ArticleProps {
   postId: number;
   updateArticle: {
-    category: string | undefined;
+    categoryId: number;
     title: string;
-    tagList: string[];
+    tags: string[];
     contentText: string;
   };
 }
 
 // 게시글 수정
-export const usePutArticle = () => {
+export const usePutArticleMutation = () => {
   const navigate = useNavigate();
   const { showToast } = useToastControl();
 

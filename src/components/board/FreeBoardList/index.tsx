@@ -1,10 +1,8 @@
-import BookMarkIcon from '../BookMarkIcon';
 import { Board, BoardListWrapper } from './styles';
-import { Filters } from '../../../types/filter';
+import { BoardControlType } from '../../../types/filter';
 import usePosts from '../../../hooks/usePosts';
 import PaginationRounded from '../Pagination';
 import BoardItem from '../QuestionBoardList/BoardItem';
-import usePost from '../../../hooks/usePost';
 // import More from '../More';
 
 // interface Option {
@@ -15,16 +13,8 @@ import usePost from '../../../hooks/usePost';
 //   options: Option[];
 // }
 
-interface Props {
-  filters: Filters;
-}
-
-function FreeBoardList({ filters }: Props) {
-  const { posts, showLoadingMessage, showNoDataMessage, showPagination, toggleStatus } = usePosts(filters);
-  const { handleBookMarkIconClick, handleMoreClick, handleBlindDataAddClick, handlePostClick, eventStop } = usePost({
-    posts,
-    toggleStatus,
-  });
+function FreeBoardList({ filters, setFilters }: BoardControlType) {
+  const { posts, showLoadingMessage, showNoDataMessage, showPagination, toggleStatus, pagesCount } = usePosts(filters);
 
   if (showLoadingMessage) {
     return (
@@ -45,18 +35,9 @@ function FreeBoardList({ filters }: Props) {
   return (
     <BoardListWrapper>
       {posts.map((post) => (
-        <BoardItem
-          key={post.id}
-          post={post}
-          handlePostClick={handlePostClick}
-          handleBookMarkIconClick={handleBookMarkIconClick}
-          handleMoreClick={handleMoreClick}
-          handleBlindDataAddClick={handleBlindDataAddClick}
-          eventStop={eventStop}
-          BookMarkIconMemo={BookMarkIcon}
-        />
+        <BoardItem key={post.id} post={post} toggleStatus={toggleStatus} />
       ))}
-      {showPagination && <PaginationRounded />}
+      {showPagination && <PaginationRounded pagesCount={pagesCount} setFilters={setFilters} />}
     </BoardListWrapper>
   );
   // return (

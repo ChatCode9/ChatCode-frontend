@@ -3,29 +3,29 @@ import { Post, ToggleKey, ToggleValue } from '../types/post';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
-  posts: Post[];
+  post: Post;
   toggleStatus: (id: number, type: ToggleKey, value: ToggleValue) => void;
 }
 
-const usePost = ({ posts, toggleStatus }: Props) => {
+const usePost = ({ post, toggleStatus }: Props) => {
   const navigate = useNavigate();
 
   // 게시글 북마크 하고자 할 때
   const handleBookMarkIconClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>, id: number) => {
       event.stopPropagation();
-      toggleStatus(id, 'bookmark', !posts.find((post) => post.id === id)?.bookmark);
+      toggleStatus(id, 'bookmark', post.bookmark);
     },
-    [toggleStatus, posts],
+    [toggleStatus, post],
   );
 
   // 블라인드 상태 토글하고자 할 때
   const handleMoreClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
       event.stopPropagation();
-      toggleStatus(id, 'blind', !posts.find((post) => post.id === id)?.blind);
+      toggleStatus(id, 'blind', post.blind);
     },
-    [toggleStatus, posts],
+    [toggleStatus, post],
   );
 
   // 중요!!!
@@ -33,9 +33,9 @@ const usePost = ({ posts, toggleStatus }: Props) => {
   const handleBlindDataAddClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
       event.stopPropagation();
-      toggleStatus(id, 'blind', !posts.find((post) => post.id === id)?.blind);
+      toggleStatus(id, 'blind', post.blind);
     },
-    [toggleStatus, posts],
+    [toggleStatus, post],
   );
 
   // 게시글 클릭 할 때

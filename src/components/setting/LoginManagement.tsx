@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { tagState } from '../../atoms/userInfoState';
-import { usePostTags } from '../../hooks/api/usePostTags';
+import { usePostTagsMutation } from '../../hooks/api/usePostTagsMutation';
 import styled from 'styled-components';
 import googleLogo from '../../../public/googleLogo.svg';
 import githubLogo from '../../../public/githubLogo.png';
@@ -17,10 +17,13 @@ function LoginManagement() {
   const navigate = useNavigate();
   const selectedTags: number[] = useRecoilValue(tagState);
   const clickedList = useRecoilValue(clickedListState);
+  const { mutate: postUserTags } = usePostTagsMutation();
+
   console.log('selectedTags', selectedTags);
   console.log('clickedList', clickedList);
-  const { mutate: postUserTags } = usePostTags();
+
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
   const handleSubmitTags = () => {
     const formattedTags = selectedTags.map((tagId) => {
       return { id: tagId };

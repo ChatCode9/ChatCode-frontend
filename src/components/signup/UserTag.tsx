@@ -3,10 +3,10 @@ import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 
 import { useTagsQuery } from '../../hooks/api/useTagsQuery';
-import { useDeleteTag } from '../../hooks/api/useDeleteTag';
+import { useDeleteTagMutation } from '../../hooks/api/useDeleteTagMutation';
 import { tagState } from '../../atoms/userInfoState';
-import { usePostTag } from '../../hooks/api/usePostTag';
-import { usePutTag } from '../../hooks/api/usePutTag';
+import { usePostTagMutation } from '../../hooks/api/usePostTagMutation';
+import { usePutTagMutation } from '../../hooks/api/usePutTagMutation';
 import { useUserTagsQuery } from '../../hooks/api/useUserTagsQuery';
 import { clickedListState } from '../../atoms/userInfoState';
 
@@ -16,47 +16,15 @@ interface Tag {
 }
 function UserTag() {
   //admin api 작업
-  const { mutate: postTagMutate } = usePostTag();
-
-  useEffect(() => {
-    const interest_tag = [{ name: 'New Tag1' }];
-    postTagMutate(interest_tag);
-  }, [postTagMutate]);
-
-  const { mutate: putTagMutate } = usePutTag();
-  useEffect(() => {
-    const updatedTag = [{ id: 1, name: 'frontend' }];
-    putTagMutate(updatedTag);
-  }, [putTagMutate]);
-
-  const { mutate: DeleteTagMutate } = useDeleteTag();
-  useEffect(() => {
-    const tagIdToDelete = 36;
-    DeleteTagMutate(tagIdToDelete);
-  }, [DeleteTagMutate]);
-
-  // 태그 전체 목록 불러오기
-  const { data } = useTagsQuery();
-  useEffect(() => {
-    if (data) {
-      setTagName(data.data);
-      setClickedList(Array(data.data.length).fill(false));
-    }
-  }, [data]);
-
   const [tagName, setTagName] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useRecoilState<number[]>(tagState);
   const [clickedList, setClickedList] = useRecoilState(clickedListState);
 
+  const { data } = useTagsQuery();
   const { data: userTags } = useUserTagsQuery();
-
-  useEffect(() => {
-    if (userTags) {
-      const initialClickedList = tagName.map((tag) => userTags.data.some((userTag: Tag) => userTag.id === tag.id));
-      setClickedList(initialClickedList);
-      setSelectedTags(userTags.data.map((tag: Tag) => tag.id));
-    }
-  }, [userTags, tagName, setClickedList, setSelectedTags]);
+  const { mutate: postTagMutate } = usePostTagMutation();
+  const { mutate: putTagMutate } = usePutTagMutation();
+  const { mutate: DeleteTagMutate } = useDeleteTagMutation();
 
   const handleClick = (index: number): void => {
     const updatedList = [...clickedList];
@@ -77,6 +45,37 @@ function UserTag() {
       setSelectedTags(selectedTags.filter((tagId) => tagId !== selectedTag.id));
     }
   };
+
+  useEffect(() => {
+    const interest_tag = [{ name: 'New Tag1' }];
+    postTagMutate(interest_tag);
+  }, [postTagMutate]);
+
+  useEffect(() => {
+    const updatedTag = [{ id: 1, name: 'frontend' }];
+    putTagMutate(updatedTag);
+  }, [putTagMutate]);
+
+  useEffect(() => {
+    const tagIdToDelete = 36;
+    DeleteTagMutate(tagIdToDelete);
+  }, [DeleteTagMutate]);
+
+  // 태그 전체 목록 불러오기
+  useEffect(() => {
+    if (data) {
+      setTagName(data.data);
+      setClickedList(Array(data.data.length).fill(false));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (userTags) {
+      const initialClickedList = tagName.map((tag) => userTags.data.some((userTag: Tag) => userTag.id === tag.id));
+      setClickedList(initialClickedList);
+      setSelectedTags(userTags.data.map((tag: Tag) => tag.id));
+    }
+  }, [userTags, tagName, setClickedList, setSelectedTags]);
 
   return (
     <>

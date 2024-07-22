@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { putTag } from '../../services/admin/putTag';
 
-export const usePutTag = () => {
+export const usePutTagMutation = () => {
   const mutation = useMutation({
     mutationFn: putTag,
     onSuccess: () => {

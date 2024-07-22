@@ -23,14 +23,14 @@ function Navbar() {
             </Linked>
           </Topic>
           <Topic>
-            <Linked to="/board/free">Community</Linked>
+            <Linked to="/board/free">Free</Linked>
           </Topic>
           <Topic>
             <Linked to="/board/question">Question</Linked>
           </Topic>
         </LeftTopicMenu>
 
-        <FlexBox></FlexBox>
+        <FlexBox />
         <RightMenu>
           <StyledSearchInput>
             <SearchInput name="search" placeholder="Search for..." />
@@ -57,6 +57,7 @@ const Header = styled.header`
   border-bottom: 3px solid #f2f1fa;
   align-items: center;
   justify-content: center;
+  padding: 0 10px;
 `;
 const Nav = styled.nav`
   width: 100%;
@@ -82,7 +83,6 @@ const Linked = styled(Link)`
 const RightMenu = styled.div`
   display: flex;
   align-items: center;
-  width: 30%;
 `;
 const StyledSearchInput = styled.div`
   display: flex;

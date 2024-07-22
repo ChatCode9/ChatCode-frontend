@@ -107,6 +107,7 @@ const usePosts = (filters: Filters) => {
     showNoDataMessage,
     showPagination,
     toggleStatus,
+    pagesCount: postList?.pageInfo.totalPages ? postList?.pageInfo.totalPages + 1 : 1,
   };
 };
 

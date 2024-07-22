@@ -17,7 +17,7 @@ interface Props {
 }
 
 function CommentItem({ avatar, username, timestamp, likeCount, disLikeCount, comment }: Props) {
-  const [isOpenInput] = useState<boolean>(false);
+  const [isOpenInput, setIsOpenInput] = useState<boolean>(false);
 
   return (
     <>
@@ -41,7 +41,7 @@ function CommentItem({ avatar, username, timestamp, likeCount, disLikeCount, com
 
       <Content>{comment}</Content>
 
-      <ToggleBtn>{isOpenInput ? '댓글 닫기' : '댓글 보기'}</ToggleBtn>
+      <ToggleBtn onClick={() => setIsOpenInput((prev) => !prev)}>{isOpenInput ? '댓글 닫기' : '댓글 보기'}</ToggleBtn>
 
       <CommentInput type="textarea" />
     </>

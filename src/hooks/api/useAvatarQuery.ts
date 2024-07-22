@@ -1,20 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getAvatar } from '../../services/user/getAvatar';
-import { AvatarData } from '../../types/avatar';
+import { AvatarData, AvatarName } from '../../types/avatar';
 
-interface Props {
-  postId: number;
-}
-
-export const useAvatarQuery = ({ postId }: Props) => {
+export const useAvatarQuery = ({ name }: AvatarName) => {
   const {
     data: avatarData,
     isLoading: isLoadingAvatar,
     isError: isErrorAvatar,
   } = useQuery<AvatarData>({
-    queryKey: ['avatarData', postId],
-    queryFn: () => getAvatar(postId),
+    queryKey: ['avatarData', name],
+    queryFn: () => getAvatar({ name }),
   });
 
   return { avatarData, isLoadingAvatar, isErrorAvatar };

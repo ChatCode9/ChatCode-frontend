@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { BiDislike, BiLike } from 'react-icons/bi';
 
 interface Props {
-  voteCount: number | undefined;
-  isLiked: boolean | null;
+  voteCount?: number;
+  isLiked?: boolean;
   onLike: () => void;
   onDislike: () => void;
 }
 
 const VotingComponent = ({ voteCount, isLiked, onLike, onDislike }: Props) => {
-    return (
+  return (
     <VotingContainer>
       <Button
         aria-pressed={isLiked === true}
@@ -31,7 +31,7 @@ const VotingComponent = ({ voteCount, isLiked, onLike, onDislike }: Props) => {
         <BiDislike />
       </Button>
     </VotingContainer>
-  )
+  );
 };
 
 export default VotingComponent;
@@ -56,9 +56,9 @@ const Button = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-    color: ${({ $isActive, $isNull }) => ($isActive ? '#fff' : $isNull ? '#8d8ba7' : '#8d8ba7')};
-    background: ${({ $isActive, $isNull }) => ($isActive ? '#8d8ba7' : $isNull ? 'none' : 'none')};
-    border: 2px solid #8d8ba7;
+  color: ${({ $isActive, $isNull }) => ($isActive ? '#fff' : $isNull ? '#8d8ba7' : '#8d8ba7')};
+  background: ${({ $isActive, $isNull }) => ($isActive ? '#8d8ba7' : $isNull ? 'none' : 'none')};
+  border: 2px solid #8d8ba7;
   border-radius: 10px;
   padding: 4px 8px;
   cursor: pointer;
@@ -66,7 +66,7 @@ const Button = styled.button<ButtonProps>`
   &:hover {
     background-color: #e0e0e0;
   }
-    
+
   //&:active {
   //    background-color: #8d8ba7;
   //    border: 2px solid #8d8ba7;
