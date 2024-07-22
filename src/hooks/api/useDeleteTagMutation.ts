@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { deleteTag } from '../../services/admin/deleteTag';
 
-export const useDeleteTag = () => {
+export const useDeleteTagMutation = () => {
   const mutation = useMutation({
     mutationFn: deleteTag,
     onSuccess: () => {

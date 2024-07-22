@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { putNickname } from '../../services/user/putNickname';
 
-export const usePutNickname = () => {
+export const usePutNicknameMutation = () => {
   const mutation = useMutation({
     mutationFn: putNickname,
     onSuccess: () => {

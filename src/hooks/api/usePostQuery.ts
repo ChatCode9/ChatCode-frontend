@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { getPost } from '../../services/post/getPost';
 import { PostData } from '../../types/post';
@@ -8,14 +8,10 @@ interface Props {
 }
 
 export const usePostQuery = ({ postId }: Props) => {
-  const {
-    data: postData,
-    isLoading: isLoadingPost,
-    isError: isErrorPost,
-  } = useQuery<PostData>({
+  const { data: postData } = useSuspenseQuery<PostData>({
     queryKey: ['postData', postId],
     queryFn: () => getPost(postId),
   });
 
-  return { postData, isLoadingPost, isErrorPost };
+  return { postData };
 };
