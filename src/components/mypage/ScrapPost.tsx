@@ -1,36 +1,41 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import postsData from '../../data/posts.json';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+import postsData from '../../data/posts.json';
+import { useMyInfoQuery } from '../../hooks/api/useMyInfoQuery';
+import { useScrapsQuery } from '../../hooks/api/useScrapsQuery';
+import { formatDate } from '../../utils/formatDate';
+
 function ScrapPost() {
+  const { data: myInfoData } = useMyInfoQuery();
+  const { scrapsData } = useScrapsQuery({ id: myInfoData.data.id });
   const [isRemoveList, setIsRemoveList] = useState(postsData.map(() => true));
+  const [isRemoveButtonVisible, setIsRemoveButtonVisible] = useState(postsData.map(() => false));
+
   console.log(isRemoveList);
+
   const handleRemoveList = (index: number) => {
     const newList = [...isRemoveList];
     newList[index] = !newList[index];
     setIsRemoveList(newList);
   };
-  const [isRemoveButtonVisible, setIsRemoveButtonVisible] = useState(postsData.map(() => false));
+
   const handleRemoveBtn = (index: number) => {
     const newList = [...isRemoveButtonVisible];
     newList[index] = !newList[index];
     setIsRemoveButtonVisible(newList);
   };
+
   return (
     <ScrapWrapper>
-      {postsData.map(
+      {scrapsData?.data?.map(
         (list, index) =>
           isRemoveList[index] && (
             <BoardBox>
               <ContentBox>
-                <h1>{list.title}</h1>
-                <div>
-                  {list.tags.map((tag, index) => (
-                    <span key={index}>{tag}</span>
-                  ))}
-                </div>
-                <p>{list.content}</p>
+                <h1>{list.articleTitle}</h1>
+                <p>{formatDate(list.dateCreated)}</p>
               </ContentBox>
               <MoreBtnBox>
                 <button
