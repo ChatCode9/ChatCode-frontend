@@ -3,12 +3,12 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Switch from '@mui/material/Switch';
-import { usePutNickname } from '../../hooks/api/usePutNickname';
+import { usePutNicknameMutation } from '../../hooks/api/usePutNicknameMutation';
 import { useState } from 'react';
 import { nickNameState } from '../../atoms/userInfoState';
 import { useRecoilState } from 'recoil';
 import { tagState } from '../../atoms/userInfoState';
-import { usePostTags } from '../../hooks/api/usePostTags';
+import { usePostTagsMutation } from '../../hooks/api/usePostTagsMutation';
 
 interface ConsentStates {
   totalConsent: boolean;
@@ -19,8 +19,8 @@ interface ConsentStates {
 function UserConsent() {
   const [nickName] = useRecoilState<string>(nickNameState);
   const [selectedTags] = useRecoilState<number[]>(tagState);
-  const { mutate: PutNickname } = usePutNickname();
-  const { mutate: PostUserTags } = usePostTags();
+  const { mutate: PutNickname } = usePutNicknameMutation();
+  const { mutate: PostUserTags } = usePostTagsMutation();
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const [consentStates, setConsentStates] = useState<ConsentStates>({
     totalConsent: false,

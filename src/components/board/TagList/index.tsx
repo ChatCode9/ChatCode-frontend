@@ -1,13 +1,11 @@
 import styled from 'styled-components';
+import { Post } from '../../../types/post';
+import { spliceTag } from '../../../utils/spliceTag';
 
-interface Props {
-  tags: string[];
-}
-
-function TagList({ tags }: Props) {
+function TagList({ tags }: Pick<Post, 'tags'>) {
   return (
     <Container className="tag-list">
-      {tags.map((tag) => (
+      {spliceTag(tags).map((tag) => (
         <li key={tag}>{`#${tag}`}</li>
       ))}
     </Container>

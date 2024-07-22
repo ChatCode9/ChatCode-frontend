@@ -7,11 +7,9 @@ interface Props {
 }
 
 function Profile({ avatar, timeline, nickname }: Props) {
-  console.log(avatar);
-
   return (
     <Container>
-      <ProfileImage />
+      <ProfileImage className="avatar" src={avatar} alt={nickname} />
       <div className="inner">
         <span className="timeline">{timeline}</span>
         <p className="nickname">{nickname}</p>
@@ -36,7 +34,7 @@ const Container = styled.div`
   }
 `;
 
-const ProfileImage = styled.div`
+const ProfileImage = styled.img`
   width: 37px;
   height: 37px;
   background-color: #5d5a88;

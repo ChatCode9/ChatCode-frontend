@@ -16,9 +16,6 @@ const LogIn = ({ children }: LogInProps) => {
     if (myInfo?.data) {
       setIsLoggedIn(true);
     }
-    // if (localStorage.getItem('Authorization')) {
-    //   setIsLoggedIn(true);
-    // }
   }, [setIsLoggedIn]);
 
   return <>{children}</>;
