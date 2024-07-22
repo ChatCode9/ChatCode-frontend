@@ -1,15 +1,16 @@
 import axios from 'axios';
 import client from '../client';
 
-interface putImageProps {
+export interface putUserProps {
   id: number;
-  picture: string;
+  content?: string;
+  picture?: string;
 }
 
-//S3 URL을 서버에 전송
-export const putImage = async ({ id, picture }: putImageProps) => {
+//유저 정보 수정하는 API
+export const putUser = async ({ id, content, picture }: putUserProps) => {
   try {
-    const response = await client.put(`/avatars/${id}`, { picture });
+    const response = await client.put(`/avatars/${id}`, { content, picture });
     console.log('서버 응답', response.data);
     return response.data;
   } catch (error) {
