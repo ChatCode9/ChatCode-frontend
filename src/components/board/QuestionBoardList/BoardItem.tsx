@@ -13,29 +13,35 @@ import Profile from '../Profile';
 import Status from '../Status';
 import Block from '../Block';
 import TagList from '../TagList';
-import { Post } from '../../../types/post';
+import { Post, ToggleKey, ToggleValue } from '../../../types/post';
+import usePost from '../../../hooks/usePost';
+import BookMarkIcon from '../BookMarkIcon';
 
 interface BoardItemProps {
   post: Post;
-  handlePostClick: (id: number, blind?: boolean) => void;
-  handleBookMarkIconClick: (event: React.MouseEvent<HTMLDivElement>, id: number) => void;
-  handleMoreClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
-  handleBlindDataAddClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
-  eventStop: (event: React.MouseEvent<HTMLDivElement>) => void;
-  BookMarkIconMemo: React.FC<{ isActive: boolean }>;
+  toggleStatus: (id: number, type: ToggleKey, value: ToggleValue) => void;
 }
 
-const BoardItem: React.FC<BoardItemProps> = ({
-  post,
-  handlePostClick,
-  handleBookMarkIconClick,
-  handleMoreClick,
-  handleBlindDataAddClick,
-  eventStop,
-  BookMarkIconMemo,
-}) => {
-  const { id, status, viewCount, commentCount, likeCount, nickname, timeline, title, tags, content, bookmark, blind } =
-    post;
+const BoardItem: React.FC<BoardItemProps> = ({ post, toggleStatus }) => {
+  const {
+    id,
+    status,
+    viewCount,
+    commentCount,
+    likeCount,
+    nickname,
+    timeline,
+    title,
+    tags,
+    content,
+    bookmark,
+    blind,
+    profileImg,
+  } = post;
+  const { handleBookMarkIconClick, handleMoreClick, handleBlindDataAddClick, handlePostClick, eventStop } = usePost({
+    post,
+    toggleStatus,
+  });
 
   return (
     <BoardItemWrapper $status={status} onClick={() => handlePostClick(id, blind)} key={status}>
@@ -45,7 +51,7 @@ const BoardItem: React.FC<BoardItemProps> = ({
         <Status viewCount={viewCount} commentCount={commentCount} likeCount={likeCount} />
       </StatusWrapper>
       <BoardWrapper>
-        <Profile avatar="" nickname={nickname} timeline={timeline} />
+        <Profile avatar={profileImg} nickname={nickname} timeline={timeline} />
         <BoardContent>
           <div className="title">{title}</div>
           <TagList tags={tags} />
@@ -53,14 +59,14 @@ const BoardItem: React.FC<BoardItemProps> = ({
         </BoardContent>
       </BoardWrapper>
       {!blind && (
-        <BookMarkWrapper onClick={(event) => handleBookMarkIconClick(event, id)}>
-          <BookMarkIconMemo isActive={bookmark} />
-        </BookMarkWrapper>
-      )}
-      {!blind && (
-        <MoreWrapper onClick={eventStop}>
-          <More onClick={(event) => handleMoreClick(event, id)} id={id} />
-        </MoreWrapper>
+        <>
+          <BookMarkWrapper onClick={(event) => handleBookMarkIconClick(event, id)}>
+            <BookMarkIcon isActive={bookmark} />
+          </BookMarkWrapper>
+          <MoreWrapper onClick={eventStop}>
+            <More onClick={(event) => handleMoreClick(event, id)} id={id} />
+          </MoreWrapper>
+        </>
       )}
     </BoardItemWrapper>
   );

@@ -22,7 +22,7 @@ function QuestionBoardPage() {
       />
       <BoardController filters={filters} setFilters={setFilters} />
       <Divider />
-      <QuestionBoardList filters={filters} />
+      <QuestionBoardList filters={filters} setFilters={setFilters} />
     </Container>
   );
 }
